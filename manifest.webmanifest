@@ -1,0 +1,19 @@
+{
+  "name": "Snake & Ladder",
+  "short_name": "Snake & Ladder",
+  "description": "Classic 100-square Snake & Ladder board game. Play free in your browser with 2-4 players.",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "portrait",
+  "background_color": "#10131a",
+  "theme_color": "#10131a",
+  "icons": [
+    {
+      "src": "favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

@@ -1,0 +1,999 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Snake &amp; Ladder — Free Online Board Game | Play in Your Browser</title>
+
+<!-- ===== SEO ===== -->
+<meta name="description" content="Play Snake &amp; Ladder free online. Classic 100-square board with ladders and snakes, 2-4 players, instant play in your browser. No signup or download required." />
+<meta name="keywords" content="snake and ladder, snakes and ladders, snake and ladder game, online board game, free browser game, ladders and snakes, saap seekhi, classic board game" />
+<meta name="author" content="ThePrabhanshu-dev" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<meta name="theme-color" content="#10131a" />
+<link rel="canonical" href="https://theprabhanshu-dev.github.io/snake-and-ladder-game/" />
+
+<!-- ===== Social sharing (Open Graph / Twitter) ===== -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Snake &amp; Ladder" />
+<meta property="og:title" content="Snake &amp; Ladder — Free Online Board Game" />
+<meta property="og:description" content="Classic 100-square Snake &amp; Ladder board. Climb the ladders, dodge the snakes, race your friends to 100. Play instantly in your browser." />
+<meta property="og:url" content="https://theprabhanshu-dev.github.io/snake-and-ladder-game/" />
+<meta property="og:image" content="https://theprabhanshu-dev.github.io/snake-and-ladder-game/og-image.svg" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Snake &amp; Ladder — Free Online Board Game" />
+<meta name="twitter:description" content="Climb the ladders, dodge the snakes, race your friends to 100. Play instantly in your browser." />
+<meta name="twitter:image" content="https://theprabhanshu-dev.github.io/snake-and-ladder-game/og-image.svg" />
+
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="favicon.svg" />
+<link rel="manifest" href="manifest.webmanifest" />
+<style>
+  :root {
+    --bg: #10131a;
+    --panel: #191d27;
+    --panel2: #222836;
+    --accent: #5b8cff;
+    --p1: #ff5f6d;
+    --p2: #3ddc97;
+    --p3: #ffd166;
+    --p4: #c08bff;
+    --text: #e8ecf5;
+    --muted: #8b93a7;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    background: radial-gradient(circle at 20% 10%, #1b2233 0%, var(--bg) 55%);
+    color: var(--text);
+    font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+    display: flex;
+    justify-content: center;
+    padding: 20px 14px 40px;
+  }
+  .wrap { width: 100%; max-width: 960px; }
+  header { text-align: center; margin-bottom: 16px; }
+  h1 {
+    margin: 0 0 4px;
+    font-size: clamp(22px, 4vw, 34px);
+    letter-spacing: 1px;
+  }
+  h1 span { color: var(--accent); }
+  .sub { color: var(--muted); font-size: 13px; }
+
+  .layout { display: grid; gap: 18px; grid-template-columns: 1fr; }
+  @media (min-width: 820px) { .layout { grid-template-columns: minmax(0,1fr) 280px; } }
+
+  .board-shell {
+    background: var(--panel);
+    border: 1px solid #2b3244;
+    border-radius: 16px;
+    padding: 12px;
+    box-shadow: 0 18px 40px rgba(0,0,0,.45);
+  }
+  .board {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #222836;
+    display: grid;
+    grid-template-columns: repeat(10, 1fr);
+    grid-template-rows: repeat(10, 1fr);
+    gap: 2px;
+    padding: 2px;
+  }
+  .cell {
+    position: relative;
+    border-radius: 5px;
+    background: #2f3648;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: clamp(9px, 1.4vw, 13px);
+    font-weight: 600;
+    color: #aab4ca;
+    user-select: none;
+  }
+  .cell.light { background: #39415a; color: #c3cde0; }
+  .cell.start { box-shadow: inset 0 0 0 2px var(--accent); color: #a9c2ff; font-weight: 700; }
+  .cell.finish { box-shadow: inset 0 0 0 2px #ffd166; color: #ffe29a; font-weight: 700; }
+  .cell.hit { animation: flash .5s ease; }
+  @keyframes flash { 0%{transform:scale(1)} 50%{transform:scale(1.18); background:#5a678c} 100%{transform:scale(1)} }
+
+  .link {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+  .link svg { width: 100%; height: 100%; }
+
+  .links { position: absolute; inset: 0; pointer-events: none; z-index: 1; }
+  .tokens { position: absolute; inset: 0; pointer-events: none; z-index: 2; }
+  .token {
+    position: absolute;
+    width: 9%;
+    height: 9%;
+    border-radius: 50%;
+    border: 2px solid rgba(255,255,255,.85);
+    transform: translate(-50%, -50%);
+    transition: left .22s cubic-bezier(.34,1.4,.64,1), top .22s cubic-bezier(.34,1.4,.64,1);
+    display: flex; align-items: center; justify-content: center;
+    font-size: clamp(7px, 1.1vw, 11px);
+    font-weight: 800;
+    color: #fff;
+    text-shadow: 0 1px 2px rgba(0,0,0,.5);
+    box-shadow: 0 3px 8px rgba(0,0,0,.45);
+  }
+  .token.p1 { background: var(--p1); }
+  .token.p2 { background: var(--p2); }
+  .token.p3 { background: var(--p3); }
+  .token.p4 { background: var(--p4); }
+  .token.off { display: none; }
+
+  .panel {
+    background: var(--panel);
+    border: 1px solid #2b3244;
+    border-radius: 16px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .players { display: flex; flex-direction: column; gap: 10px; }
+  .player {
+    display: flex; align-items: center; gap: 10px;
+    background: var(--panel2);
+    border: 1px solid transparent;
+    border-radius: 12px;
+    padding: 10px 12px;
+    transition: border-color .2s, background .2s;
+  }
+  .player.active { border-color: var(--accent); background: #263049; }
+  .dot { width: 18px; height: 18px; border-radius: 50%; border: 2px solid rgba(255,255,255,.7); flex: none; }
+  .dot.p1 { background: var(--p1); }
+  .dot.p2 { background: var(--p2); }
+  .dot.p3 { background: var(--p3); }
+  .dot.p4 { background: var(--p4); }
+  .pname { flex: 1; font-weight: 600; font-size: 14px; }
+  .pos { font-size: 12px; color: var(--muted); }
+
+  .dice-box { text-align: center; }
+  .dice {
+    width: 74px; height: 74px; margin: 0 auto 8px;
+    border-radius: 16px;
+    background: var(--panel2);
+    border: 1px solid #333c52;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    padding: 10px;
+    box-shadow: inset 0 -4px 0 rgba(0,0,0,.35), 0 8px 18px rgba(0,0,0,.35);
+    transition: transform .2s;
+  }
+  .dice.rolling { animation: shake .5s infinite; }
+  @keyframes shake {
+    0%,100% { transform: rotate(0) scale(1); }
+    25% { transform: rotate(-9deg) scale(1.05); }
+    75% { transform: rotate(9deg) scale(1.05); }
+  }
+  .pip { width: 12px; height: 12px; border-radius: 50%; background: #eef2ff; justify-self: center; align-self: center; opacity: 0; }
+  .pip.on { opacity: 1; }
+  .dice-label { font-size: 13px; color: var(--muted); min-height: 18px; }
+
+  button {
+    font: inherit;
+    cursor: pointer;
+    border: none;
+    border-radius: 10px;
+    padding: 12px 16px;
+    font-weight: 700;
+    color: #fff;
+    background: linear-gradient(180deg, #6b96ff, #4472e6);
+    box-shadow: 0 6px 14px rgba(68,114,230,.35);
+    transition: transform .12s, filter .12s;
+  }
+  button:hover:not(:disabled) { filter: brightness(1.08); }
+  button:active:not(:disabled) { transform: translateY(1px); }
+  button:disabled { opacity: .5; cursor: not-allowed; }
+  button.ghost { background: var(--panel2); box-shadow: none; border: 1px solid #333c52; }
+
+  .msg {
+    min-height: 44px;
+    font-size: 13px;
+    color: var(--muted);
+    background: var(--panel2);
+    border-radius: 10px;
+    padding: 10px 12px;
+    line-height: 1.4;
+  }
+  .msg b { color: var(--text); }
+  .legend { font-size: 11.5px; color: var(--muted); line-height: 1.6; }
+  .legend .l { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 5px; vertical-align: middle; }
+  .l.ladder { background: #4cc9f0; }
+  .l.snake { background: #ff7a7a; }
+  .rules { font-size: 12px; color: var(--muted); line-height: 1.7; }
+  .rules li { margin-bottom: 2px; }
+  .rules ul { margin: 0; padding-left: 18px; }
+
+  /* ============ LOADING SCREEN ============ */
+  .loader {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: radial-gradient(circle at 30% 20%, #1d2740 0%, #0d1017 60%);
+    opacity: 0;
+    transition: opacity .45s ease, visibility .45s;
+    overflow: hidden;
+  }
+  .loader.show { opacity: 1; visibility: visible; }
+  .loader.done { opacity: 0; visibility: hidden; pointer-events: none; }
+  .loader-canvas { position: absolute; inset: 0; width: 100%; height: 100%; }
+
+  .loader-inner {
+    position: relative;
+    z-index: 2;
+    width: min(560px, 92vw);
+    text-align: center;
+    padding: 24px;
+  }
+  .loader-logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 6px;
+  }
+  .loader-logo-snake, .loader-logo-dice { font-size: clamp(26px, 6vw, 40px); animation: bob 2.2s ease-in-out infinite; }
+  .loader-logo-dice { animation-delay: .5s; }
+  @keyframes bob { 0%,100% { transform: translateY(0) rotate(-6deg); } 50% { transform: translateY(-9px) rotate(6deg); } }
+  .loader-title {
+    margin: 0;
+    font-size: clamp(26px, 6.5vw, 46px);
+    letter-spacing: 1px;
+    background: linear-gradient(90deg, #ff7a7a, #ffd166, #4cc9f0);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    animation: shimmer 3s linear infinite;
+    background-size: 200% 100%;
+  }
+  .loader-title em { font-style: normal; }
+  @keyframes shimmer { 0% { background-position: 0% 0; } 100% { background-position: 200% 0; } }
+
+  .loader-stage {
+    position: relative;
+    height: clamp(150px, 30vw, 220px);
+    margin: 10px 0 6px;
+  }
+  .loader-ladder {
+    position: absolute;
+    left: 4%;
+    bottom: 6%;
+    width: clamp(110px, 26vw, 170px);
+    height: auto;
+    opacity: .95;
+  }
+  .loader-snake {
+    position: absolute;
+    right: 4%;
+    bottom: 6%;
+    width: clamp(110px, 26vw, 170px);
+    height: auto;
+    opacity: .95;
+  }
+  .loader-ladder.animate .ladder-rungs line {
+    stroke-dasharray: 14 8;
+    animation: rungs 1.1s linear infinite;
+  }
+  @keyframes rungs { to { stroke-dashoffset: -22; } }
+  .loader-snake.animate path {
+    stroke-dasharray: 130 40;
+    animation: slither 1.8s linear infinite;
+  }
+  @keyframes slither { to { stroke-dashoffset: -170; } }
+
+  .loader-dice-wrap {
+    position: absolute;
+    left: 50%;
+    top: 42%;
+    transform: translate(-50%, -50%);
+  }
+  .loader-dice {
+    width: clamp(66px, 14vw, 92px);
+    height: clamp(66px, 14vw, 92px);
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3, 1fr);
+    padding: 12px;
+    gap: 2px;
+    border-radius: 18px;
+    background: linear-gradient(160deg, #333c55, #1d2334);
+    border: 1px solid #46527a;
+    box-shadow: inset 0 -6px 0 rgba(0,0,0,.4), 0 14px 34px rgba(0,0,0,.5);
+    animation: shake .6s ease-in-out infinite;
+  }
+  .loader-dice .pip {
+    width: 13px; height: 13px; border-radius: 50%;
+    background: #eef2ff; opacity: 0;
+    justify-self: center; align-self: center;
+    transition: opacity .12s;
+  }
+  .loader-dice .pip.on { opacity: 1; }
+
+  .loader-progress { margin: 8px 0 14px; }
+  .loader-track {
+    height: 9px;
+    border-radius: 99px;
+    background: #1c2233;
+    border: 1px solid #2c3549;
+    overflow: hidden;
+  }
+  .loader-bar {
+    height: 100%;
+    width: 0%;
+    border-radius: 99px;
+    background: linear-gradient(90deg, #4cc9f0, #5b8cff, #a06bff);
+    box-shadow: 0 0 14px rgba(91,140,255,.65);
+    transition: width .12s linear;
+  }
+  .loader-status {
+    margin-top: 9px;
+    font-size: 13px;
+    color: #9fb0d4;
+    min-height: 18px;
+  }
+  .loader-status.bump { animation: bump .35s ease; }
+  @keyframes bump { 0% { transform: translateY(4px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+
+  .loader-tip {
+    font-size: 12.5px;
+    color: #7f8db0;
+    min-height: 34px;
+    transition: opacity .25s ease;
+    font-style: italic;
+  }
+  .loader-skip {
+    margin-top: 4px;
+    background: transparent;
+    border: 1px solid #313a52;
+    color: #8f9cba;
+    box-shadow: none;
+    font-size: 12px;
+    padding: 8px 14px;
+    font-weight: 600;
+  }
+  .loader-skip:hover { background: rgba(91,140,255,.12); color: #cfd9f2; }
+
+  /* ============ ADS + PROMO ============ */
+  .ad-slot { margin: 0 0 12px; }
+  .house-ad {
+    border: 1px solid #2f3852;
+    border-radius: 12px;
+    background: linear-gradient(135deg, #1e2639, #1a2131);
+    padding: 12px 14px;
+    text-align: center;
+  }
+  .house-ad-tag {
+    display: inline-block;
+    font-size: 9.5px;
+    letter-spacing: 1.4px;
+    text-transform: uppercase;
+    color: #7d8aa8;
+    border: 1px solid #333d58;
+    border-radius: 99px;
+    padding: 2px 9px;
+    margin-bottom: 7px;
+  }
+  .house-ad-title { font-weight: 700; font-size: 14.5px; margin-bottom: 4px; }
+  .house-ad-text { font-size: 12.5px; color: var(--muted); line-height: 1.5; margin-bottom: 10px; }
+  .house-ad-actions { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+  .ad-btn {
+    font: inherit;
+    font-size: 12.5px;
+    font-weight: 700;
+    padding: 9px 14px;
+    border-radius: 9px;
+    border: 1px solid transparent;
+    cursor: pointer;
+    text-decoration: none;
+    display: inline-block;
+  }
+  .ad-btn.primary { background: linear-gradient(180deg, #6b96ff, #4472e6); color: #fff; }
+  .ad-btn.primary.copied { background: linear-gradient(180deg, #3ddc97, #22a06b); }
+  .ad-btn.ghost { background: #232b3f; color: #b7c3dd; border-color: #333d58; }
+
+  .promo-section {
+    margin-top: 18px;
+    background: var(--panel);
+    border: 1px solid #2b3244;
+    border-radius: 16px;
+    padding: 16px;
+  }
+  .promo-title {
+    font-size: 15px;
+    font-weight: 700;
+    margin: 0 0 4px;
+  }
+  .promo-sub { font-size: 12px; color: var(--muted); margin: 0 0 12px; line-height: 1.5; }
+  .share-row { display: flex; gap: 8px; flex-wrap: wrap; }
+  .share-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 9px 13px;
+    border-radius: 10px;
+    background: var(--panel2);
+    border: 1px solid #333c52;
+    color: var(--text);
+    text-decoration: none;
+    font-size: 12.5px;
+    font-weight: 600;
+    transition: transform .12s, border-color .15s, background .15s;
+  }
+  .share-btn:hover { transform: translateY(-2px); border-color: var(--accent); background: #263049; }
+  .share-emoji { font-size: 15px; }
+
+  .portal-row {
+    display: grid;
+    gap: 9px;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    margin-top: 12px;
+  }
+  .portal-card {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    padding: 11px 13px;
+    border-radius: 12px;
+    background: var(--panel2);
+    border: 1px solid #333c52;
+    text-decoration: none;
+    color: var(--text);
+    transition: transform .12s, border-color .15s;
+  }
+  .portal-card:hover { transform: translateY(-2px); border-color: var(--accent); }
+  .portal-emoji { font-size: 18px; }
+  .portal-name { font-weight: 700; font-size: 13.5px; }
+  .portal-cta { font-size: 11px; color: var(--accent); }
+  .ref-note {
+    display: none;
+    background: rgba(61,220,151,.1);
+    border: 1px solid rgba(61,220,151,.35);
+    color: #9df0c8;
+    border-radius: 10px;
+    padding: 9px 12px;
+    font-size: 12.5px;
+    margin-bottom: 12px;
+  }
+  .footer {
+    margin-top: 22px;
+    text-align: center;
+    font-size: 11.5px;
+    color: #6d7794;
+    line-height: 1.8;
+  }
+  .footer a { color: #8fa6d8; }
+  .site-nav { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: 8px; }
+  .site-nav a { color: #a8b6d6; text-decoration: none; font-weight: 600; font-size: 12.5px; }
+  .site-nav a:hover { color: var(--accent); }
+</style>
+</head>
+<body>
+
+<!-- ============ INTERACTIVE LOADING SCREEN ============ -->
+<div id="loader" class="loader">
+  <canvas id="loaderCanvas" class="loader-canvas"></canvas>
+  <div class="loader-inner">
+    <div class="loader-logo">
+      <span class="loader-logo-snake">🐍</span>
+      <h1 class="loader-title">Snake <em>&amp;</em> Ladder</h1>
+      <span class="loader-logo-dice">🎲</span>
+    </div>
+
+    <div class="loader-stage">
+      <svg id="loaderLadder" class="loader-ladder" viewBox="0 0 120 120" aria-hidden="true">
+        <line x1="20" y1="108" x2="34" y2="18" stroke="#4cc9f0" stroke-width="4" stroke-linecap="round"/>
+        <line x1="52" y1="108" x2="66" y2="18" stroke="#4cc9f0" stroke-width="4" stroke-linecap="round"/>
+        <g class="ladder-rungs">
+          <line x1="22" y1="94" x2="54" y2="94" stroke="#4cc9f0" stroke-width="3" stroke-linecap="round"/>
+          <line x1="26" y1="80" x2="58" y2="80" stroke="#4cc9f0" stroke-width="3" stroke-linecap="round"/>
+          <line x1="30" y1="66" x2="62" y2="66" stroke="#4cc9f0" stroke-width="3" stroke-linecap="round"/>
+          <line x1="34" y1="52" x2="66" y2="52" stroke="#4cc9f0" stroke-width="3" stroke-linecap="round"/>
+          <line x1="38" y1="38" x2="70" y2="38" stroke="#4cc9f0" stroke-width="3" stroke-linecap="round"/>
+          <line x1="42" y1="24" x2="74" y2="24" stroke="#4cc9f0" stroke-width="3" stroke-linecap="round"/>
+        </g>
+      </svg>
+
+      <div class="loader-dice-wrap">
+        <div id="loaderDice" class="loader-dice">
+          <span class="pip" style="grid-area:1/1"></span><span class="pip" style="grid-area:1/2"></span><span class="pip" style="grid-area:1/3"></span>
+          <span class="pip" style="grid-area:2/1"></span><span class="pip" style="grid-area:2/2"></span><span class="pip" style="grid-area:2/3"></span>
+          <span class="pip" style="grid-area:3/1"></span><span class="pip" style="grid-area:3/2"></span><span class="pip" style="grid-area:3/3"></span>
+        </div>
+      </div>
+
+      <svg id="loaderSnake" class="loader-snake" viewBox="0 0 120 120" aria-hidden="true">
+        <path d="M100 20 C 74 20, 74 44, 96 48 C 118 52, 118 78, 96 80 C 74 82, 74 104, 96 104"
+              fill="none" stroke="#ff7a7a" stroke-width="9" stroke-linecap="round"/>
+        <circle cx="96" cy="104" r="7" fill="#ff9a9a"/>
+        <circle cx="93" cy="102" r="2" fill="#3a1020"/>
+        <circle cx="99" cy="102" r="2" fill="#3a1020"/>
+      </svg>
+    </div>
+
+    <div class="loader-progress">
+      <div class="loader-track"><div id="loaderBar" class="loader-bar"></div></div>
+      <div id="loaderStatus" class="loader-status">Waking up the snakes…</div>
+    </div>
+
+    <div id="loaderTip" class="loader-tip"></div>
+    <button id="loaderSkip" class="loader-skip" type="button">Skip intro ⏭</button>
+  </div>
+</div>
+
+<div class="wrap">
+  <header>
+    <h1>Snake &amp; <span>Ladder</span></h1>
+    <div class="sub">Classic board game — roll the dice, climb the ladders, dodge the snakes.</div>
+  </header>
+
+  <div id="refNote" class="ref-note"></div>
+
+  <div id="adTop" class="ad-slot"></div>
+
+  <div class="layout">
+    <div class="board-shell">
+      <div class="board" id="board">
+        <div class="tokens" id="tokens"></div>
+      </div>
+    </div>
+
+    <aside class="panel">
+      <div class="players" id="playerRows">
+      </div>
+
+      <div class="dice-box">
+        <div class="dice" id="dice">
+          <span class="pip" style="grid-area:1/1"></span><span class="pip" style="grid-area:1/2"></span><span class="pip" style="grid-area:1/3"></span>
+          <span class="pip" style="grid-area:2/1"></span><span class="pip" style="grid-area:2/2"></span><span class="pip" style="grid-area:2/3"></span>
+          <span class="pip" style="grid-area:3/1"></span><span class="pip" style="grid-area:3/2"></span><span class="pip" style="grid-area:3/3"></span>
+        </div>
+        <div class="dice-label" id="diceLabel">Roll to play</div>
+      </div>
+
+      <button id="roll">Roll Dice</button>
+      <button class="ghost" id="restart">Restart Game</button>
+      <button class="ghost" id="addPlayer">Add Player</button>
+
+      <div class="msg" id="msg">Player 1, you're up! Roll the dice to begin.</div>
+
+      <div class="legend">
+        <span class="l ladder"></span>Ladder &nbsp; <span class="l snake"></span>Snake
+      </div>
+
+      <div class="rules">
+        <b style="color:var(--text)">How to play</b>
+        <ul>
+          <li>Land on a ladder base to climb to its top.</li>
+          <li>Land on a snake head to slide down its tail.</li>
+          <li>Need an exact <b>100</b> to win — overshooting ends your turn.</li>
+          <li>Three 6s in a row sends you back to square 1!</li>
+        </ul>
+      </div>
+
+      <div id="adSide" class="ad-slot"></div>
+    </aside>
+  </div>
+
+  <div id="adFoot" class="ad-slot"></div>
+
+  <section class="promo-section" id="more-games">
+    <h2 class="promo-title">🎉 Invite friends &amp; find us elsewhere</h2>
+    <p class="promo-sub">Share the game with your friends — every player who joins through your link is credited to you. Or find Snake &amp; Ladder on the sites below.</p>
+    <div id="shareRow" class="share-row"></div>
+    <div id="portalRow" class="portal-row"></div>
+  </section>
+
+  <footer class="footer">
+    <nav class="site-nav">
+      <a href="#more-games">Share</a>
+      <a href="rules.js">Rules source</a>
+      <a href="README.md">About</a>
+      <a href="#" id="promoLink">My invite link</a>
+    </nav>
+    <div>Snake &amp; Ladder — built as a single-page browser game. Playable offline, no signup needed.</div>
+  </footer>
+</div>
+
+<script src="rules.js"></script>
+<script src="loader.js"></script>
+<script src="ads.js"></script>
+<script>
+(function () {
+  "use strict";
+
+  const boardEl = document.getElementById("board");
+  const tokensEl = document.getElementById("tokens");
+  const diceEl = document.getElementById("dice");
+  const diceLabel = document.getElementById("diceLabel");
+  const rollBtn = document.getElementById("roll");
+  const restartBtn = document.getElementById("restart");
+  const addBtn = document.getElementById("addPlayer");
+  const msgEl = document.getElementById("msg");
+
+  const PLAYER_COLORS = ["p1", "p2", "p3", "p4"];
+
+  const Rules = window.SnakeLadderRules;
+  const TOTAL = Rules.TOTAL;
+  const COLS = Rules.COLS;
+  const JUMPS = Rules.JUMPS;
+
+  let players = [];
+  let turn = 0;
+  let rolling = false;
+  let sixes = 0;
+  let winner = -1;
+
+  /* ---------- board geometry ---------- */
+  function coord(n) { return Rules.coord(n); }
+  function buildBoard() {
+    boardEl.querySelectorAll(".cell").forEach(c => c.remove());
+    let linksEl = boardEl.querySelector(".links");
+    if (!linksEl) {
+      linksEl = document.createElement("div");
+      linksEl.className = "links";
+      boardEl.insertBefore(linksEl, tokensEl);
+    }
+    linksEl.innerHTML = "";
+    for (let n = 1; n <= TOTAL; n++) {
+      const { row, col } = coord(n);
+      const el = document.createElement("div");      el.className = "cell" + ((row + col) % 2 ? " light" : "");
+      if (n === 1) el.classList.add("start");
+      if (n === TOTAL) el.classList.add("finish");
+      el.textContent = n;
+      el.style.gridRow = String(COLS - row);
+      el.style.gridColumn = String(col + 1);
+      el.dataset.n = n;
+      boardEl.appendChild(el);
+    }
+
+    // Draw ladders/snakes using measured cell centers so lines line up exactly.
+    const cr = linksEl.getBoundingClientRect();
+    if (!cr.width || !cr.height) return;
+    const center = (n) => {
+      const c = boardEl.querySelector(`.cell[data-n="${n}"]`);
+      const r = c.getBoundingClientRect();
+      return {
+        x: ((r.left + r.width / 2) - cr.left) / cr.width * 100,
+        y: ((r.top + r.height / 2) - cr.top) / cr.height * 100
+      };
+    };
+    Object.keys(JUMPS).forEach((from) => {
+      const to = JUMPS[from];
+      const a = center(Number(from)), b = center(to);
+      const up = to > Number(from);
+      const link = document.createElement("div");
+      link.className = "link";
+      link.innerHTML = linkSVG(a, b, up);
+      linksEl.appendChild(link);
+    });
+  }
+
+  function linkSVG(a, b, up) {
+    const color = up ? "#4cc9f0" : "#ff7a7a";
+    if (up) {
+      // ladder: straight rungs
+      const d = `M ${a.x} ${a.y} L ${b.x} ${b.y}`;
+      const rungs = [];
+      const steps = 5;
+      for (let i = 1; i < steps; i++) {
+        const t = i / steps;
+        const x = a.x + (b.x - a.x) * t;
+        const y = a.y + (b.y - a.y) * t;
+        const dx = (b.x - a.x) * 0.09, dy = (b.y - a.y) * 0.09;
+        rungs.push(`<line x1="${x - dx}" y1="${y - dy}" x2="${x + dx}" y2="${y + dy}" stroke="${color}" stroke-width="1.6" stroke-linecap="round" opacity="0.9"/>`);
+      }
+      return `<svg viewBox="0 0 100 100" preserveAspectRatio="none">
+        <line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}" stroke="${color}" stroke-width="1.8" opacity="0.85"/>
+        ${rungs.join("")}
+        <circle cx="${a.x}" cy="${a.y}" r="2.2" fill="${color}"/>
+        <circle cx="${b.x}" cy="${b.y}" r="2.2" fill="${color}"/>
+      </svg>`;
+    }
+    // snake: S-shaped body
+    const mx = (a.x + b.x) / 2;
+    const my = (a.y + b.y) / 2;
+    const dx = b.x - a.x, dy = b.y - a.y;
+    const len = Math.hypot(dx, dy) || 1;
+    const nx = -dy / len, ny = dx / len;          // unit normal
+    const bow = Math.min(9, len * 0.28);           // how far the body bends
+    const w = 5;                                    // half-width of the wave
+    const q1 = { x: mx + nx * bow, y: my + ny * bow };
+    const q2 = { x: mx - nx * bow, y: my - ny * bow };
+    const d = `M ${a.x} ${a.y} C ${q1.x} ${q1.y} ${q2.x} ${q2.y} ${b.x} ${b.y}`;
+    // little fins along the body
+    const fins = [];
+    for (let i = 1; i < 6; i++) {
+      const t = i / 6;
+      const px = a.x + (b.x - a.x) * t, py = a.y + (b.y - a.y) * t;
+      const s = (i % 2 ? 1 : -1) * w;
+      fins.push(`<circle cx="${(px + nx * s).toFixed(2)}" cy="${(py + ny * s).toFixed(2)}" r="1.1" fill="${color}" opacity="0.8"/>`);
+    }
+    return `<svg viewBox="0 0 100 100" preserveAspectRatio="none">
+      <path d="${d}" fill="none" stroke="${color}" stroke-width="3.2" stroke-linecap="round" opacity="0.92"/>
+      ${fins.join("")}
+      <circle cx="${b.x}" cy="${b.y}" r="2.8" fill="${color}"/>
+      <circle cx="${a.x}" cy="${a.y}" r="1.8" fill="${color}" opacity="0.7"/>
+    </svg>`;
+  }
+
+  /* ---------- rendering ---------- */
+  function renderTokens() {
+    players.forEach((p, i) => {
+      const el = document.getElementById("t" + (i + 1));
+      if (!el) return;
+      el.className = "token " + PLAYER_COLORS[i % PLAYER_COLORS.length];
+      el.textContent = String(i + 1);
+      if (p.pos === 0) {
+        el.classList.add("off");
+        return;
+      }
+      el.classList.remove("off");
+      const c = boardEl.querySelector(`.cell[data-n="${p.pos}"]`);
+      const tr = tokensEl.getBoundingClientRect();
+      const cr = c ? c.getBoundingClientRect() : tr;
+      const bx = ((cr.left + cr.width / 2) - tr.left) / tr.width;
+      const by = ((cr.top + cr.height / 2) - tr.top) / tr.height;
+      const offset = (i % 2) * 2.4; // nudge so stacked tokens are both visible
+      el.style.left = `calc(${(bx * 100).toFixed(3)}% + ${offset}%)`;
+      el.style.top = `calc(${(by * 100).toFixed(3)}% + ${offset}%)`;
+    });
+  }
+
+  function buildPlayerRows() {
+    const box = document.getElementById("playerRows");
+    box.innerHTML = "";
+    for (let i = 0; i < 4; i++) {
+      const row = document.createElement("div");
+      row.className = "player" + (i === 0 ? " active" : "");
+      row.id = "row" + (i + 1);
+      row.innerHTML = `<span class="dot ${PLAYER_COLORS[i]}"></span>
+        <span class="pname">Player ${i + 1}</span>
+        <span class="pos" id="pos${i + 1}">at 0</span>`;
+      box.appendChild(row);
+    }
+  }
+
+  function renderPanels() {
+    players.forEach((p, i) => {
+      const row = document.getElementById("row" + (i + 1));
+      if (!row) return;
+      row.style.display = "";
+      row.classList.toggle("active", i === turn && winner === -1);
+      row.querySelector(".pname").textContent = "Player " + (i + 1);
+      document.getElementById("pos" + (i + 1)).textContent = "at " + p.pos;
+    });
+    for (let i = players.length; i < 4; i++) {
+      const row = document.getElementById("row" + (i + 1));
+      if (row) row.style.display = "none";
+    }
+    addBtn.disabled = players.length >= 4;
+  }
+
+  function setDice(value) {
+    const pips = diceEl.querySelectorAll(".pip");
+    const map = {
+      1: [4], 2: [0, 8], 3: [0, 4, 8], 4: [0, 2, 6, 8], 5: [0, 2, 4, 6, 8], 6: [0, 2, 3, 5, 6, 8]
+    };
+    pips.forEach((p, i) => p.classList.toggle("on", (map[value] || []).includes(i)));
+  }
+
+  function msg(html) { msgEl.innerHTML = html; }
+
+  /* ---------- game logic ---------- */
+  function buildTokens() {
+    tokensEl.innerHTML = "";
+    for (let i = 0; i < 4; i++) {
+      const el = document.createElement("div");
+      el.className = "token off";
+      el.id = "t" + (i + 1);
+      el.textContent = String(i + 1);
+      tokensEl.appendChild(el);
+    }
+  }
+
+  function newGame(count) {
+    players = [];
+    for (let i = 0; i < count; i++) players.push({ pos: 0 });
+    turn = 0;
+    sixes = 0;
+    winner = -1;
+    rolling = false;
+    rollBtn.disabled = false;
+    setDice(1);
+    diceLabel.textContent = "Roll to play";
+    buildTokens();
+    buildPlayerRows();
+    buildBoard();
+    renderTokens();
+    renderPanels();
+    msg(`<b>Player 1</b>, you're up! Roll the dice to begin.`);
+  }
+
+  function startTurn() {
+    msg(`<b>Player ${turn + 1}</b> — roll the dice.`);
+    rollBtn.disabled = false;
+    diceLabel.textContent = `Player ${turn + 1}'s turn`;
+  }
+
+  function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+  async function roll() {
+    if (rolling || winner !== -1) return;
+    rolling = true;
+    rollBtn.disabled = true;
+    diceEl.classList.add("rolling");
+    diceLabel.textContent = "Rolling…";
+
+    const value = 1 + Math.floor(Math.random() * 6);
+    // brief shuffle animation
+    for (let i = 0; i < 6; i++) {
+      setDice(1 + Math.floor(Math.random() * 6));
+      await sleep(90);
+    }
+    diceEl.classList.remove("rolling");
+    setDice(value);
+
+    const p = players[turn];
+
+    // Rules come from the shared, unit-tested rules.js module.
+    const res = Rules.step(p, value, sixes);
+
+    if (res.tripleSix) {
+      sixes = res.sixes;
+      p.pos = res.pos;
+      renderTokens();
+      renderPanels();
+      flashCell(res.pos);
+      msg(`<b>Player ${turn + 1}</b> rolled three 6s! Back to the start.`);
+      await sleep(700);
+      nextTurn();
+      return;
+    }
+
+    if (res.overshoot) {
+      msg(`<b>Player ${turn + 1}</b> rolled ${value} — needs an exact ${TOTAL}. Turn passes.`);
+      await sleep(700);
+      nextTurn();
+      return;
+    }
+
+    // walk the token one square at a time
+    for (let i = 0; i < value; i++) {
+      p.pos++;
+      renderTokens();
+      renderPanels();
+      await sleep(180);
+    }
+
+    // resolve ladder / snake jumps
+    let jumped = false;
+    for (const jump of res.jumps) {
+      const isLadder = jump.to > jump.from;
+      msg(isLadder
+        ? `<b>Player ${turn + 1}</b> climbed the ladder from ${jump.from} to ${jump.to}!`
+        : `<b>Player ${turn + 1}</b> hit a snake at ${jump.from} — sliding to ${jump.to}!`);
+      flashCell(jump.from);
+      await sleep(550);
+      p.pos = jump.to;
+      renderTokens();
+      renderPanels();
+      jumped = true;
+      await sleep(550);
+    }
+
+    if (!jumped) {
+      msg(`<b>Player ${turn + 1}</b> landed on ${p.pos}.`);
+      await sleep(450);
+    }
+
+    if (res.won) {
+      winner = turn;
+      sixes = res.sixes;
+      msg(`🎉 <b>Player ${turn + 1}</b> wins! Reaching square ${TOTAL}.`);
+      diceLabel.textContent = "Game over";
+      renderPanels();
+      rolling = false;
+      return;
+    }
+
+    sixes = res.sixes;
+
+    if (res.bonus) {
+      msg(`<b>Player ${turn + 1}</b> rolled a 6 — bonus turn!`);
+      rolling = false;
+      rollBtn.disabled = false;
+      renderPanels();
+      return;
+    }
+
+    await sleep(300);
+    nextTurn();
+  }
+
+  function nextTurn() {
+    turn = (turn + 1) % players.length;
+    sixes = 0;
+    rolling = false;
+    renderPanels();
+    startTurn();
+  }
+
+  function flashCell(n) {
+    const el = boardEl.querySelector(`.cell[data-n="${n}"]`);
+    if (!el) return;
+    el.classList.add("hit");
+    setTimeout(() => el.classList.remove("hit"), 550);
+  }
+
+  rollBtn.addEventListener("click", roll);
+  restartBtn.addEventListener("click", () => newGame(players.length));
+  addBtn.addEventListener("click", () => {
+    if (players.length >= 4) return;
+    newGame(players.length + 1);
+  });
+  let resizeTimer;
+  window.addEventListener("resize", () => {
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => { buildBoard(); renderTokens(); }, 120);
+  });
+
+  // "My invite link" in the footer copies the referral URL.
+  const promoLink = document.getElementById("promoLink");
+  if (promoLink) {
+    promoLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      if (window.GamePromo) {
+        const link = window.GamePromo.referralLink();
+        if (navigator.clipboard) {
+          navigator.clipboard.writeText(link).then(() => {
+            promoLink.textContent = "Invite link copied! ✅";
+            setTimeout(() => (promoLink.textContent = "My invite link"), 1800);
+          });
+        }
+      }
+    });
+  }
+
+  // Staged boot: report progress to the loader while the board is built.
+  const L = window.Loader;
+  function boot() {
+    if (L) L.progress(35, "Loading the rules…");
+    newGame(2);
+    if (L) {
+      L.progress(70, "Laying out the board…");
+      setTimeout(() => L.progress(90, "Rolling the dice…"), 180);
+      setTimeout(() => L.done(), 620);
+    }
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", boot);
+  } else {
+    boot();
+  }
+})();
+</script>
+</body>
+</html>
