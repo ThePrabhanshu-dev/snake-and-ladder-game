@@ -1,4 +1,4 @@
-﻿/* Interactive loading screen for the Snake & Ladder game.
+/* Interactive loading screen for the Snake & Ladder game.
    Shows a live board build-up, a rolling dice and a progress bar while the
    game assets/rules finish loading. Hides itself once the game is ready. */
 (function () {
@@ -17,7 +17,7 @@
   const canvas = document.getElementById("loaderCanvas");
 
   const TIPS = [
-    "Roll a 6 to roll again â€” that's a free extra turn.",
+    "Roll a 6 to roll again — that's a free extra turn.",
     "Land on a ladder base to climb straight to the top.",
     "Snakes slide you down, so land past them, not on them.",
     "You need an exact 100 to win. Don't overshoot!",

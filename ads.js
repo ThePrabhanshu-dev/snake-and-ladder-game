@@ -1,4 +1,4 @@
-﻿/* Ad + cross-promotion manager for the Snake & Ladder game.
+/* Ad + cross-promotion manager for the Snake & Ladder game.
  *
  * Two jobs:
  *  1. Render ad slots. If a Google AdSense publisher id is configured
@@ -21,20 +21,22 @@
       side: "0000000000",
       foot: "0000000000"
     },
-    // Sites that list browser games â€” used by the "Play us there" strip.
+    // Sites that list browser games — used by the "Play us there" strip.
     portals: [
-      { name: "CrazyGames", url: "https://www.crazygames.com/", emoji: "ðŸŽ®" },
-      { name: "Poki", url: "https://poki.com/", emoji: "ðŸ•¹ï¸" },
-      { name: "itch.io", url: "https://itch.io/games", emoji: "ðŸ§©" },
-      { name: "Coolmath Games", url: "https://www.coolmathgames.com/", emoji: "âž—" },
-      { name: "Addicting Games", url: "https://www.addictinggames.com/", emoji: "ðŸ”¥" }
+      { name: "CrazyGames", url: "https://www.crazygames.com/", emoji: "🎮" },
+      { name: "Poki", url: "https://poki.com/", emoji: "🕹️" },
+      { name: "itch.io", url: "https://itch.io/games", emoji: "🧩" },
+      { name: "Coolmath Games", url: "https://www.coolmathgames.com/", emoji: "➗" },
+      { name: "Addicting Games", url: "https://www.addictinggames.com/", emoji: "🔥" }
     ]
   };
 
-  var SHARE_TEXT = "Snake & Ladder â€” classic board game, play it in your browser! ðŸðŸŽ²";
+  var SHARE_TEXT = "Snake & Ladder — classic board game, play it in your browser! 🐍🎲";
+  // Always share/point at the game itself, whatever page the visitor is on.
+  var GAME_PATH = "index.html";
   var SHARE_URL = (location.protocol === "file:")
     ? "https://theprabhanshu-dev.github.io/snake-and-ladder-game/"
-    : location.origin + location.pathname;
+    : new URL(GAME_PATH, location.href.split("#")[0]).toString();
 
   /* ---------- helpers ---------- */
   function el(tag, cls, html) {
@@ -74,13 +76,13 @@
       return;
     }
 
-    // House ad / promo placeholder â€” drives players to the referral link
+    // House ad / promo placeholder — drives players to the referral link
     // and to the other game portals.
     var box = el("div", "house-ad");
     box.appendChild(el("div", "house-ad-tag", label || "Sponsored"));
     box.appendChild(el("div", "house-ad-title", "Enjoying Snake &amp; Ladder?"));
     box.appendChild(el("div", "house-ad-text",
-      "Invite a friend with your personal link â€” every friend who plays is tracked, " +
+      "Invite a friend with your personal link — every friend who plays is tracked, " +
       "and more games are coming soon."));
     var row = el("div", "house-ad-actions");
     var copy = el("button", "ad-btn primary", "Copy my invite link");
@@ -99,7 +101,7 @@
     var link = referralLink();
     var done = function () {
       var old = btn.textContent;
-      btn.textContent = "Link copied! âœ…";
+      btn.textContent = "Link copied! ✅";
       btn.classList.add("copied");
       setTimeout(function () { btn.textContent = old; btn.classList.remove("copied"); }, 1800);
     };
@@ -140,11 +142,11 @@
     if (!container) return;
     container.innerHTML = "";
     var items = [
-      { label: "WhatsApp", emoji: "ðŸ’¬", url: "https://wa.me/?text=" + encodeURIComponent(SHARE_TEXT + " " + SHARE_URL) },
-      { label: "Facebook", emoji: "ðŸ‘", url: "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(SHARE_URL) },
-      { label: "X", emoji: "ð•", url: "https://twitter.com/intent/tweet?text=" + encodeURIComponent(SHARE_TEXT) + "&url=" + encodeURIComponent(SHARE_URL) },
-      { label: "Reddit", emoji: "ðŸ¤–", url: "https://www.reddit.com/submit?url=" + encodeURIComponent(SHARE_URL) + "&title=" + encodeURIComponent(SHARE_TEXT) },
-      { label: "Telegram", emoji: "âœˆï¸", url: "https://t.me/share/url?url=" + encodeURIComponent(SHARE_URL) + "&text=" + encodeURIComponent(SHARE_TEXT) }
+      { label: "WhatsApp", emoji: "💬", url: "https://wa.me/?text=" + encodeURIComponent(SHARE_TEXT + " " + SHARE_URL) },
+      { label: "Facebook", emoji: "👍", url: "https://www.facebook.com/sharer/sharer.php?u=" + encodeURIComponent(SHARE_URL) },
+      { label: "X", emoji: "𝕏", url: "https://twitter.com/intent/tweet?text=" + encodeURIComponent(SHARE_TEXT) + "&url=" + encodeURIComponent(SHARE_URL) },
+      { label: "Reddit", emoji: "🤖", url: "https://www.reddit.com/submit?url=" + encodeURIComponent(SHARE_URL) + "&title=" + encodeURIComponent(SHARE_TEXT) },
+      { label: "Telegram", emoji: "✈️", url: "https://t.me/share/url?url=" + encodeURIComponent(SHARE_URL) + "&text=" + encodeURIComponent(SHARE_TEXT) }
     ];
     items.forEach(function (it) {
       var a = el("a", "share-btn");
@@ -167,7 +169,7 @@
       a.rel = "noopener sponsored";
       a.innerHTML = '<span class="portal-emoji">' + p.emoji + "</span>" +
         '<span class="portal-name">' + p.name + "</span>" +
-        '<span class="portal-cta">Find us there â†’</span>';
+        '<span class="portal-cta">Find us there →</span>';
       container.appendChild(a);
     });
   }
@@ -192,9 +194,23 @@
   /* ---------- boot ---------- */
   function init() {
     loadAdSense();
+
+    // Any element with data-ad="<slotName>" is treated as an ad slot, so extra
+    // pages (like play.html) can declare their own slots without changes here.
+    var declared = document.querySelectorAll("[data-ad]");
+    for (var i = 0; i < declared.length; i++) {
+      var node = declared[i];
+      var name = node.getAttribute("data-ad");
+      var label = node.getAttribute("data-ad-label") || "Sponsored";
+      if (node.id !== "adTop" && node.id !== "adSide" && node.id !== "adFoot") {
+        renderAd(node, name, label);
+      }
+    }
+
     renderAd(document.getElementById("adTop"), "top", "Sponsored");
     renderAd(document.getElementById("adSide"), "side", "Sponsored");
     renderAd(document.getElementById("adFoot"), "foot", "Sponsored");
+
     buildShare(document.getElementById("shareRow"));
     buildPortals(document.getElementById("portalRow"));
 
@@ -204,7 +220,7 @@
       try { localStorage.setItem("snl_ref", ref); } catch (e) {}
       var note = document.getElementById("refNote");
       if (note) {
-        note.textContent = "Welcome! You were invited by â€œ" + ref + "â€ â€” enjoy the game! ðŸŽ‰";
+        note.textContent = "Welcome! You were invited by “" + ref + "” — enjoy the game! 🎉";
         note.style.display = "block";
       }
     }
