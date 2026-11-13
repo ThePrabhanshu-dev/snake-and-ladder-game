@@ -81,7 +81,7 @@ Add this to any page on a partner site:
 
 ```html
 <div class="snl-game-embed" data-ref="partnerName"></div>
-<script src="https://theprabhanshu-dev.github.io/snake-and-ladder-game/embed.js" async></script>
+<script src="https://theprabhanshu-dev.github.io/snake-and-ladder-game/embed.js?v=1.0.1" async></script>
 ```
 
 Use `data-variant="button"` for a small button instead of the full card. Every click is tagged with
