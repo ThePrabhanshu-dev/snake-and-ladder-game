@@ -116,6 +116,23 @@ no game can loop forever or push a pawn outside the 0–100 range.
 43 passed, 0 failed
 ```
 
+## 🌐 Free hosting (Cloudflare Pages)
+
+The game is also published free on **Cloudflare Pages** (unlimited bandwidth, no cost):
+
+**https://snake-and-ladder-2q0.pages.dev/**
+
+Deploy an update with one command:
+
+```bash
+npx wrangler login   # one-time browser auth (only needed once)
+node deploy.js       # stages the site files and uploads them
+```
+
+`deploy.js` copies only the site assets into a temp folder (never `.git`, tests or scripts)
+and runs `wrangler pages deploy` against the `snake-and-ladder` project on branch `main`.
+A custom domain can be attached in the Cloudflare dashboard — SSL is issued free and auto-renewed.
+
 ## Extending
 
 Board layouts live in one place — the `JUMPS` map in `rules.js`:
@@ -143,3 +160,6 @@ git push origin main
 
 Pages rebuilds automatically (~1 minute). Check the deployment at
 **Repo → Settings → Pages**.
+
+The same files are mirrored to Cloudflare Pages with `node deploy.js` (see
+[Free hosting](#-free-hosting-cloudflare-pages)).
