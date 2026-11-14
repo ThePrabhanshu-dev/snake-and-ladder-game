@@ -52,6 +52,11 @@ Serving over `http://` is needed so the browser loads the sibling `.js` files.
 | `ads.js` | Ad slots (AdSense-ready) + share/referral/portal promo system |
 | `embed.js` | Drop-in widget for embedding the game on other websites |
 | `play.html` | Landing page for external traffic (ad slots, FAQ, CTA) |
+| `how-to-play.html` | Rules + strategy guide page (SEO content, AdSense approval) |
+| `about.html`, `contact.html`, `privacy.html` | Required compliance pages for AdSense |
+| `ads.txt` | Authorised sellers list for the domain (auto-generated on deploy) |
+| `deploy.js` | One-command free deploy to Cloudflare Pages |
+| `add-domain.js` | Attach/remove a custom domain on the Pages project |
 | `test.js` | Node test suite for `rules.js` |
 | `og-image.svg`, `favicon.svg`, `manifest.webmanifest` | Social preview, icon, PWA manifest |
 | `robots.txt`, `sitemap.xml` | Search-engine discovery |
@@ -63,8 +68,24 @@ Serving over `http://` is needed so the browser loads the sibling `.js` files.
 > AdSense requires a **custom domain** — a `*.pages.dev` or `*.github.io` subdomain is not approved.
 > Buy a domain, point it at Cloudflare Pages (free SSL) and use that URL in AdSense.
 
-1. Create a free [Google AdSense](https://www.google.com/adsense/start/) account and add your domain.
-2. Open [`ads.js`](ads.js) and set your publisher id:
+**Step A — get a domain and attach it**
+
+Buy a `.com` (≈ ₹900/yr) or a cheaper `.fun` / `.games` / `.app` (₹250–600/yr) at
+[Cloudflare Registrar](https://www.cloudflare.com/products/registrar/) (at-cost, no markup) or any
+registrar, then point the nameservers at Cloudflare and attach it to the Pages project:
+
+```bash
+node add-domain.js yourdomain.com          # attach
+node add-domain.js --remove yourdomain.com # detach
+```
+
+**Step B — create the AdSense account**
+
+1. Sign up at [adsense.google.com/start](https://www.google.com/adsense/start/) with your Google account.
+2. Choose **"Websites"** as the site type, enter `https://yourdomain.com` and confirm.
+3. Turn on **Auto ads** (or create manual units for the `top` / `side` / `foot` slots) and copy the
+   three ad-slot IDs.
+4. Open [`ads.js`](ads.js) and set your publisher id and slot ids:
 
 ```js
 var CONFIG = {
@@ -73,12 +94,14 @@ var CONFIG = {
   ...};
 ```
 
-3. Deploy — the house-ad placeholders are replaced automatically by live AdSense units and
+5. Deploy — the house-ad placeholders are replaced automatically by live AdSense units and
    [`ads.txt`](ads.txt) is regenerated with your publisher id automatically:
 
 ```bash
 node deploy.js
 ```
+
+6. In AdSense → **Sites**, request review for your domain. Approval usually takes 1–14 days.
 
 Three slots exist: `top` (above the board), `side` (in the sidebar), `foot` (below the board). `play.html` adds more via `data-ad="..."`.
 
