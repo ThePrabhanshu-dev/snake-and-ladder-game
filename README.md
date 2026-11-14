@@ -57,6 +57,7 @@ Serving over `http://` is needed so the browser loads the sibling `.js` files.
 | `ads.txt` | Authorised sellers list for the domain (auto-generated on deploy) |
 | `deploy.js` | One-command free deploy to Cloudflare Pages |
 | `set-adsense.js` | Wire an AdSense publisher id + slot ids into `ads.js` |
+| `verify-adsense.js` | Check that the live site really serves the AdSense setup |
 | `add-domain.js` | Attach/remove a custom domain on the Pages project |
 | `test.js` | Node test suite for `rules.js` |
 | `og-image.svg`, `favicon.svg`, `manifest.webmanifest` | Social preview, icon, PWA manifest |
@@ -100,7 +101,14 @@ node set-adsense.js --client ca-pub-XXXXXXXXXXXXXXXX --slots top=111,side=222,fo
 node deploy.js
 ```
 
-6. In AdSense → **Sites**, request review for your domain. Approval usually takes 1–14 days.
+6. Verify the live site is really serving the ads:
+
+```bash
+node verify-adsense.js            # checks the pages.dev site
+node verify-adsense.js https://yourdomain.com
+```
+
+7. In AdSense → **Sites**, request review for your domain. Approval usually takes 1–14 days.
 
 Three slots exist: `top` (above the board), `side` (in the sidebar), `foot` (below the board). `play.html` adds more via `data-ad="..."`.
 
