@@ -5,7 +5,7 @@ User-agent: *
 Allow: /
 
 # Static assets and the game source are not useful as search results.
-Disallow: /rules.js
+# (rules.js is linked from the About page as the documented rule set, so it stays crawlable.)
 Disallow: /ads.js
 Disallow: /loader.js
 Disallow: /embed.js
