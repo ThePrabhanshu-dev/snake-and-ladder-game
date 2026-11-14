@@ -18,6 +18,7 @@ const BRANCH = process.env.DEPLOY_BRANCH || "main";
 const SITE_FILES = [
   "index.html",
   "play.html",
+  "how-to-play.html",
   "about.html",
   "contact.html",
   "privacy.html",

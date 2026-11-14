@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>How to Play Snake &amp; Ladder — Rules, Strategy &amp; Winning Tips</title>
+<meta name="description" content="Learn how to play Snake &amp; Ladder: the exact rules, the best openings, ladder and snake positions on the 10x10 board, and tips to win more often." />
+<meta name="robots" content="index, follow" />
+<link rel="canonical" href="https://theprabhanshu-dev.github.io/snake-and-ladder-game/how-to-play.html" />
+<meta property="og:type" content="article" />
+<meta property="og:title" content="How to Play Snake &amp; Ladder — Rules &amp; Winning Tips" />
+<meta property="og:description" content="The exact rules of Snake &amp; Ladder plus the openings and board positions that decide the winner." />
+<meta property="og:image" content="https://theprabhanshu-dev.github.io/snake-and-ladder-game/og-image.svg" />
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<style>
+  :root { --bg:#0e1219; --panel:#181d28; --accent:#5b8cff; --text:#e8ecf5; --muted:#8b93a7; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:radial-gradient(circle at 25% 0%, #1a2336 0%, var(--bg) 55%);
+    color:var(--text); font-family:"Segoe UI",system-ui,-apple-system,sans-serif; line-height:1.7; }
+  .wrap { max-width:860px; margin:0 auto; padding:26px 16px 60px; }
+  h1 { font-size:clamp(24px,4.5vw,34px); margin:0 0 6px; }
+  h1 span { color:var(--accent); }
+  h2 { font-size:19px; margin:28px 0 8px; }
+  h3 { font-size:15.5px; margin:18px 0 4px; color:var(--text); }
+  p, li { color:var(--muted); font-size:14.5px; }
+  ul, ol { padding-left:20px; }
+  li { margin:5px 0; }
+  a { color:var(--accent); }
+  .card { background:var(--panel); border:1px solid #2b3244; border-radius:14px; padding:20px 22px; }
+  .tag { display:inline-block; font-size:9.5px; letter-spacing:1.4px; text-transform:uppercase; color:#7d8aa8;
+    border:1px solid #333d58; border-radius:99px; padding:2px 9px; margin-bottom:8px; }
+  table { width:100%; border-collapse:collapse; margin:12px 0; font-size:14px; }
+  th, td { text-align:left; padding:9px 10px; border-bottom:1px solid #262d3d; }
+  th { color:var(--text); font-size:13px; text-transform:uppercase; letter-spacing:.6px; }
+  td { color:var(--muted); }
+  td b { color:var(--text); }
+  .up { color:#5fd39a; font-weight:700; }
+  .down { color:#ff7a8a; font-weight:700; }
+  .cta { display:inline-block; margin-top:16px; padding:12px 22px; border-radius:10px; text-decoration:none;
+    background:linear-gradient(180deg,#6b96ff,#4472e6); color:#fff; font-weight:700; font-size:15px; }
+  .faq details { border-bottom:1px solid #262d3d; padding:12px 0; }
+  .faq summary { cursor:pointer; font-weight:600; font-size:14.5px; color:var(--text); }
+  .faq p { margin:8px 0 0; }
+  footer { text-align:center; color:#6d7794; font-size:12px; margin-top:30px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>How to Play <span>Snake &amp; Ladder</span></h1>
+  <p style="color:#6d7794;font-size:13px">Rules, board map and the openings that win games · Last updated: 14 November 2026</p>
+
+  <div class="card">
+    <p><strong>Snake &amp; Ladder</strong> (also known as <em>Chutes and Ladders</em> or <em>Vikram Bates</em>)
+    is a race between 2 to 4 players on a 10×10 board numbered 1 to 100. Everyone rolls the same die,
+    moves their pawn, and the ladder and snake squares decide how far each player really travels.
+    The first player to land on exactly <strong>100</strong> wins.</p>
+
+    <h2>The rules in short</h2>
+    <ol>
+      <li>Roll the die and move your pawn that many squares forward.</li>
+      <li>Land on the bottom of a <b>ladder</b> and you climb to its top, instantly.</li>
+      <li>Land on the head of a <b>snake</b> and you slide down to its tail, instantly.</li>
+      <li>Roll a <b>6</b> and you roll again — same turn.</li>
+      <li>Roll <b>three 6s in a row</b> and you are sent back to square 1 and lose the turn.</li>
+      <li>You must land on <b>exactly 100</b>. If your roll would take you past 100, you do not move and
+          the next player goes.</li>
+    </ol>
+
+    <h2>Every ladder and snake on the board</h2>
+    <p>The board this game uses is the traditional layout — 9 ladders and 6 snakes. Ladders take you
+    up, snakes pull you back down:</p>
+    <table>
+      <thead><tr><th>From</th><th>To</th><th>Type</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td>38</td><td class="up">Ladder ↑ 37 squares</td></tr>
+        <tr><td>4</td><td>14</td><td class="up">Ladder ↑ 10 squares</td></tr>
+        <tr><td>9</td><td>31</td><td class="up">Ladder ↑ 22 squares</td></tr>
+        <tr><td>16</td><td>6</td><td class="down">Snake ↓ 10 squares</td></tr>
+        <tr><td>21</td><td>42</td><td class="up">Ladder ↑ 21 squares</td></tr>
+        <tr><td>28</td><td>84</td><td class="up">Ladder ↑ 56 squares</td></tr>
+        <tr><td>36</td><td>44</td><td class="up">Ladder ↑ 8 squares</td></tr>
+        <tr><td>51</td><td>67</td><td class="up">Ladder ↑ 16 squares</td></tr>
+        <tr><td>62</td><td>19</td><td class="down">Snake ↓ 43 squares</td></tr>
+        <tr><td>64</td><td>60</td><td class="down">Snake ↓ 4 squares</td></tr>
+        <tr><td>71</td><td>91</td><td class="up">Ladder ↑ 20 squares</td></tr>
+        <tr><td>78</td><td>98</td><td class="up">Ladder ↑ 20 squares</td></tr>
+        <tr><td>87</td><td>24</td><td class="down">Snake ↓ 63 squares</td></tr>
+        <tr><td>93</td><td>73</td><td class="down">Snake ↓ 20 squares</td></tr>
+        <tr><td>95</td><td>75</td><td class="down">Snake ↓ 20 squares</td></tr>
+      </tbody>
+    </table>
+
+    <h2>Strategy: how to win more often</h2>
+    <h3>1. The opening 1 → 38 is the best move on the board</h3>
+    <p>Landing on square 1 launches you to 38 — a jump of 37 squares, the biggest ladder start on the
+    board. Square 9 → 31 (+22) and square 21 → 42 (+21) are the next best. Because the jump resolves
+    instantly, the ladder effectively doubles your travel on that turn, so chasing 1s early is worth
+    far more than it looks.</p>
+
+    <h3>2. The 28 → 84 ladder is the game within the game</h3>
+    <p>A jump of 56 squares from 28 to 84 can hand you the win outright. Landing on 28 puts you in
+    range of the finish, and it is the single most valuable square to own. If you are around 22–27,
+    try to set up a roll that lands exactly on 28.</p>
+
+    <h3>3. Treat 87 as the real danger square</h3>
+    <p>The snake at 87 drags you back 63 squares — the biggest drop on the board — straight down to 24.
+    Landing there can undo half a game. If you are sitting in the 80s, your priority is to leave that
+    window immediately, even with a small roll.</p>
+
+    <h3>4. Square 78 → 98 is your back door to the finish</h3>
+    <p>Landing on 78 fires you to 98, one roll away from victory — you then need an exact <b>2</b> to
+    hit 100. Because you must land on exactly 100, treat 98 as a loaded dice rather than a milestone.</p>
+
+    <h3>5. Snakes at the top are traps, not bad luck</h3>
+    <p>93 → 73 and 95 → 75 both send you back 20 squares, and 62 → 19 sends you back 43. When you are
+    ahead, avoid ending your turn on 61–64 and 92–95: those windows are where big games are lost.</p>
+
+    <h3>6. Three 6s is a real penalty</h3>
+    <p>The temptation to keep rolling 6s is strong, but the third one sends you back to square 1.
+    When you are ahead, bank your score; when you are behind, chase the 6s.</p>
+
+    <h3>7. Count the squares, do not count the luck</h3>
+    <p>A good player moves with intent. Before you roll, decide the square you want to land on
+    (a ladder base, 87 avoided), then pick the roll that gets you there. Any other roll is just insurance.</p>
+
+    <h2>Frequently asked questions</h2>
+    <div class="faq">
+      <details><summary>How many players can play?</summary>
+        <p>Between 2 and 4 players on one device. Press <b>Add Player</b> in the side panel to add
+        more (this restarts the game).</p></details>
+      <details><summary>Do I need to install anything?</summary>
+        <p>No. The game is plain HTML, CSS and JavaScript — open the page in any modern browser and play.</p></details>
+      <details><summary>Do I need an account or sign-up?</summary>
+        <p>No. There is no login, no registration and no server. Your game state lives only in the page.</p></details>
+      <details><summary>What happens if I roll past 100?</summary>
+        <p>You stay where you are and the turn passes to the next player. Only an exact 100 wins.</p></details>
+      <details><summary>Can I play on a phone?</summary>
+        <p>Yes. The layout stacks on narrow screens and the board scales to fit.</p></details>
+      <details><summary>Does the number of 6s I roll matter?</summary>
+        <p>Yes. One 6 gives another roll, but three 6s in a row sends you back to square 1 and ends
+        your turn.</p></details>
+    </div>
+
+    <a class="cta" href="index.html">▶ Play Snake &amp; Ladder now</a>
+  </div>
+
+  <footer>
+    <a href="index.html">Game</a> · <a href="how-to-play.html">How to play</a> ·
+    <a href="about.html">About</a> · <a href="contact.html">Contact</a> ·
+    <a href="privacy.html">Privacy Policy</a>
+  </footer>
+</div>
+</body>
+</html>

@@ -60,6 +60,9 @@ Serving over `http://` is needed so the browser loads the sibling `.js` files.
 
 ### 1. Enable real ads (AdSense)
 
+> AdSense requires a **custom domain** — a `*.pages.dev` or `*.github.io` subdomain is not approved.
+> Buy a domain, point it at Cloudflare Pages (free SSL) and use that URL in AdSense.
+
 1. Create a free [Google AdSense](https://www.google.com/adsense/start/) account and add your domain.
 2. Open [`ads.js`](ads.js) and set your publisher id:
 
@@ -67,13 +70,28 @@ Serving over `http://` is needed so the browser loads the sibling `.js` files.
 var CONFIG = {
   adsenseClient: "ca-pub-XXXXXXXXXXXXXXXX",   // <- your publisher id
   adsenseSlots: { top: "1234567890", side: "2345678901", foot: "3456789012" },
-  ...
-};
+  ...};
 ```
 
-3. Push the change — the house-ad placeholders are replaced automatically by live AdSense units.
+3. Deploy — the house-ad placeholders are replaced automatically by live AdSense units and
+   [`ads.txt`](ads.txt) is regenerated with your publisher id automatically:
+
+```bash
+node deploy.js
+```
 
 Three slots exist: `top` (above the board), `side` (in the sidebar), `foot` (below the board). `play.html` adds more via `data-ad="..."`.
+
+**Approval checklist (all already on the site):**
+
+| Requirement | Where |
+|---|---|
+| Privacy policy | [`privacy.html`](privacy.html) |
+| About page | [`about.html`](about.html) |
+| Contact page | [`contact.html`](contact.html) |
+| `ads.txt` at domain root | [`ads.txt`](ads.txt) (auto-generated) |
+| `robots.txt` + `sitemap.xml` | already present |
+| AdSense script + `ins` slots | loaded by [`ads.js`](ads.js) |
 
 ### 2. Embed the game on another website
 
