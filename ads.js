@@ -75,15 +75,28 @@
     return true;
   }
 
+  function validSlotId(slot) {
+    var id = (CONFIG.adsenseSlots[slot] || "").trim();
+    // Placeholder / empty ids would produce invalid ad tags ("slot id missing"),
+    // which AdSense counts against site quality. Skip them instead.
+    if (!id || /^0+$/.test(id) || /^1+$/.test(id)) return "";
+    if (!/^\d{6,}$/.test(id)) return "";
+    return id;
+  }
+
   function renderAd(container, slot, label) {
     if (!container) return;
     container.innerHTML = "";
 
     if (CONFIG.adsenseClient) {
+      var slotId = validSlotId(slot);
+      // No manual unit for this position: leave the slot empty and let AdSense
+      // Auto ads (enabled in the AdSense dashboard) fill the page instead.
+      if (!slotId) return;
       var ins = el("ins", "adsbygoogle ad-slot");
       ins.style.display = "block";
       ins.setAttribute("data-ad-client", CONFIG.adsenseClient);
-      ins.setAttribute("data-ad-slot", CONFIG.adsenseSlots[slot] || "");
+      ins.setAttribute("data-ad-slot", slotId);
       ins.setAttribute("data-ad-format", "auto");
       ins.setAttribute("data-full-width-responsive", "true");
       // AdSense policy: ads must be distinguishable from site content.
