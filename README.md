@@ -56,6 +56,7 @@ Serving over `http://` is needed so the browser loads the sibling `.js` files.
 | `about.html`, `contact.html`, `privacy.html` | Required compliance pages for AdSense |
 | `ads.txt` | Authorised sellers list for the domain (auto-generated on deploy) |
 | `deploy.js` | One-command free deploy to Cloudflare Pages |
+| `set-adsense.js` | Wire an AdSense publisher id + slot ids into `ads.js` |
 | `add-domain.js` | Attach/remove a custom domain on the Pages project |
 | `test.js` | Node test suite for `rules.js` |
 | `og-image.svg`, `favicon.svg`, `manifest.webmanifest` | Social preview, icon, PWA manifest |
@@ -85,13 +86,11 @@ node add-domain.js --remove yourdomain.com # detach
 2. Choose **"Websites"** as the site type, enter `https://yourdomain.com` and confirm.
 3. Turn on **Auto ads** (or create manual units for the `top` / `side` / `foot` slots) and copy the
    three ad-slot IDs.
-4. Open [`ads.js`](ads.js) and set your publisher id and slot ids:
+4. Paste your publisher id and (optionally) the three ad-slot ids into the site:
 
-```js
-var CONFIG = {
-  adsenseClient: "ca-pub-XXXXXXXXXXXXXXXX",   // <- your publisher id
-  adsenseSlots: { top: "1234567890", side: "2345678901", foot: "3456789012" },
-  ...};
+```bash
+node set-adsense.js --client ca-pub-XXXXXXXXXXXXXXXX
+node set-adsense.js --client ca-pub-XXXXXXXXXXXXXXXX --slots top=111,side=222,foot=333
 ```
 
 5. Deploy — the house-ad placeholders are replaced automatically by live AdSense units and
