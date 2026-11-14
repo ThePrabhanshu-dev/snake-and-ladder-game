@@ -140,5 +140,36 @@ console.log("\nNo position can ever exceed 100");
   check("positions always within 0..100", ok);
 }
 
+console.log("\nSeeded RNG (daily challenge)");
+{
+  const a = R.mulberry32(12345);
+  const b = R.mulberry32(12345);
+  const seqA = Array.from({ length: 20 }, () => a());
+  const seqB = Array.from({ length: 20 }, () => b());
+  check("same seed produces the same sequence", JSON.stringify(seqA) === JSON.stringify(seqB));
+  check("all values are within [0, 1)", seqA.every(v => v >= 0 && v < 1));
+  check("values are not all identical", new Set(seqA).size > 1);
+
+  const c = R.mulberry32(12346);
+  const seqC = Array.from({ length: 20 }, () => c());
+  check("different seeds produce different sequences", JSON.stringify(seqA) !== JSON.stringify(seqC));
+
+  eq("hashSeed is deterministic", R.hashSeed("2026-11-14"), R.hashSeed("2026-11-14"));
+  check("hashSeed differs per date", R.hashSeed("2026-11-14") !== R.hashSeed("2026-11-15"));
+  check("hashSeed is a 32-bit unsigned int",
+    R.hashSeed("2026-11-14") >= 0 && R.hashSeed("2026-11-14") <= 0xffffffff);
+}
+{
+  // Two players on the same daily challenge must roll identical dice.
+  const date = "2026-11-14";
+  const rngA = R.mulberry32(R.hashSeed(date));
+  const rngB = R.mulberry32(R.hashSeed(date));
+  const rollsA = Array.from({ length: 30 }, () => 1 + Math.floor(rngA() * 6));
+  const rollsB = Array.from({ length: 30 }, () => 1 + Math.floor(rngB() * 6));
+  check("daily challenge dice are identical for every player",
+    JSON.stringify(rollsA) === JSON.stringify(rollsB));
+  check("all challenge rolls are between 1 and 6", rollsA.every(v => v >= 1 && v <= 6));
+}
+
 console.log("\n" + passed + " passed, " + failed + " failed");
 process.exit(failed ? 1 : 0);

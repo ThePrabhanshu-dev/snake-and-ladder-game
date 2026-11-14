@@ -3,7 +3,7 @@
  * Usage — add this to any page on another site:
  *
  *   <div class="snl-game-embed" data-ref="partnerName"></div>
- *   <script src="https://theprabhanshu-dev.github.io/snake-and-ladder-game/embed.js" async></script>
+ *   <script src="https://snake-and-ladder-2q0.pages.dev/embed.js" async></script>
  *
  * It renders a styled "Play Snake & Ladder" card that links to the live game
  * and tags the click with ?ref=<partner> so referrals can be measured.
@@ -11,7 +11,7 @@
 (function () {
   "use strict";
 
-  var GAME_URL = "https://theprabhanshu-dev.github.io/snake-and-ladder-game/";
+  var GAME_URL = "https://snake-and-ladder-2q0.pages.dev/";
 
   var CSS = `
 .snl-widget{display:flex;align-items:center;gap:14px;max-width:520px;margin:18px 0;

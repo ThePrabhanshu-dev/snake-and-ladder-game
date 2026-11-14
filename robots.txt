@@ -1,4 +1,26 @@
+# Snake & Ladder Online — robots.txt
+# Everything on this site is public and safe to index.
+
 User-agent: *
 Allow: /
 
-Sitemap: https://theprabhanshu-dev.github.io/snake-and-ladder-game/sitemap.xml
+# Static assets and the game source are not useful as search results.
+Disallow: /rules.js
+Disallow: /ads.js
+Disallow: /loader.js
+Disallow: /embed.js
+
+# Ad crawlers must be able to reach the verification files.
+User-agent: Mediapartners-Google
+Allow: /
+
+User-agent: AdsBot-Google
+Allow: /
+
+User-agent: AdsBot-Google-Mobile
+Allow: /
+
+User-agent: Mediapartners-Google-Mobile
+Allow: /
+
+Sitemap: https://snake-and-ladder-2q0.pages.dev/sitemap.xml

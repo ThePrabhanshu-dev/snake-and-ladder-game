@@ -15,11 +15,11 @@
   var CONFIG = {
     // Put your real Google AdSense publisher id here (ca-pub-XXXXXXXXXXXXXXXX)
     // to switch the placeholders over to live AdSense units.
-    adsenseClient: "",
+    adsenseClient: "ca-pub-8439899281485854",
     adsenseSlots: {
-      top: "0000000000",
-      side: "0000000000",
-      foot: "0000000000"
+      top: "4959474672",
+      side: "7394066327",
+      foot: "9828657971"
     },
     // Sites that list browser games — used by the "Play us there" strip.
     portals: [
@@ -35,7 +35,7 @@
   // Always share/point at the game itself, whatever page the visitor is on.
   var GAME_PATH = "index.html";
   var SHARE_URL = (location.protocol === "file:")
-    ? "https://theprabhanshu-dev.github.io/snake-and-ladder-game/"
+    ? "https://snake-and-ladder-2q0.pages.dev/"
     : new URL(GAME_PATH, location.href.split("#")[0]).toString();
 
   /* ---------- helpers ---------- */
@@ -64,6 +64,8 @@
   function loadAdSense() {
     if (!CONFIG.adsenseClient) return false;
     addPreconnect();
+    // The pages already include Google's AdSense script in <head> (site
+    // verification requirement) — don't load it twice.
     if (document.getElementById("adsense-script")) return true;
     var s = document.createElement("script");
     s.id = "adsense-script";

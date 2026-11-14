@@ -4,13 +4,19 @@ A classic **Snake & Ladder** board game that runs in the browser. No build step,
 
 ## 🔗 Live
 
-**https://theprabhanshu-dev.github.io/snake-and-ladder-game/**
+**https://snake-and-ladder-2q0.pages.dev/**
+
+Mirror: https://theprabhanshu-dev.github.io/snake-and-ladder-game/ (GitHub Pages — the canonical
+URL on every page points at the Cloudflare Pages domain).
 
 | Page | URL | Purpose |
 |---|---|---|
-| Game | [`/`](https://theprabhanshu-dev.github.io/snake-and-ladder-game/) | The full game with the interactive loader |
-| Landing page | [`/play.html`](https://theprabhanshu-dev.github.io/snake-and-ladder-game/play.html) | SEO/landing page for traffic coming from other sites — ad slots + FAQ + CTA |
-| Embed widget | [`/embed.js`](https://theprabhanshu-dev.github.io/snake-and-ladder-game/embed.js) | Drop-in "Play Snake & Ladder" card for any other website |
+| Game | [`/`](https://snake-and-ladder-2q0.pages.dev/) | The full game with the interactive loader |
+| Landing page | [`/play.html`](https://snake-and-ladder-2q0.pages.dev/play.html) | SEO/landing page for traffic coming from other sites — ad slots + FAQ + CTA |
+| How to play | [`/how-to-play.html`](https://snake-and-ladder-2q0.pages.dev/how-to-play.html) | Full rules + board map |
+| Strategy | [`/strategy.html`](https://snake-and-ladder-2q0.pages.dev/strategy.html) | Openings, safe squares, decision guide |
+| Daily challenge | [`/daily-challenge.html`](https://snake-and-ladder-2q0.pages.dev/daily-challenge.html) | Same seeded board + dice sequence for everyone |
+| Embed widget | [`/embed.js`](https://snake-and-ladder-2q0.pages.dev/embed.js) | Drop-in "Play Snake & Ladder" card for any other website |
 
 Repository: https://github.com/ThePrabhanshu-dev/snake-and-ladder-game (deployed via GitHub Pages from `main`).
 
@@ -40,6 +46,8 @@ Serving over `http://` is needed so the browser loads the sibling `.js` files.
 - **Live position readout** for every player
 - **Interactive loading screen** — animated ladder, slithering snake, tumbling dice, progress bar and rotating tips, with a skip button
 - **Ad slots** wired up and AdSense-ready, with a house-ad fallback so the layout never breaks
+- **Daily Challenge** — a date-seeded dice sequence so every player worldwide gets the same board,
+  plus a shareable `?challenge=YYYY-MM-DD` link and a "Challenge a friend" button
 - **Cross-promotion** — share buttons, referral links and a game-portal strip
 
 ## Files
@@ -52,7 +60,9 @@ Serving over `http://` is needed so the browser loads the sibling `.js` files.
 | `ads.js` | Ad slots (AdSense-ready) + share/referral/portal promo system |
 | `embed.js` | Drop-in widget for embedding the game on other websites |
 | `play.html` | Landing page for external traffic (ad slots, FAQ, CTA) |
-| `how-to-play.html` | Rules + strategy guide page (SEO content, AdSense approval) |
+| `how-to-play.html` | Rules + board map guide page (SEO content, AdSense approval) |
+| `strategy.html` | Decision guide — openings, safe squares, when to chase a ladder |
+| `daily-challenge.html` | Daily Challenge landing page (same board for everyone) |
 | `about.html`, `contact.html`, `privacy.html` | Required compliance pages for AdSense |
 | `ads.txt` | Authorised sellers list for the domain (auto-generated on deploy) |
 | `deploy.js` | One-command free deploy to Cloudflare Pages |
@@ -60,8 +70,11 @@ Serving over `http://` is needed so the browser loads the sibling `.js` files.
 | `verify-adsense.js` | Check that the live site really serves the AdSense setup |
 | `add-domain.js` | Attach/remove a custom domain on the Pages project |
 | `test.js` | Node test suite for `rules.js` |
-| `og-image.svg`, `favicon.svg`, `manifest.webmanifest` | Social preview, icon, PWA manifest |
+| `og-image.svg`, `og-image.png`, `favicon.svg`, `manifest.webmanifest` | Social preview, icon, PWA manifest |
 | `robots.txt`, `sitemap.xml` | Search-engine discovery |
+| `tools/check-site.py` | Source sanity checks (encoding, canonical, AdSense tag, JSON-LD) |
+| `tools/make-og-image.py` | Regenerates `og-image.png` from the SVG design |
+| `tools/fix-encoding.py` | Repairs mojibake in text files |
 
 ## 🚀 Getting traffic from other websites
 
@@ -129,7 +142,7 @@ Add this to any page on a partner site:
 
 ```html
 <div class="snl-game-embed" data-ref="partnerName"></div>
-<script src="https://theprabhanshu-dev.github.io/snake-and-ladder-game/embed.js?v=1.0.1" async></script>
+<script src="https://snake-and-ladder-2q0.pages.dev/embed.js?v=1.1.0" async></script>
 ```
 
 Use `data-variant="button"` for a small button instead of the full card. Every click is tagged with
@@ -139,7 +152,7 @@ Use `data-variant="button"` for a small button instead of the full card. Every c
 
 ```js
 window.GamePromo.partnerLink("mysite.com");
-// -> https://theprabhanshu-dev.github.io/snake-and-ladder-game/?ref=mysite.com&utm_source=mysite.com&utm_medium=partner
+// -> https://snake-and-ladder-2q0.pages.dev/?ref=mysite.com&utm_source=mysite.com&utm_medium=partner
 ```
 
 Visitors arriving with `?ref=` see a "You were invited by …" banner and the code is stored in `localStorage`
@@ -147,8 +160,20 @@ under `snl_ref`.
 
 ### 4. SEO & sharing
 
-`robots.txt`, `sitemap.xml`, Open Graph / Twitter cards and a social preview image (`og-image.svg`) are all
+`robots.txt`, `sitemap.xml`, Open Graph / Twitter cards and a social preview image (`og-image.png`) are all
 included, so links shared on WhatsApp, Facebook, X, Reddit and Telegram render a rich preview.
+
+### 5. Daily Challenge links
+
+The game accepts a `?challenge=YYYY-MM-DD` query parameter, which seeds the dice generator with that
+date so every player gets the exact same sequence of rolls:
+
+```
+https://snake-and-ladder-2q0.pages.dev/?challenge=2026-11-14
+```
+
+Use it to share today's board, or to replay yesterday's board. The seed comes from
+`Rules.hashSeed(date)` and `Rules.mulberry32(seed)` in [`rules.js`](rules.js), both covered by the test suite.
 
 ## Tests
 
@@ -157,16 +182,17 @@ node test.js
 ```
 
 Covers board coordinate mapping, ladder/snake resolution, movement, overshoot handling,
-the win condition, the three-sixes penalty, and runs 500 randomized full games to confirm
-no game can loop forever or push a pawn outside the 0–100 range.
+the win condition, the three-sixes penalty, the seeded RNG used by the Daily Challenge, and runs
+500 randomized full games to confirm no game can loop forever or push a pawn outside the 0–100 range.
 
 ```
-43 passed, 0 failed
+52 passed, 0 failed
 ```
 
 ## 🌐 Free hosting (Cloudflare Pages)
 
-The game is also published free on **Cloudflare Pages** (unlimited bandwidth, no cost):
+The game is published free on **Cloudflare Pages** (unlimited bandwidth, no cost) — this is the
+canonical domain used by every page's `<link rel="canonical">`:
 
 **https://snake-and-ladder-2q0.pages.dev/**
 
@@ -211,3 +237,11 @@ Pages rebuilds automatically (~1 minute). Check the deployment at
 
 The same files are mirrored to Cloudflare Pages with `node deploy.js` (see
 [Free hosting](#-free-hosting-cloudflare-pages)).
+
+### Before you deploy
+
+```bash
+node test.js             # game rules + seeded RNG unit tests
+python tools/check-site.py   # encoding, canonical URLs, AdSense tag, JSON-LD, assets
+node verify-adsense.js   # checks the *live* site serves the AdSense setup
+```

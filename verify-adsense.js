@@ -48,11 +48,17 @@ async function main() {
 
   if (local) {
     ok("publisher id deployed in ads.js", adsJs.body.includes(local), local);
-    const pubId = local.replace(/^ca-/, "");
+    // ads.txt lists the publisher id without the "ca-" prefix, e.g. pub-123…
+    const adsTxtId = local.replace(/^ca-/, "");
     ok(
       "ads.txt lists the publisher id",
-      adsTxt.body.includes(`pub-${pubId}`),
-      `expected pub-${pubId}`
+      adsTxt.body.includes(adsTxtId),
+      `expected ${adsTxtId}`
+    );
+    ok(
+      "site-verification meta tag present",
+      index.body.includes(`google-adsense-account`) && index.body.includes(local),
+      'meta name="google-adsense-account"'
     );
   } else {
     ok("publisher id configured locally", false, "set it with: node set-adsense.js --client ca-pub-…");

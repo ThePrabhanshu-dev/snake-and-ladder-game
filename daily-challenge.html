@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Snake &amp; Ladder Daily Challenge — Same Board for Everyone, Every Day</title>
+<meta name="description" content="The Snake &amp; Ladder Daily Challenge gives every player the same dice sequence for the day. Same board, same rolls, one attempt — compare your score with friends." />
+<meta name="keywords" content="snake and ladder daily challenge, daily snake and ladder, snake and ladder challenge, snakes and ladders daily board" />
+<meta name="author" content="ThePrabhanshu-dev" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<meta name="theme-color" content="#10131a" />
+<link rel="canonical" href="https://snake-and-ladder-2q0.pages.dev/daily-challenge.html" />
+
+<meta property="og:type" content="article" />
+<meta property="og:site_name" content="Snake &amp; Ladder" />
+<meta property="og:title" content="Snake &amp; Ladder Daily Challenge — Same Board for Everyone" />
+<meta property="og:description" content="Every player gets the same dice sequence today. One attempt. Compare scores." />
+<meta property="og:url" content="https://snake-and-ladder-2q0.pages.dev/daily-challenge.html" />
+<meta property="og:image" content="https://snake-and-ladder-2q0.pages.dev/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Snake &amp; Ladder Daily Challenge" />
+<meta name="twitter:description" content="Every player gets the same dice sequence today. One attempt. Compare scores." />
+<meta name="twitter:image" content="https://snake-and-ladder-2q0.pages.dev/og-image.png" />
+
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<meta name="google-adsense-account" content="ca-pub-8439899281485854" />
+<script async id="adsense-script" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8439899281485854" crossorigin="anonymous"></script>
+
+<!-- ===== Structured data ===== -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://snake-and-ladder-2q0.pages.dev/daily-challenge.html#webpage",
+      "url": "https://snake-and-ladder-2q0.pages.dev/daily-challenge.html",
+      "name": "Snake & Ladder Daily Challenge",
+      "description": "A daily Snake & Ladder board where every player around the world receives the identical dice sequence.",
+      "isPartOf": { "@id": "https://snake-and-ladder-2q0.pages.dev/#website" },
+      "inLanguage": "en"
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://snake-and-ladder-2q0.pages.dev/#website",
+      "url": "https://snake-and-ladder-2q0.pages.dev/",
+      "name": "Snake & Ladder Online",
+      "inLanguage": "en"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://snake-and-ladder-2q0.pages.dev/daily-challenge.html#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://snake-and-ladder-2q0.pages.dev/" },
+        { "@type": "ListItem", "position": 2, "name": "Daily Challenge", "item": "https://snake-and-ladder-2q0.pages.dev/daily-challenge.html" }
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://snake-and-ladder-2q0.pages.dev/daily-challenge.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What is the Snake & Ladder Daily Challenge?",
+          "acceptedAnswer": { "@type": "Answer", "text": "It is a daily board where every player receives the exact same dice sequence. The date is used to seed the random number generator, so everyone rolls the same numbers in the same order. That turns a game of pure luck into a test of decision making." }
+        },
+        {
+          "@type": "Question",
+          "name": "When does the new daily board appear?",
+          "acceptedAnswer": { "@type": "Answer", "text": "A new board starts at midnight local time and stays live for the whole day. The seed is derived from the date, so everyone playing on the same calendar day is on the same board." }
+        },
+        {
+          "@type": "Question",
+          "name": "How many players can join a daily challenge?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Between 2 and 4, exactly like a normal game. The dice sequence is shared, so each player rolls in turn from the same sequence of numbers." }
+        },
+        {
+          "@type": "Question",
+          "name": "Can I replay the same daily board?",
+          "acceptedAnswer": { "@type": "Answer", "text": "You can replay the board as often as you like, but the dice sequence never changes, so re-running it produces exactly the same rolls. Practising the same board is how most players improve their openings." }
+        },
+        {
+          "@type": "Question",
+          "name": "How do I compare my score with friends?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Use the Challenge a friend button inside the game. It copies a link that includes the challenge date, so opening it drops your friend straight onto the same board you played." }
+        }
+      ]
+    }
+  ]
+}
+</script>
+<style>
+  :root { --bg:#0e1219; --panel:#181d28; --panel2:#212838; --accent:#5b8cff; --text:#e8ecf5; --muted:#8b93a7; }
+  * { box-sizing:border-box; }
+  body { margin:0; background:radial-gradient(circle at 25% 0%, #1a2336 0%, var(--bg) 55%);
+    color:var(--text); font-family:"Segoe UI",system-ui,-apple-system,sans-serif; line-height:1.7; }
+  .wrap { max-width:860px; margin:0 auto; padding:26px 16px 60px; }
+  h1 { font-size:clamp(24px,4.5vw,34px); margin:0 0 6px; }
+  h1 span { color:var(--accent); }
+  h2 { font-size:19px; margin:26px 0 8px; }
+  p, li { color:var(--muted); font-size:14.5px; }
+  ul, ol { padding-left:20px; }
+  li { margin:6px 0; }
+  a { color:var(--accent); }
+  .updated { color:#6d7794; font-size:13px; margin:0 0 22px; }
+  .card { background:var(--panel); border:1px solid #2b3244; border-radius:14px; padding:20px 22px; margin:0 0 14px; }
+  .tag { display:inline-block; font-size:9.5px; letter-spacing:1.4px; text-transform:uppercase; color:#7d8aa8;
+    border:1px solid #333d58; border-radius:99px; padding:2px 9px; margin-bottom:8px; }
+  .cta { display:inline-block; margin-top:10px; padding:12px 22px; border-radius:10px; text-decoration:none;
+    background:linear-gradient(180deg,#6b96ff,#4472e6); color:#fff; font-weight:700; font-size:15px; }
+  .cta.ghost { background:var(--panel2); border:1px solid #333d58; color:#b7c3dd; }
+  .board-hero { text-align:center; padding:8px 0 4px; }
+  .board-hero .big { font-size:44px; }
+  .date-chip { display:inline-block; background:var(--panel2); border:1px solid #333d58; border-radius:99px;
+    padding:6px 15px; font-size:13px; color:#cfe0ff; font-weight:700; margin-top:6px; }
+  .faq details { border-bottom:1px solid #262d3d; padding:12px 0; }
+  .faq summary { cursor:pointer; font-weight:600; font-size:14.5px; color:var(--text); }
+  .faq p { margin:8px 0 0; }
+  .link-list { list-style:none; margin:0; padding:0; display:grid; gap:7px; }
+  .link-list a { display:block; background:var(--panel2); border:1px solid #333d58; border-radius:10px;
+    padding:10px 13px; color:var(--text); text-decoration:none; font-size:13.5px; font-weight:600; }
+  .link-list a:hover { border-color:var(--accent); background:#263049; }
+  .ad-slot { margin:18px 0; }
+  footer { text-align:center; color:#6d7794; font-size:12px; margin-top:30px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Snake &amp; Ladder <span>Daily Challenge</span></h1>
+  <p class="updated">One board. One dice sequence. Everyone plays the same game. · Last updated: 14 November 2026</p>
+
+  <div class="card board-hero">
+    <div class="big">🏆</div>
+    <span class="tag">New board every day</span>
+    <p>Today's board is generated from today's date, so <b>every player in the world gets the exact
+    same dice sequence</b>. No luck advantage — the winner is whoever makes the better decisions.</p>
+    <span class="date-chip" id="todayChip">Loading today's board…</span>
+    <div style="margin-top:16px">
+      <a class="cta" href="index.html" id="playCta">Play today's challenge →</a>
+    </div>
+  </div>
+
+  <div id="adTop" class="ad-slot" data-ad="top"></div>
+
+  <div class="card">
+    <h2>How the Daily Challenge works</h2>
+    <ol>
+      <li>The board is seeded from today's date, so the dice sequence is identical for every player.</li>
+      <li>Start the challenge and you play that shared sequence — 2 to 4 players as usual.</li>
+      <li>Because the rolls are fixed, every outcome is a decision you made, not a roll you lost.</li>
+      <li>Share the challenge link with a friend so they play your exact board.</li>
+    </ol>
+    <p>It is the fastest way to get better at the game: replay today's board and try to beat your
+    own result, then compare scores with friends on the same sequence.</p>
+  </div>
+
+  <div class="card">
+    <h2>Why a shared board is better for practice</h2>
+    <p>In a normal game, every decision is tangled up with chance. A 6 might rescue you or ruin you
+    and you can never tell whether your decision was good. In the Daily Challenge the dice are
+    fixed, so every result is a pure read on your play.</p>
+    <ul>
+      <li>Did you take the bonus six when you should have banked it?</li>
+      <li>Did you chase a ladder base, or did you drift into the snake at 87?</li>
+      <li>Did you protect a lead, or did you roll greedily for a ladder?</li>
+    </ul>
+    <p>Answer the same three questions on the same board each day and your play improves quickly.</p>
+  </div>
+
+  <div id="adMid" class="ad-slot" data-ad="side"></div>
+
+  <div class="card">
+    <h2>Frequently asked questions</h2>
+    <div class="faq">
+      <details open><summary>What is the Snake &amp; Ladder Daily Challenge?</summary><p>It is a daily board where every player receives the exact same dice sequence. The date is used to seed the random number generator, so everyone rolls the same numbers in the same order. That turns a game of pure luck into a test of decision making.</p></details>
+      <details><summary>When does the new daily board appear?</summary><p>A new board starts at midnight local time and stays live for the whole day. The seed is derived from the date, so everyone playing on the same calendar day is on the same board.</p></details>
+      <details><summary>How many players can join a daily challenge?</summary><p>Between 2 and 4, exactly like a normal game. The dice sequence is shared, so each player rolls in turn from the same sequence of numbers.</p></details>
+      <details><summary>Can I replay the same daily board?</summary><p>You can replay the board as often as you like, but the dice sequence never changes, so re-running it produces exactly the same rolls. Practising the same board is how most players improve their openings.</p></details>
+      <details><summary>How do I compare my score with friends?</summary><p>Use the Challenge a friend button inside the game. It copies a link that includes the challenge date, so opening it drops your friend straight onto the same board you played.</p></details>
+    </div>
+  </div>
+
+  <div id="adFoot" class="ad-slot" data-ad="foot"></div>
+
+  <div class="card">
+    <h2>Keep reading</h2>
+    <ul class="link-list">
+      <li><a href="how-to-play.html">How to play — the full rules and board map</a></li>
+      <li><a href="strategy.html">Winning strategy — openings and safe squares</a></li>
+      <li><a href="play.html">Play in one click</a></li>
+      <li><a href="about.html">About this game</a></li>
+    </ul>
+  </div>
+
+  <footer>
+    <p><a href="index.html">Play Snake &amp; Ladder →</a></p>
+    <p>
+      <a href="how-to-play.html">How to play</a> ·
+      <a href="strategy.html">Strategy</a> ·
+      <a href="daily-challenge.html">Daily challenge</a> ·
+      <a href="about.html">About</a> ·
+      <a href="contact.html">Contact</a> ·
+      <a href="privacy.html">Privacy Policy</a>
+    </p>
+    <p>Snake &amp; Ladder — free browser board game.</p>
+  </footer>
+</div>
+
+<script src="ads.js?v=1.1.0"></script>
+<script>
+(function () {
+  "use strict";
+  var chip = document.getElementById("todayChip");
+  var cta = document.getElementById("playCta");
+  var d = new Date();
+  var key = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  if (chip) chip.textContent = "Board for " + key;
+  if (cta) cta.href = "index.html?challenge=" + encodeURIComponent(key);
+})();
+</script>
+</body>
+</html>
