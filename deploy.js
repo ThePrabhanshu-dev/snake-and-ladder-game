@@ -18,6 +18,9 @@ const BRANCH = process.env.DEPLOY_BRANCH || "main";
 const SITE_FILES = [
   "index.html",
   "play.html",
+  "about.html",
+  "contact.html",
+  "privacy.html",
   "rules.js",
   "loader.js",
   "ads.js",
@@ -27,6 +30,7 @@ const SITE_FILES = [
   "manifest.webmanifest",
   "robots.txt",
   "sitemap.xml",
+  "ads.txt",
   "README.md"
 ];
 
@@ -40,6 +44,33 @@ for (const file of SITE_FILES) {
     continue;
   }
   fs.copyFileSync(src, path.join(stage, file));
+}
+
+/* ---------- ads.txt ---------- *
+ * The AdSense publisher id lives in ads.js (CONFIG.adsenseClient). Mirror it
+ * into ads.txt so the file always matches the id the site actually serves.
+ */
+function adsenseClientId() {
+  const adsSrc = fs.readFileSync(path.join(root, "ads.js"), "utf8");
+  const m = adsSrc.match(/adsenseClient:\s*"([^"]*)"/);
+  const client = m ? m[1].trim() : "";
+  return /^ca-pub-\d{16}$/.test(client) ? client : "";
+}
+
+const client = adsenseClientId();
+const adsTxtPath = path.join(stage, "ads.txt");
+if (client) {
+  const pubId = client.replace(/^ca-/, "");
+  fs.writeFileSync(
+    adsTxtPath,
+    `# ads.txt for ${client}\n` +
+      `google.com, ${pubId}, DIRECT, f08c47fec0942fa0\n`
+  );
+  console.log(`ads.txt generated for ${client}`);
+} else {
+  console.log(
+    "ads.txt: no valid AdSense publisher id in ads.js yet (set CONFIG.adsenseClient)"
+  );
 }
 
 console.log(`Staged ${fs.readdirSync(stage).length} files in ${stage}`);

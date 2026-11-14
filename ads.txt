@@ -1,0 +1,11 @@
+# ads.txt — authorised ad sellers for this site (IAB ads.txt v1.1)
+#
+# Google AdSense publisher id goes here once the account is approved.
+# Format: <exchange> <publisher-id>, DIRECT|RESELLER, <certification-id>
+#
+# Google AdSense line:
+# google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
+#
+# The deployment script (deploy.js) writes the real line automatically once a
+# valid publisher id is present in the ads.js CONFIG block.
+google.com, pub-0000000000000000, DIRECT, f08c47fec0942fa0

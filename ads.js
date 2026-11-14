@@ -47,8 +47,23 @@
   }
 
   /* ---------- AdSense ---------- */
+  function addPreconnect() {
+    [
+      "https://pagead2.googlesyndication.com",
+      "https://googleads.g.doubleclick.net",
+      "https://tpc.googlesyndication.com"
+    ].forEach(function (origin) {
+      if (document.querySelector('link[href="' + origin + '"]')) return;
+      var l = document.createElement("link");
+      l.rel = "preconnect";
+      l.href = origin;
+      (document.head || document.documentElement).appendChild(l);
+    });
+  }
+
   function loadAdSense() {
     if (!CONFIG.adsenseClient) return false;
+    addPreconnect();
     if (document.getElementById("adsense-script")) return true;
     var s = document.createElement("script");
     s.id = "adsense-script";
@@ -71,6 +86,8 @@
       ins.setAttribute("data-ad-slot", CONFIG.adsenseSlots[slot] || "");
       ins.setAttribute("data-ad-format", "auto");
       ins.setAttribute("data-full-width-responsive", "true");
+      // AdSense policy: ads must be distinguishable from site content.
+      ins.setAttribute("aria-label", "Advertisement");
       container.appendChild(ins);
       try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {}
       return;
