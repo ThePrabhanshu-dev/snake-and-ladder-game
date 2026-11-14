@@ -64,6 +64,7 @@ Serving over `http://` is needed so the browser loads the sibling `.js` files.
 | `strategy.html` | Decision guide — openings, safe squares, when to chase a ladder |
 | `daily-challenge.html` | Daily Challenge landing page (same board for everyone) |
 | `about.html`, `contact.html`, `privacy.html` | Required compliance pages for AdSense |
+| `404.html` | Friendly "page not found" page (served with a real 404 status) |
 | `ads.txt` | Authorised sellers list for the domain (auto-generated on deploy) |
 | `deploy.js` | One-command free deploy to Cloudflare Pages |
 | `set-adsense.js` | Wire an AdSense publisher id + slot ids into `ads.js` |

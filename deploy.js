@@ -24,6 +24,7 @@ const SITE_FILES = [
   "about.html",
   "contact.html",
   "privacy.html",
+  "404.html",
   "rules.js",
   "loader.js",
   "ads.js",

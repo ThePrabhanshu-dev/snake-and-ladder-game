@@ -68,7 +68,7 @@ def main():
 
     print("\nShared assets")
     for asset in ("ads.js", "rules.js", "loader.js", "ads.txt", "og-image.png",
-                  "sitemap.xml", "robots.txt"):
+                  "sitemap.xml", "robots.txt", "404.html"):
         check(os.path.exists(os.path.join(ROOT, asset)), f"{asset} exists")
 
     ads_txt = open(os.path.join(ROOT, "ads.txt"), encoding="utf-8").read()
