@@ -102,6 +102,59 @@ console.log("\nMovement");
   eq("no ladder triggered from 7", s.jumps.length, 0);
 }
 
+console.log("\nThe sixes counter belongs to the player");
+{
+  const p = { pos: 90, sixes: 2 };
+  const s = R.step(p, 6);
+  eq("a player's own counter triggers the triple six", s.tripleSix, true);
+  eq("triple six sends the player back to 1", s.pos, 1);
+  eq("the counter is cleared after a triple six", s.sixes, 0);
+}
+{
+  // A 6 that overshoots still counts towards this player's three-sixes counter.
+  const s = R.step({ pos: 97, sixes: 0 }, 6);
+  eq("a six that overshoots does not move the player", s.pos, 97);
+  eq("a six that overshoots is flagged as an overshoot", s.overshoot, true);
+  eq("a six that overshoots does not grant a bonus turn", s.bonus, false);
+  eq("a six that overshoots still counts towards the counter", s.sixes, 1);
+}
+{
+  // One player's sixes must not leak into another player's turn.
+  const a = { pos: 10, sixes: 1 };
+  const b = { pos: 10, sixes: 0 };
+  const ra = R.step(a, 6);
+  eq("step does not mutate the player", a.sixes, 1);
+  a.sixes = ra.sixes;              // the caller stores the counter back
+  const sb = R.step(b, 6);
+  eq("a second player starts their own counter", sb.sixes, 1);
+  eq("the first player keeps their counter", a.sixes, 2);
+}
+{
+  let threw = false;
+  try { R.step({ pos: 0 }, 7); } catch (e) { threw = e instanceof RangeError; }
+  check("an impossible roll is rejected", threw);
+  threw = false;
+  try { R.step({ pos: 0 }, 2.5); } catch (e) { threw = e instanceof RangeError; }
+  check("a fractional roll is rejected", threw);
+}
+
+console.log("\nBoard data helpers");
+{
+  eq("nine ladders on the board", Object.keys(R.LADDERS).length, 9);
+  eq("six snakes on the board", Object.keys(R.SNAKES).length, 6);
+  eq("JUMPS is the union of ladders and snakes", Object.keys(R.JUMPS).length, 15);
+  eq("square 1 is a ladder", R.isLadder(1), true);
+  eq("square 16 is a snake", R.isSnake(16), true);
+  eq("square 50 is neither", R.isLadder(50) || R.isSnake(50), false);
+  eq("square 50 describes as plain", R.describeSquare(50).type, "plain");
+  eq("square 1 describes as a ladder", R.describeSquare(1).type, "ladder");
+  eq("square 1 climbs to 38", R.describeSquare(1).to, 38);
+  eq("square 62 describes as a snake", R.describeSquare(62).type, "snake");
+  eq("square 62 drops to 19", R.describeSquare(62).to, 19);
+  check("no square is both a ladder and a snake",
+    Object.keys(R.LADDERS).every(k => R.SNAKES[k] === undefined));
+}
+
 console.log("\nFull game simulation (500 randomized games)");
 {
   let finished = 0, stuck = 0, maxRounds = 0, totalRounds = 0;

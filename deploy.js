@@ -27,6 +27,7 @@ const SITE_FILES = [
   "404.html",
   "rules.js",
   "loader.js",
+  "fx.js",
   "ads.js",
   "embed.js",
   "favicon.svg",

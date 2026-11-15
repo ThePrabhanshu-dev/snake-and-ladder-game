@@ -669,6 +669,176 @@
   .site-nav { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; margin-bottom: 8px; }
   .site-nav a { color: #a8b6d6; text-decoration: none; font-weight: 600; font-size: 12.5px; }
   .site-nav a:hover { color: var(--accent); }
+
+  /* ============ SOUND / TOAST / CONFETTI ============ */
+  .toast-host {
+    position: fixed;
+    left: 50%;
+    bottom: 22px;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: center;
+    z-index: 90;
+    pointer-events: none;
+    width: min(92vw, 420px);
+  }
+  .toast {
+    background: linear-gradient(180deg, #232c42, #1b2130);
+    border: 1px solid #3a465f;
+    border-radius: 12px;
+    padding: 10px 15px;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text);
+    box-shadow: 0 10px 26px rgba(0, 0, 0, .45);
+    animation: toastIn .28s ease both;
+    text-align: center;
+  }
+  .toast.win { border-color: rgba(61, 220, 151, .6); color: #9df0c8; }
+  .toast.bad { border-color: rgba(255, 95, 109, .6); color: #ffc0c5; }
+  .toast.trophy { border-color: rgba(255, 209, 102, .65); color: #ffe6a8; }
+  .toast.out { animation: toastOut .35s ease both; }
+  @keyframes toastIn { from { opacity: 0; transform: translateY(14px) scale(.96); } to { opacity: 1; transform: none; } }
+  @keyframes toastOut { to { opacity: 0; transform: translateY(10px); } }
+  .confetti-canvas {
+    position: fixed;
+    inset: 0;
+    z-index: 95;
+    pointer-events: none;
+  }
+
+  /* ============ BOARD EXPLORER ============ */
+  .explorer {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 10px;
+    background: var(--panel);
+    border: 1px solid #2b3244;
+    border-radius: 12px;
+    padding: 9px 13px;
+    min-height: 42px;
+  }
+  .explorer-num {
+    flex: 0 0 auto;
+    min-width: 34px;
+    height: 26px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+    background: var(--panel2);
+    border: 1px solid #333c52;
+    font-weight: 800;
+    font-size: 13px;
+    color: var(--accent);
+  }
+  .explorer-text { font-size: 12.5px; color: var(--muted); line-height: 1.45; }
+  .explorer-text b { color: var(--text); }
+  .cell.explored { box-shadow: inset 0 0 0 2px var(--accent); }
+
+  /* ============ QUIZ ============ */
+  .quiz-box { display: grid; gap: 10px; }
+  .quiz-progress {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11.5px;
+    color: var(--muted);
+  }
+  .quiz-track {
+    flex: 1;
+    height: 6px;
+    border-radius: 99px;
+    background: var(--panel2);
+    overflow: hidden;
+  }
+  .quiz-track span {
+    display: block;
+    height: 100%;
+    width: 0;
+    border-radius: 99px;
+    background: linear-gradient(90deg, var(--accent), var(--p4));
+    transition: width .3s ease;
+  }
+  .quiz-q { font-size: 14.5px; font-weight: 700; line-height: 1.45; margin: 0; }
+  .quiz-options { display: grid; gap: 7px; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); }
+  .quiz-option {
+    text-align: left;
+    background: var(--panel2);
+    border: 1px solid #333c52;
+    border-radius: 10px;
+    padding: 11px 13px;
+    color: var(--text);
+    font-size: 13.5px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform .12s, border-color .15s, background .15s;
+  }
+  .quiz-option:hover:not(:disabled) { border-color: var(--accent); background: #263049; transform: translateY(-1px); }
+  .quiz-option:disabled { cursor: default; }
+  .quiz-option.right { border-color: var(--p2); background: rgba(61, 220, 151, .16); color: #9df0c8; }
+  .quiz-option.wrong { border-color: var(--p1); background: rgba(255, 95, 109, .16); color: #ffc0c5; }
+  .quiz-note { font-size: 12.5px; color: var(--muted); line-height: 1.5; margin: 0; }
+  .quiz-note b { color: var(--text); }
+  .quiz-actions { display: flex; gap: 9px; flex-wrap: wrap; align-items: center; }
+  .quiz-score { font-size: 15px; font-weight: 800; }
+  .quiz-score b { color: var(--p3); }
+
+  /* ============ TROPHY ROOM ============ */
+  .trophy-grid {
+    display: grid;
+    gap: 9px;
+    grid-template-columns: repeat(auto-fill, minmax(118px, 1fr));
+  }
+  .trophy {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 3px;
+    text-align: center;
+    background: var(--panel2);
+    border: 1px solid #333c52;
+    border-radius: 12px;
+    padding: 11px 8px;
+    opacity: .55;
+    filter: grayscale(1);
+    transition: transform .15s, border-color .15s, opacity .2s, filter .2s;
+  }
+  .trophy.unlocked {
+    opacity: 1;
+    filter: none;
+    border-color: rgba(255, 209, 102, .45);
+    background: linear-gradient(180deg, #2a2a3f, #222736);
+  }
+  .trophy.unlocked:hover { transform: translateY(-2px); border-color: var(--p3); }
+  .trophy-emoji { font-size: 24px; line-height: 1.2; }
+  .trophy-name { font-size: 12px; font-weight: 700; }
+  .trophy-desc { font-size: 10.5px; color: var(--muted); line-height: 1.35; }
+  .trophy-count { font-size: 10.5px; color: var(--accent); font-weight: 700; }
+  .streak-row { display: flex; gap: 6px; margin-top: 11px; flex-wrap: wrap; align-items: center; }
+  .streak-day {
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: var(--panel2);
+    border: 1px solid #333c52;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 11px;
+    font-weight: 700;
+    color: var(--muted);
+  }
+  .streak-day.on {
+    background: linear-gradient(180deg, rgba(61, 220, 151, .3), rgba(61, 220, 151, .12));
+    border-color: rgba(61, 220, 151, .6);
+    color: #9df0c8;
+  }
+  .streak-day.today { border-color: var(--accent); }
+  .streak-label { font-size: 11.5px; color: var(--muted); margin-right: 4px; }
 </style>
 </head>
 <body>
@@ -766,6 +936,12 @@
       <span class="engage-hint">Same dice for everyone, one attempt</span>
       <button class="ghost" id="challengeStart" type="button">Start today's</button>
     </div>
+    <div class="engage-card">
+      <span class="engage-label">Sound</span>
+      <span class="engage-value" id="soundValue">On</span>
+      <span class="engage-hint">Dice, ladders and victory jingles</span>
+      <button class="ghost" id="soundToggle" type="button">Mute sounds</button>
+    </div>
   </section>
 
   <div id="adTop" class="ad-slot"></div>
@@ -774,6 +950,10 @@
     <div class="board-shell">
       <div class="board" id="board">
         <div class="tokens" id="tokens"></div>
+      </div>
+      <div class="explorer" id="explorer" aria-live="polite">
+        <span class="explorer-num" id="explorerNum">—</span>
+        <span class="explorer-text" id="explorerText">Hover or tap any square to find out what it does. <b>9 ladders</b> and <b>6 snakes</b> are hidden on this board.</span>
       </div>
     </div>
 
@@ -815,6 +995,19 @@
   </div>
 
   <div id="adFoot" class="ad-slot"></div>
+
+  <section class="promo-section" id="quizSection">
+    <h2 class="promo-title">🧠 Know the board?</h2>
+    <p class="promo-sub">Eight quick questions about the ladders and snakes you just played on. Score full marks to earn a badge.</p>
+    <div class="quiz-box" id="quizBox"></div>
+  </section>
+
+  <section class="promo-section" id="trophySection">
+    <h2 class="promo-title">🏆 Your trophy room</h2>
+    <p class="promo-sub">Badges you unlock as you play. They are saved on this device, so they are yours alone.</p>
+    <div class="trophy-grid" id="trophyGrid"></div>
+    <div class="streak-row" id="streakRow"></div>
+  </section>
 
   <section class="promo-section" id="more-games">
     <h2 class="promo-title">🎉 Invite friends &amp; find us elsewhere</h2>
@@ -869,9 +1062,10 @@
   </footer>
 </div>
 
-<script src="rules.js?v=1.1.0"></script>
-<script src="loader.js?v=1.1.0"></script>
-<script src="ads.js?v=1.1.0"></script>
+<script src="rules.js?v=1.2.0"></script>
+<script src="loader.js?v=1.2.0"></script>
+<script src="ads.js?v=1.2.0"></script>
+<script src="fx.js?v=1.2.0"></script>
 <script>
 (function () {
   "use strict";
@@ -892,10 +1086,20 @@
   const COLS = Rules.COLS;
   const JUMPS = Rules.JUMPS;
 
+  /* Sound, confetti and toasts. fx.js is optional — the game still works
+     without it, it just goes quiet. */
+  const Fx = window.Fx || {
+    play: function () {},
+    toast: function () {},
+    confetti: function () {},
+    isEnabled: function () { return false; },
+    setEnabled: function () { return false; },
+    toggle: function () { return false; }
+  };
+
   let players = [];
   let turn = 0;
   let rolling = false;
-  let sixes = 0;
   let winner = -1;
 
   /* ---------- engagement state ---------- */
@@ -920,6 +1124,16 @@
     try { localStorage.setItem(STATS_KEY, JSON.stringify(stats)); } catch (e) {}
   }
 
+  /* "Best finish" should follow the token while the game is running, not only
+     when the game ends. */
+  function saveBest() {
+    if (maxPos > stats.best) {
+      stats.best = maxPos;
+      saveStats();
+      renderStats();
+    }
+  }
+
   function renderStats() {
     const g = document.getElementById("statGames");
     const b = document.getElementById("statBest");
@@ -931,6 +1145,378 @@
     const modeToggle = document.getElementById("modeToggle");
     if (modeLabel) modeLabel.textContent = mode === "ai" ? "Vs computer" : "Pass & play";
     if (modeToggle) modeToggle.textContent = mode === "ai" ? "Back to pass & play" : "Play vs computer";
+  }
+
+  /* ---------- trophies, streaks, board explorer and the quiz ---------- */
+  const TROPHIES_KEY = "snl-trophies-v1";
+  const DAYS_KEY = "snl-days-v1";
+  const SEEN_KEY = "snl-seen-v1";
+
+  const TROPHIES = [
+    { id: "first-game", emoji: "🎲", name: "First Roll", desc: "Finish your first game" },
+    { id: "first-win", emoji: "🏆", name: "First Win", desc: "Win a game" },
+    { id: "hat-trick", emoji: "🎖️", name: "Hat-trick", desc: "Win 3 games in a row" },
+    { id: "big-ladder", emoji: "🪜", name: "Big Ladder", desc: "Ride the 28 → 84 ladder" },
+    { id: "lucky-six", emoji: "6️⃣", name: "Lucky Six", desc: "Roll three 6s in a row" },
+    { id: "centurion", emoji: "💯", name: "Centurion", desc: "Reach square 100" },
+    { id: "challenger", emoji: "🗓️", name: "Challenger", desc: "Finish a daily challenge" },
+    { id: "human", emoji: "🤖", name: "Human vs Machine", desc: "Beat the computer" },
+    { id: "quiz-ace", emoji: "🧠", name: "Quiz Ace", desc: "Full marks on the board quiz" },
+    { id: "explorer", emoji: "🔍", name: "Board Explorer", desc: "Inspect 10 squares" },
+    { id: "veteran", emoji: "🐍", name: "Veteran", desc: "Play 25 games" }
+  ];
+
+  let trophies = [];
+  let days = [];
+  let seenSquares = [];
+
+  function loadList(key) {
+    try {
+      const parsed = localStorage.getItem(key) ? JSON.parse(localStorage.getItem(key)) : [];
+      return Array.isArray(parsed) ? parsed : [];
+    } catch (e) { return []; }
+  }
+  function saveList(key, list) {
+    try { localStorage.setItem(key, JSON.stringify(list)); } catch (e) {}
+  }
+
+  function loadTrophies() {
+    trophies = loadList(TROPHIES_KEY);
+    days = loadList(DAYS_KEY);
+    seenSquares = loadList(SEEN_KEY);
+  }
+
+  function unlock(id) {
+    if (trophies.indexOf(id) !== -1) return;
+    const t = TROPHIES.filter(x => x.id === id)[0];
+    if (!t) return;
+    trophies.push(id);
+    saveList(TROPHIES_KEY, trophies);
+    renderTrophies();
+    Fx.play("achievement");
+    Fx.toast("🏅 New badge unlocked: <b>" + t.name + "</b> — " + t.desc, { kind: "trophy", duration: 4200 });
+    Fx.confetti({ count: 70, life: 1800 });
+  }
+
+  function renderTrophies() {
+    const host = document.getElementById("trophyGrid");
+    if (!host) return;
+    host.innerHTML = "";
+    TROPHIES.forEach(t => {
+      const got = trophies.indexOf(t.id) !== -1;
+      const el = document.createElement("div");
+      el.className = "trophy" + (got ? " unlocked" : "");
+      el.innerHTML =
+        '<span class="trophy-emoji">' + t.emoji + "</span>" +
+        '<span class="trophy-name">' + t.name + "</span>" +
+        '<span class="trophy-desc">' + (got ? t.desc : "Locked") + "</span>";
+      if (!got) el.setAttribute("aria-label", t.name + " — locked. " + t.desc);
+      host.appendChild(el);
+    });
+  }
+
+  function markDay() {
+    const k = todayKey();
+    if (days.indexOf(k) === -1) {
+      days.push(k);
+      if (days.length > 90) days = days.slice(-90);
+      saveList(DAYS_KEY, days);
+    }
+  }
+
+  function renderStreak() {
+    const host = document.getElementById("streakRow");
+    if (!host) return;
+    host.innerHTML = "";
+    const label = document.createElement("span");
+    label.className = "streak-label";
+    label.textContent = "Last 7 days";
+    host.appendChild(label);
+    const now = new Date();
+    const names = ["S", "M", "T", "W", "T", "F", "S"];
+    for (let i = 6; i >= 0; i--) {
+      const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() - i);
+      const key = d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+      const played = days.indexOf(key) !== -1;
+      const el = document.createElement("div");
+      el.className = "streak-day" + (played ? " on" : "") + (i === 0 ? " today" : "");
+      el.textContent = names[d.getDay()];
+      el.title = key + (played ? " — played" : " — no game yet");
+      host.appendChild(el);
+    }
+  }
+
+  /* ---------- board explorer ---------- */
+  function squareText(n) {
+    const d = Rules.describeSquare(n);
+    if (d.type === "ladder") {
+      return "<b>Ladder</b> — land on square " + n + " and you climb to <b>" + d.to + "</b>, " + (d.to - n) + " squares up.";
+    }
+    if (d.type === "snake") {
+      return "<b>Snake</b> — land on square " + n + " and you slide down to <b>" + d.to + "</b>, " + (n - d.to) + " squares back.";
+    }
+    return "Plain square <b>" + n + "</b> — nothing happens when you land here.";
+  }
+
+  function showSquare(n) {
+    const numEl = document.getElementById("explorerNum");
+    const txtEl = document.getElementById("explorerText");
+    if (numEl) numEl.textContent = String(n);
+    if (txtEl) txtEl.innerHTML = squareText(n);
+    const prev = boardEl.querySelector(".cell.explored");
+    if (prev) prev.classList.remove("explored");
+    const cell = boardEl.querySelector('.cell[data-n="' + n + '"]');
+    if (cell) cell.classList.add("explored");
+    if (seenSquares.indexOf(n) === -1) {
+      seenSquares.push(n);
+      saveList(SEEN_KEY, seenSquares);
+      if (seenSquares.length >= 10) unlock("explorer");
+    }
+  }
+
+  /* ---------- board quiz ---------- */
+  let quiz = null;
+
+  function shuffle(list) {
+    const a = list.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      const t = a[i]; a[i] = a[j]; a[j] = t;
+    }
+    return a;
+  }
+
+  function squareOptions(correct, pool) {
+    const opts = [correct];
+    shuffle(pool.filter(v => v !== correct)).forEach(v => {
+      if (opts.length < 4 && opts.indexOf(v) === -1) opts.push(v);
+    });
+    let f = 1;
+    while (opts.length < 4) {
+      const v = correct + f;
+      if (v > 0 && v <= Rules.TOTAL && opts.indexOf(v) === -1) opts.push(v);
+      f++;
+    }
+    return shuffle(opts);
+  }
+
+  function countOptions(correct) {
+    const opts = [correct];
+    const cands = [];
+    for (let d = 1; d <= 3; d++) cands.push(correct - d, correct + d);
+    shuffle(cands).forEach(v => {
+      if (opts.length < 4 && v > 0 && opts.indexOf(v) === -1) opts.push(v);
+    });
+    return shuffle(opts);
+  }
+
+  function buildQuiz() {
+    const ladders = Object.keys(Rules.LADDERS).map(Number);
+    const snakes = Object.keys(Rules.SNAKES).map(Number);
+    const pool = ladders.concat(snakes);
+    const biggest = ladders.reduce((a, b) => (Rules.LADDERS[b] - b > Rules.LADDERS[a] - a ? b : a));
+    const worstSnake = snakes.reduce((a, b) => (a - Rules.SNAKES[a] > b - Rules.SNAKES[b] ? a : b));
+    const ladderTo = t => ladders.filter(s => Rules.LADDERS[s] === t)[0];
+    const snakeTo = t => snakes.filter(s => Rules.SNAKES[s] === t)[0];
+
+    const q = [];
+    q.push({
+      text: "Which square has the biggest ladder on the board?",
+      options: squareOptions(biggest, pool),
+      answer: biggest,
+      note: "Square <b>" + biggest + "</b> climbs you to <b>" + Rules.LADDERS[biggest] + "</b> — a jump of " + (Rules.LADDERS[biggest] - biggest) + " squares."
+    });
+    q.push({
+      text: "The ladder on square 28 takes you to…",
+      options: squareOptions(84, pool),
+      answer: 84,
+      note: "The 28 → 84 ladder is the biggest on the board. Land on 28 and you are nearly at the finish."
+    });
+    q.push({
+      text: "The snake on square 62 slides you down to…",
+      options: squareOptions(19, pool),
+      answer: 19,
+      note: "Square 62 drops you back <b>43 squares</b> to 19 — the longest slide on the board."
+    });
+    q.push({
+      text: "How many ladders are on the board?",
+      options: countOptions(Object.keys(Rules.LADDERS).length),
+      answer: Object.keys(Rules.LADDERS).length,
+      note: "There are <b>" + Object.keys(Rules.LADDERS).length + " ladders</b> and <b>" + Object.keys(Rules.SNAKES).length + " snakes</b>."
+    });
+    q.push({
+      text: "How many snakes are on the board?",
+      options: countOptions(Object.keys(Rules.SNAKES).length),
+      answer: Object.keys(Rules.SNAKES).length,
+      note: "There are <b>" + Object.keys(Rules.SNAKES).length + " snakes</b> and <b>" + Object.keys(Rules.LADDERS).length + " ladders</b>."
+    });
+    q.push({
+      text: "Which square drops you down to 75?",
+      options: squareOptions(snakeTo(75), pool),
+      answer: snakeTo(75),
+      note: "The snake on square <b>" + snakeTo(75) + "</b> slides you back 20 squares to 75."
+    });
+    q.push({
+      text: "Which square takes you all the way to 98?",
+      options: squareOptions(ladderTo(98), pool),
+      answer: ladderTo(98),
+      note: "The ladder on square <b>" + ladderTo(98) + "</b> is your back door to the finish."
+    });
+    q.push({
+      text: "Which snake sends you back the furthest?",
+      options: squareOptions(worstSnake, pool),
+      answer: worstSnake,
+      note: "The snake on square <b>" + worstSnake + "</b> sends you back " + (worstSnake - Rules.SNAKES[worstSnake]) + " squares."
+    });
+    return shuffle(q).slice(0, 8);
+  }
+
+  function initQuiz() {
+    const host = document.getElementById("quizBox");
+    if (!host) return;
+    host.innerHTML = "";
+    const intro = document.createElement("p");
+    intro.className = "quiz-note";
+    intro.textContent = "Eight questions about the ladders and snakes on the board above. A perfect score earns the Quiz Ace badge.";
+    host.appendChild(intro);
+    const actions = document.createElement("div");
+    actions.className = "quiz-actions";
+    const start = document.createElement("button");
+    start.type = "button";
+    start.textContent = "Start the quiz";
+    start.addEventListener("click", startQuiz);
+    actions.appendChild(start);
+    host.appendChild(actions);
+  }
+
+  function startQuiz() {
+    quiz = { questions: buildQuiz(), index: 0, score: 0, answered: false };
+    renderQuiz();
+  }
+
+  function renderQuiz() {
+    const host = document.getElementById("quizBox");
+    if (!host || !quiz) return;
+    const current = quiz.questions[quiz.index];
+    const total = quiz.questions.length;
+    host.innerHTML = "";
+
+    const prog = document.createElement("div");
+    prog.className = "quiz-progress";
+    prog.innerHTML = "<span>Question " + (quiz.index + 1) + " of " + total + "</span>" +
+      '<span class="quiz-track"><span style="width:' + Math.round(quiz.index / total * 100) + '%"></span></span>';
+    host.appendChild(prog);
+
+    const qEl = document.createElement("p");
+    qEl.className = "quiz-q";
+    qEl.textContent = current.text;
+    host.appendChild(qEl);
+
+    const opts = document.createElement("div");
+    opts.className = "quiz-options";
+    current.options.forEach(val => {
+      const b = document.createElement("button");
+      b.type = "button";
+      b.className = "quiz-option";
+      b.textContent = String(val);
+      b.addEventListener("click", () => answerQuiz(val, b, opts));
+      opts.appendChild(b);
+    });
+    host.appendChild(opts);
+
+    const note = document.createElement("p");
+    note.className = "quiz-note";
+    note.id = "quizNote";
+    note.style.display = "none";
+    host.appendChild(note);
+
+    const actions = document.createElement("div");
+    actions.className = "quiz-actions";
+    actions.id = "quizActions";
+    host.appendChild(actions);
+  }
+
+  function answerQuiz(val, btn, opts) {
+    if (!quiz || quiz.answered) return;
+    quiz.answered = true;
+    const current = quiz.questions[quiz.index];
+    const right = val === current.answer;
+    if (right) { quiz.score++; Fx.play("quizRight"); } else { Fx.play("quizWrong"); }
+    Array.from(opts.children).forEach(b => {
+      b.disabled = true;
+      if (Number(b.textContent) === current.answer) b.classList.add("right");
+      else if (b === btn) b.classList.add("wrong");
+    });
+    const note = document.getElementById("quizNote");
+    if (note) {
+      note.style.display = "";
+      note.innerHTML = (right ? "✅ Correct. " : "❌ Not quite. ") + current.note;
+    }
+    const actions = document.getElementById("quizActions");
+    if (actions) {
+      actions.innerHTML = "";
+      const next = document.createElement("button");
+      next.type = "button";
+      next.textContent = quiz.index + 1 < quiz.questions.length ? "Next question →" : "See my score";
+      next.addEventListener("click", () => {
+        quiz.index++;
+        quiz.answered = false;
+        if (quiz.index < quiz.questions.length) renderQuiz();
+        else finishQuiz();
+      });
+      actions.appendChild(next);
+    }
+  }
+
+  function finishQuiz() {
+    const host = document.getElementById("quizBox");
+    if (!host || !quiz) return;
+    const total = quiz.questions.length;
+    host.innerHTML = "";
+
+    const score = document.createElement("div");
+    score.className = "quiz-score";
+    score.innerHTML = "You scored <b>" + quiz.score + " / " + total + "</b>";
+    host.appendChild(score);
+
+    const note = document.createElement("p");
+    note.className = "quiz-note";
+    note.textContent = quiz.score === total
+      ? "Perfect! You know this board better than the snakes do."
+      : quiz.score >= total / 2
+        ? "Good job — a couple of squares are still a mystery. Have another look at the board above."
+        : "Worth another look at the board above, then come back for the badge.";
+    host.appendChild(note);
+
+    if (quiz.score === total) unlock("quiz-ace");
+
+    const actions = document.createElement("div");
+    actions.className = "quiz-actions";
+    const again = document.createElement("button");
+    again.type = "button";
+    again.textContent = "Play again";
+    again.addEventListener("click", startQuiz);
+    actions.appendChild(again);
+    const share = document.createElement("button");
+    share.type = "button";
+    share.className = "ghost";
+    share.textContent = "Share my score";
+    share.addEventListener("click", shareQuizScore);
+    actions.appendChild(share);
+    host.appendChild(actions);
+  }
+
+  function shareQuizScore() {
+    if (!quiz) return;
+    const text = "I scored " + quiz.score + "/" + quiz.questions.length + " on the Snake & Ladder board quiz! 🧠🎲";
+    const url = new URL("index.html#quizSection", location.href.split("#")[0]).toString();
+    if (navigator.share) {
+      navigator.share({ title: "Snake & Ladder board quiz", text: text, url: url }).catch(() => {});
+      return;
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text + " " + url).catch(() => {});
+    }
   }
 
   /* ---------- daily challenge ---------- */
@@ -1137,11 +1723,12 @@
 
   function newGame(count) {
     players = [];
-    for (let i = 0; i < count; i++) players.push({ pos: 0, ai: false });
+    // `sixes` is the player's own count of consecutive sixes, so it has to
+    // travel with the player instead of living in a shared variable.
+    for (let i = 0; i < count; i++) players.push({ pos: 0, sixes: 0, ai: false });
     // In "vs computer" mode player 2 is played by the computer.
     if (mode === "ai" && players.length >= 2) players[1].ai = true;
     turn = 0;
-    sixes = 0;
     winner = -1;
     rolling = false;
     moves = 0;
@@ -1183,26 +1770,30 @@
     }
     diceEl.classList.remove("rolling");
     setDice(value);
+    Fx.play("dice");
 
     const p = players[turn];
     if (p.pos > maxPos) maxPos = p.pos;
 
     // Rules come from the shared, unit-tested rules.js module.
-    const res = Rules.step(p, value, sixes);
+    const res = Rules.step(p, value);
+    p.sixes = res.sixes;
 
     if (res.tripleSix) {
-      sixes = res.sixes;
       p.pos = res.pos;
       renderTokens();
       renderPanels();
       flashCell(res.pos);
-      msg(`<b>Player ${turn + 1}</b> rolled three 6s! Back to the start.`);
+      Fx.play("tripleSix");
+      Fx.toast("<b>Three 6s in a row!</b> Player " + (turn + 1) + " is back to square 1.", { kind: "bad" });
+      unlock("lucky-six");
       await sleep(700);
       nextTurn();
       return;
     }
 
     if (res.overshoot) {
+      Fx.play("click");
       msg(`<b>Player ${turn + 1}</b> rolled ${value} — needs an exact ${TOTAL}. Turn passes.`);
       await sleep(700);
       nextTurn();
@@ -1212,6 +1803,7 @@
     // walk the token one square at a time
     for (let i = 0; i < value; i++) {
       p.pos++;
+      if (p.pos > maxPos) { maxPos = p.pos; saveBest(); }
       renderTokens();
       renderPanels();
       await sleep(180);
@@ -1225,6 +1817,12 @@
         ? `<b>Player ${turn + 1}</b> climbed the ladder from ${jump.from} to ${jump.to}!`
         : `<b>Player ${turn + 1}</b> hit a snake at ${jump.from} — sliding to ${jump.to}!`);
       flashCell(jump.from);
+      if (isLadder) {
+        Fx.play("ladder");
+        if (jump.from === 28 && jump.to === 84) unlock("big-ladder");
+      } else {
+        Fx.play("snake");
+      }
       await sleep(550);
       p.pos = jump.to;
       renderTokens();
@@ -1240,7 +1838,6 @@
 
     if (res.won) {
       winner = turn;
-      sixes = res.sixes;
       if (p.pos > maxPos) maxPos = p.pos;
       msg(`🎉 <b>Player ${turn + 1}</b> wins! Reaching square ${TOTAL}.`);
       diceLabel.textContent = "Game over";
@@ -1251,10 +1848,9 @@
       return;
     }
 
-    sixes = res.sixes;
-
     if (res.bonus) {
       msg(`<b>Player ${turn + 1}</b> rolled a 6 — bonus turn!`);
+      Fx.play("six");
       rolling = false;
       rollBtn.disabled = false;
       renderPanels();
@@ -1267,7 +1863,6 @@
 
   function nextTurn() {
     turn = (turn + 1) % players.length;
-    sixes = 0;
     rolling = false;
     renderPanels();
     startTurn();
@@ -1291,11 +1886,33 @@
   /* ---------- stats + win overlay ---------- */
   function recordGame() {
     stats.games++;
-    if (winner === 0) { stats.streak++; } else { stats.streak = 0; }
+    if (winner === 0) {
+      stats.wins++;                 // wins was never counted before
+      stats.streak++;
+    } else {
+      stats.streak = 0;
+    }
     if (stats.streak > stats.bestStreak) stats.bestStreak = stats.streak;
     if (maxPos > stats.best) stats.best = maxPos;
     saveStats();
     renderStats();
+    markDay();
+    unlock("first-game");
+    if (winner === 0) {
+      unlock("first-win");
+      unlock("centurion");
+      if (challenge) unlock("challenger");
+      if (players[winner] && !players[winner].ai && mode === "ai") unlock("human");
+      if (stats.bestStreak >= 3) unlock("hat-trick");
+      Fx.play("win");
+      Fx.confetti();
+      Fx.toast("🎉 <b>Player " + (winner + 1) + " wins!</b> Reaching square " + TOTAL + " in " + moves + " rolls.", { kind: "win" });
+    } else {
+      Fx.play("lose");
+    }
+    if (stats.games >= 25) unlock("veteran");
+    renderTrophies();
+    renderStreak();
   }
 
   function showWinOverlay() {
@@ -1351,7 +1968,7 @@
     setTimeout(() => el.classList.remove("hit"), 550);
   }
 
-  rollBtn.addEventListener("click", roll);
+  rollBtn.addEventListener("click", () => { Fx.play("click"); roll(); });
   restartBtn.addEventListener("click", () => { hideWinOverlay(); newGame(players.length); });
   addBtn.addEventListener("click", () => {
     if (players.length >= 4) return;
@@ -1395,6 +2012,45 @@
     });
   }
 
+  // Sound on/off. Remembered on the device.
+  const soundToggle = document.getElementById("soundToggle");
+  function renderSound() {
+    const on = Fx.isEnabled();
+    const value = document.getElementById("soundValue");
+    if (value) value.textContent = on ? "On" : "Off";
+    if (soundToggle) soundToggle.textContent = on ? "Mute sounds" : "Unmute sounds";
+  }
+  if (soundToggle) {
+    soundToggle.addEventListener("click", () => {
+      Fx.toggle();
+      renderSound();
+    });
+  }
+
+  // Board explorer: hovering or tapping a square explains what it does.
+  boardEl.addEventListener("mouseover", (e) => {
+    const cell = e.target.closest ? e.target.closest(".cell") : null;
+    if (cell) showSquare(Number(cell.dataset.n));
+  });
+  boardEl.addEventListener("click", (e) => {
+    const cell = e.target.closest ? e.target.closest(".cell") : null;
+    if (cell) {
+      showSquare(Number(cell.dataset.n));
+      return;
+    }
+    // Clicking the empty space around the board counts as a roll.
+    if (!rolling && winner === -1) roll();
+  });
+
+  // Space bar rolls the dice, as long as the player is not typing somewhere.
+  document.addEventListener("keydown", (e) => {
+    if (e.key !== " " && e.key !== "Spacebar") return;
+    const tag = (e.target && e.target.tagName) || "";
+    if (tag === "INPUT" || tag === "TEXTAREA" || e.target.isContentEditable) return;
+    e.preventDefault();
+    if (!rolling && winner === -1) roll();
+  });
+
   // Win overlay buttons.
   const winAgain = document.getElementById("winAgain");
   if (winAgain) winAgain.addEventListener("click", () => { hideWinOverlay(); newGame(players.length); });
@@ -1430,6 +2086,11 @@
   function boot() {
     if (L) L.progress(35, "Loading the rules…");
     loadStats();
+    loadTrophies();
+    renderTrophies();
+    renderStreak();
+    renderSound();
+    initQuiz();
     newGame(2);
     // ?challenge=YYYY-MM-DD deep-links straight into a daily challenge run.
     let requested = null;

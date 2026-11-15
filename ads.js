@@ -21,11 +21,16 @@
       side: "7394066327",
       foot: "9828657971"
     },
+    // Show the house-ad placeholder when no AdSense client is configured.
+    // Portal builds switch this off so the ad slots stay empty.
+    showHouseAds: true,
     // Sites that list browser games — used by the "Play us there" strip.
     portals: [
       { name: "CrazyGames", url: "https://www.crazygames.com/", emoji: "🎮" },
       { name: "Poki", url: "https://poki.com/", emoji: "🕹️" },
       { name: "itch.io", url: "https://itch.io/games", emoji: "🧩" },
+      { name: "Newgrounds", url: "https://www.newgrounds.com/games", emoji: "🎨" },
+      { name: "GameDistribution", url: "https://gamedistribution.com/", emoji: "📦" },
       { name: "Coolmath Games", url: "https://www.coolmathgames.com/", emoji: "➗" },
       { name: "Addicting Games", url: "https://www.addictinggames.com/", emoji: "🔥" }
     ]
@@ -109,7 +114,8 @@
     }
 
     // House ad / promo placeholder — drives players to the referral link
-    // and to the other game portals.
+    // and to the other game portals. Portal builds disable it.
+    if (!CONFIG.showHouseAds) return;
     var box = el("div", "house-ad");
     box.appendChild(el("div", "house-ad-tag", label || "Sponsored"));
     box.appendChild(el("div", "house-ad-title", "Enjoying Snake &amp; Ladder?"));
