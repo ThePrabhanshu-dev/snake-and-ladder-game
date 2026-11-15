@@ -85,6 +85,7 @@ Serving over `http://` is needed so the browser loads the sibling `.js` files.
 | `deploy.js` | One-command free deploy to Cloudflare Pages |
 | `set-adsense.js` | Wire an AdSense publisher id + slot ids into `ads.js` |
 | `verify-adsense.js` | Check that the live site really serves the AdSense setup |
+| `verify-money.js` | Check which ad network is live on the deployed site and whether it can earn |
 | `package-portal.js` | Build the portal upload zip + listing metadata for third-party game sites |
 | `add-domain.js` | Attach/remove a custom domain on the Pages project |
 | `test.js` | Node test suite for `rules.js` |
