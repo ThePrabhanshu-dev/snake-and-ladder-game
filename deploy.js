@@ -29,6 +29,7 @@ const SITE_FILES = [
   "loader.js",
   "fx.js",
   "ads.js",
+  "ads-network.json",
   "embed.js",
   "favicon.svg",
   "og-image.svg",

@@ -1,0 +1,26 @@
+{
+  "_comment": [
+    "Fallback ad-network config. Google AdSense only approves sites on a custom",
+    "domain, so until the domain + approval are done this file lets you run a",
+    "second network that DOES accept *.pages.dev (Adsterra, HilltopAds, Exoclick,",
+    "PropellerAds).",
+    "",
+    "How to use:",
+    "  1. Sign up at https://www.adsterra.com/ (publisher sign-up) and add your site URL.",
+    "  2. Create an ad unit (Banner 728x90 or Social Ads) and copy the <script> snippet.",
+    "  3. Paste it below (top / side / foot) and set enabled to true.",
+    "  4. Deploy: node deploy.js",
+    "",
+    "When AdSense approves your domain, set \"enabled\" to false and flip",
+    "adsenseApproved to true in ads.js - never run two ad networks on one page."
+  ],
+  "enabled": false,
+  "provider": "adsterra",
+  "head": "",
+  "body": "",
+  "slots": {
+    "top": "",
+    "side": "",
+    "foot": ""
+  }
+}

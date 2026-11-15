@@ -24,6 +24,24 @@
     // Show the house-ad placeholder when no AdSense client is configured.
     // Portal builds switch this off so the ad slots stay empty.
     showHouseAds: true,
+    // Set to true once AdSense approves the site. Until then the slots are
+    // filled by the fallback ad network (see fallbackNetwork below) or by the
+    // house ad, because AdSense units do not fill on an unapproved site.
+    adsenseApproved: false,
+    // Fallback ad network - earn money on the *.pages.dev domain while AdSense
+    // review is pending. Paste the snippets from your network's dashboard
+    // (Adsterra, HilltopAds, Exoclick, PropellerAds all accept subdomain
+    // sites). Managed with: node set-ads-network.js
+    fallbackNetwork: {
+      enabled: false,
+      provider: "",
+      // Global snippet injected at the end of <head> (e.g. a popunder loader).
+      head: "",
+      // Global snippet injected at the end of <body> (e.g. a social bar).
+      body: "",
+      // Snippet per on-page ad slot.
+      slots: { top: "", side: "", foot: "" }
+    },
     // Sites that list browser games — used by the "Play us there" strip.
     portals: [
       { name: "CrazyGames", url: "https://www.crazygames.com/", emoji: "🎮" },
@@ -91,11 +109,101 @@
     return id;
   }
 
+  /* ---------- fallback ad network ---------- */
+  // Snippets pasted from an ad network dashboard (Adsterra, HilltopAds,
+  // Exoclick, PropellerAds...). They are injected as real <script> elements
+  // so the network's loader actually executes.
+  function parseSnippet(html) {
+    // A <template> keeps the snippet as a fragment. DOMParser is not used on
+    // purpose: it parses a full document and moves a leading <script> into
+    // <head>, which would silently drop the snippet.
+    var tpl = document.createElement("template");
+    tpl.innerHTML = html;
+    return Array.prototype.slice.call(tpl.content.childNodes);
+  }
+
+  function appendSnippet(target, html) {
+    if (!target || !html) return;
+    var nodes = parseSnippet(html);
+    for (var i = 0; i < nodes.length; i++) {
+      var node = nodes[i];
+      if (node.nodeType === 1 && node.tagName === "SCRIPT") {
+        // Imported scripts do not run - recreate them so the code executes.
+        var s = document.createElement("script");
+        for (var j = 0; j < node.attributes.length; j++) {
+          s.setAttribute(node.attributes[j].name, node.attributes[j].value);
+        }
+        s.text = node.textContent || "";
+        target.appendChild(s);
+      } else {
+        target.appendChild(document.importNode(node, true));
+      }
+    }
+  }
+
+  function injectSnippet(container, html) {
+    appendSnippet(container, html);
+  }
+
+  function injectGlobal(snippet, where) {
+    var target = where === "head" ? document.head : document.body;
+    appendSnippet(target, snippet);
+  }
+
+  function fallbackEnabled() {
+    var fn = CONFIG.fallbackNetwork || {};
+    if (!fn.enabled) return false;
+    // Once AdSense is approved, AdSense takes priority - do not run two
+    // ad networks on the same page (Google rejects that as invalid traffic).
+    if (CONFIG.adsenseApproved && CONFIG.adsenseClient) return false;
+    return true;
+  }
+
+  /* ---------- config loading ---------- */
+  // The fallback network snippets live in ads-network.json so they can be
+  // pasted (and edited) without touching any JavaScript. If the file cannot
+  // be read - or the page is opened from disk - the built-in defaults apply.
+  function loadNetworkConfig(done) {
+    if (location.protocol === "file:") return done();
+    fetch("ads-network.json", { cache: "no-store" })
+      .then(function (res) { return res.ok ? res.json() : null; })
+      .then(function (cfg) {
+        if (cfg) applyNetworkConfig(cfg);
+      })
+      .catch(function () {})
+      .then(function () { done(); });
+  }
+
+  function applyNetworkConfig(cfg) {
+    var fn = CONFIG.fallbackNetwork;
+    if (!fn) return;
+    if (typeof cfg.enabled === "boolean") fn.enabled = cfg.enabled;
+    if (typeof cfg.provider === "string") fn.provider = cfg.provider;
+    if (typeof cfg.head === "string") fn.head = cfg.head;
+    if (typeof cfg.body === "string") fn.body = cfg.body;
+    if (cfg.slots && typeof cfg.slots === "object") {
+      ["top", "side", "foot"].forEach(function (name) {
+        if (typeof cfg.slots[name] === "string") fn.slots[name] = cfg.slots[name];
+      });
+    }
+  }
+
   function renderAd(container, slot, label) {
     if (!container) return;
     container.innerHTML = "";
 
-    if (CONFIG.adsenseClient) {
+    // 1. Fallback network (money now, while AdSense review is pending).
+    if (fallbackEnabled()) {
+      var fn = CONFIG.fallbackNetwork;
+      var slotSnippet = (fn.slots && fn.slots[slot]) || "";
+      if (slotSnippet) {
+        injectSnippet(container, slotSnippet);
+        return;
+      }
+    }
+
+    // 2. Google AdSense (once the site is approved).
+    if (CONFIG.adsenseApproved && CONFIG.adsenseClient) {
       var slotId = validSlotId(slot);
       // No manual unit for this position: leave the slot empty and let AdSense
       // Auto ads (enabled in the AdSense dashboard) fill the page instead.
@@ -230,9 +338,7 @@
   };
 
   /* ---------- boot ---------- */
-  function init() {
-    loadAdSense();
-
+  function renderSlots() {
     // Any element with data-ad="<slotName>" is treated as an ad slot, so extra
     // pages (like play.html) can declare their own slots without changes here.
     var declared = document.querySelectorAll("[data-ad]");
@@ -248,9 +354,29 @@
     renderAd(document.getElementById("adTop"), "top", "Sponsored");
     renderAd(document.getElementById("adSide"), "side", "Sponsored");
     renderAd(document.getElementById("adFoot"), "foot", "Sponsored");
+  }
 
+  function init() {
+    // AdSense units are only requested once the site is approved - on an
+    // unapproved site they serve nothing. The static adsbygoogle.js tag stays
+    // in the page <head> because Google needs it for site verification.
+    if (CONFIG.adsenseApproved && CONFIG.adsenseClient) {
+      loadAdSense();
+    }
+
+    // Share buttons and the portal strip do not depend on the ad config.
     buildShare(document.getElementById("shareRow"));
     buildPortals(document.getElementById("portalRow"));
+
+    // Ad slots wait for ads-network.json so the fallback snippets are known.
+    loadNetworkConfig(function () {
+      if (fallbackEnabled()) {
+        var fn = CONFIG.fallbackNetwork;
+        injectGlobal(fn.head, "head");
+        injectGlobal(fn.body, "body");
+      }
+      renderSlots();
+    });
 
     // Track the referral that brought the player in.
     var ref = new URLSearchParams(location.search).get("ref");
