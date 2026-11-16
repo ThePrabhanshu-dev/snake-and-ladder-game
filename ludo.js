@@ -265,6 +265,7 @@
   function handleRoll(roll) {
     const player = current();
     lastRoll = roll;
+    if (diceLabelEl) diceLabelEl.textContent = "Rolled " + roll;
     const moves = Rules.legalMoves(state, state.turn, roll);
     pendingMoves = moves;
 
@@ -278,11 +279,7 @@
       return;
     }
 
-    const diceLabel = "Rolled " + roll;
-    if (diceLabelEl) diceLabelEl.textContent = diceLabel;
-
-    if (roll === 6) {
-      Fx.play("six");
+    if (roll === 6) {      Fx.play("six");
       state.sixes += 1;
       if (state.sixes >= Rules.THREE_SIXES) {
         state.sixes = 0;
