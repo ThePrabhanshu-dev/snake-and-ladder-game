@@ -1,13 +1,4 @@
-/* Drop-in embeddable widget for partner websites.
- *
- * Usage — add this to any page on another site:
- *
- *   <div class="snl-game-embed" data-ref="partnerName"></div>
- *   <script src="https://snake-and-ladder-2q0.pages.dev/embed.js" async></script>
- *
- * It renders a styled "Play Snake & Ladder" card that links to the live game
- * and tags the click with ?ref=<partner> so referrals can be measured.
- */
+
 (function () {
   "use strict";
 
@@ -104,7 +95,7 @@
   } else {
     scan();
   }
-  // Re-scan for dynamically injected embeds.
+
   if (window.MutationObserver) {
     new MutationObserver(scan).observe(document.documentElement, { childList: true, subtree: true });
   }

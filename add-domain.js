@@ -1,16 +1,5 @@
 #!/usr/bin/env node
-/**
- * Attach a custom domain to the Cloudflare Pages project (needed for AdSense,
- * which does not approve *.pages.dev / *.github.io subdomains).
- *
- *   node add-domain.js yourdomain.com
- *
- * The domain must already be in your Cloudflare account (buy at
- * cloudflare.com/products/registrar, or point the nameservers of a domain
- * bought elsewhere at Cloudflare). SSL is issued free and auto-renewed.
- *
- * Requires a one-time `npx wrangler login` (this reuses the stored token).
- */
+
 
 const fs = require("fs");
 const os = require("os");

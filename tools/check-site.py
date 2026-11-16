@@ -1,11 +1,5 @@
-#!/usr/bin/env python3
-"""Sanity checks for the site's source files.
 
-Verifies that every HTML page is valid UTF-8, has a canonical URL pointing at
-the live domain, and carries the AdSense publisher tag + script.
 
-Usage:  python tools/check-site.py
-"""
 import os
 import re
 import sys
@@ -21,14 +15,12 @@ PAGES = [
 
 failures = []
 
-
 def check(cond, message):
     if cond:
         print("  PASS  " + message)
     else:
         print("  FAIL  " + message)
         failures.append(message)
-
 
 def main():
     print("File encoding")
@@ -87,7 +79,6 @@ def main():
 
     print("\n" + ("ALL CHECKS PASSED" if not failures else f"{len(failures)} FAILURES"))
     return 1 if failures else 0
-
 
 if __name__ == "__main__":
     sys.exit(main())

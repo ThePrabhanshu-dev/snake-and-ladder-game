@@ -12,8 +12,7 @@
   </defs>
   <rect width="1200" height="630" fill="url(#bg)"/>
 
-  <!-- decorative ladder -->
-  <g opacity="0.9" transform="translate(90 150)">
+    <g opacity="0.9" transform="translate(90 150)">
     <line x1="30" y1="300" x2="60" y2="40" stroke="#4cc9f0" stroke-width="9" stroke-linecap="round"/>
     <line x1="110" y1="300" x2="140" y2="40" stroke="#4cc9f0" stroke-width="9" stroke-linecap="round"/>
     <g stroke="#4cc9f0" stroke-width="7" stroke-linecap="round">
@@ -25,23 +24,20 @@
     </g>
   </g>
 
-  <!-- decorative snake -->
-  <path d="M1080 130 C 990 130, 1000 220, 1075 235 C 1150 250, 1145 330, 1065 345 C 1000 358, 1010 430, 1080 440"
+    <path d="M1080 130 C 990 130, 1000 220, 1075 235 C 1150 250, 1145 330, 1065 345 C 1000 358, 1010 430, 1080 440"
         fill="none" stroke="#ff7a7a" stroke-width="20" stroke-linecap="round" opacity="0.92"/>
   <circle cx="1080" cy="440" r="18" fill="#ff9a9a"/>
   <circle cx="1074" cy="436" r="5" fill="#3a1020"/>
   <circle cx="1088" cy="436" r="5" fill="#3a1020"/>
 
-  <!-- text -->
-  <text x="600" y="270" text-anchor="middle" font-family="Segoe UI, system-ui, sans-serif"
+    <text x="600" y="270" text-anchor="middle" font-family="Segoe UI, system-ui, sans-serif"
         font-size="86" font-weight="800" fill="url(#title)">Snake &amp; Ladder</text>
   <text x="600" y="335" text-anchor="middle" font-family="Segoe UI, system-ui, sans-serif"
         font-size="30" fill="#9fb0d4">Climb the ladders. Dodge the snakes. Race to 100.</text>
   <text x="600" y="392" text-anchor="middle" font-family="Segoe UI, system-ui, sans-serif"
         font-size="26" font-weight="700" fill="#e8ecf5">Free online board game &#183; 2–4 players &#183; No signup</text>
 
-  <!-- dice -->
-  <g transform="translate(500 440)">
+    <g transform="translate(500 440)">
     <rect width="74" height="74" rx="16" fill="#2a3348" stroke="#46527a" stroke-width="2"/>
     <circle cx="20" cy="20" r="7" fill="#eef2ff"/>
     <circle cx="54" cy="20" r="7" fill="#eef2ff"/>

@@ -1,7 +1,4 @@
-/* Shared site chrome: the top navigation bar and a few accessibility helpers.
-   Kept in its own file so every page gets the same bar without duplicating
-   the rules in each page's inline <style>. Colours are scoped to .topnav so
-   the bar looks identical no matter what theme variables a page defines. */
+
 
 .topnav {
   --nav-bg: #12161f;
@@ -67,9 +64,6 @@
   .topnav-links { margin-left: 0; width: 100%; }
 }
 
-/* ---- accessibility helpers shared by every page ---- */
-
-/* First tab stop on every page: lets keyboard users jump past the nav. */
 .skip-link {
   position: absolute;
   left: -9999px;
@@ -85,16 +79,13 @@
 }
 .skip-link:focus { left: 0; }
 
-/* A visible focus ring on everything that can be tabbed to. */
 :focus-visible {
   outline: 3px solid #7aa2ff;
   outline-offset: 2px;
 }
 
-/* An ad slot that has nothing in it should not leave a hole in the page. */
 .ad-slot:empty { display: none; }
 
-/* Shown when JavaScript is switched off. */
 .noscript-note {
   width: 100%;
   max-width: 960px;
@@ -109,7 +100,6 @@
 }
 .noscript-note b { color: var(--text); }
 
-/* Respect a reduced-motion preference everywhere on the site. */
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after {
     animation-duration: .01ms !important;
@@ -119,32 +109,21 @@
   }
 }
 
-/* ===================================================================
-   THEME TOKENS
-   Every page already defines --bg / --panel / --accent / --text /
-   --muted in its own inline <style>. This block adds the extra tokens
-   the shared chrome needs. They are only declared for the colours
-   that did not exist as variables before, so the dark theme keeps the
-   exact look each page already had.
-
-   The light theme lives further down and overrides everything.
-   =================================================================== */
-
 :root {
-  --line: #2b3244;          /* card + panel borders */
-  --line-soft: #262d3d;     /* table row separators */
-  --line-strong: #333d58;   /* input, tag and chip borders */
-  --field: #121824;         /* input / code background */
-  --field-text: #b7c3dd;    /* text sitting on a soft surface */
-  --tag-text: #7d8aa8;      /* small uppercase labels */
-  --faint: #6d7794;         /* footer and meta text */
-  --link-soft: #8fa6d8;     /* links inside footers */
-  --hover: #263049;         /* hover / active surface */
-  --tile: #212838;          /* small tile background */
-  --tile-line: #2f3852;     /* small tile border */
-  --bg-glow: #1a2336;       /* colour behind the page gradient */
-  --bar-bg: rgba(25, 29, 39, .96);   /* mobile control bar */
-  --overlay-bg: rgba(8, 10, 16, .82);/* modal scrim */
+  --line: #2b3244;
+  --line-soft: #262d3d;
+  --line-strong: #333d58;
+  --field: #121824;
+  --field-text: #b7c3dd;
+  --tag-text: #7d8aa8;
+  --faint: #6d7794;
+  --link-soft: #8fa6d8;
+  --hover: #263049;
+  --tile: #212838;
+  --tile-line: #2f3852;
+  --bg-glow: #1a2336;
+  --bar-bg: rgba(25, 29, 39, .96);
+  --overlay-bg: rgba(8, 10, 16, .82);
   --toast-bg: linear-gradient(180deg, #232c42, #1b2130);
   --toast-line: #3a465f;
   --toast-win: #9df0c8;
@@ -152,13 +131,6 @@
   --toast-trophy: #ffe6a8;
   --shadow-panel: 0 18px 40px rgba(0, 0, 0, .45);
 }
-
-/* ===================================================================
-   LIGHT THEME
-   Applied by site-ui.js through <html data-theme="light">. The
-   attribute selector is more specific than the plain :root rule in
-   each page's inline <style>, so these values win.
-   =================================================================== */
 
 html[data-theme="light"] {
   --bg: #f4f6fb;
@@ -195,8 +167,6 @@ html[data-theme="light"] {
   --shadow-panel: 0 18px 40px rgba(24, 33, 56, .12);
 }
 
-/* Each page builds its background gradient from --bg-glow, so the light
-   theme gets the same soft spotlight without any extra rule. */
 html[data-theme="light"] .topnav {
   --nav-bg: #ffffff;
   --nav-line: #e3e8f2;
@@ -207,8 +177,6 @@ html[data-theme="light"] .topnav {
 html[data-theme="light"] .topnav-links a:hover { background: #eef2fb; }
 html[data-theme="light"] .topnav-links a[aria-current="page"] { background: #e3ebfd; }
 
-/* Surfaces that hard-code a dark border or background need the light
-   equivalents. The selectors match the classes each page uses. */
 html[data-theme="light"] .card,
 html[data-theme="light"] .panel,
 html[data-theme="light"] .board-shell,
@@ -292,14 +260,11 @@ html[data-theme="light"] footer a,
 html[data-theme="light"] .site-nav a { color: var(--link-soft); }
 html[data-theme="light"] .site-nav a:hover { color: var(--accent); }
 
-/* The dice keeps its own contrast: on a light table the pips turn dark. */
 html[data-theme="light"] #dice .pip { background: #1b2130; }
 html[data-theme="light"] .win-overlay { background: var(--overlay-bg); }
 html[data-theme="light"] .controls { background: var(--bar-bg); border-top-color: var(--line); }
 html[data-theme="light"] .pname:hover:not(:disabled) { background: var(--line); border-color: var(--line-strong); }
 
-/* The Snake & Ladder board turns into the familiar pale checkerboard so
-   the square numbers stay easy to read in daylight. */
 html[data-theme="light"] .board { background: #dde3ee; }
 html[data-theme="light"] .cell { background: #ffffff; color: #56617a; }
 html[data-theme="light"] .cell.light { background: #e7ecf6; color: #414c63; }
@@ -307,27 +272,19 @@ html[data-theme="light"] .cell.start { color: #2f5fd0; }
 html[data-theme="light"] .cell.finish { color: #8a5a00; }
 html[data-theme="light"] .cell.hit { background: #cddcff; }
 
-/* Tiles and cards that keep a dark fill in the dark theme. */
 html[data-theme="light"] .date-chip { color: #2f5fd0; border-color: var(--line-strong); }
 html[data-theme="light"] .up { color: #0f7a52; }
 html[data-theme="light"] .down { color: #b42318; }
 
-/* The Ludo board keeps its own coloured layout, but the message bubble
-   around it has to follow the page. */
 html[data-theme="light"] .msg { background: var(--panel2); color: var(--text); }
 html[data-theme="light"] .cell-home { box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .12); }
 
-/* The splash screen is shown before the game is ready. */
 html[data-theme="light"] .loader { background: radial-gradient(circle at 30% 20%, #ffffff 0%, #e7ecf6 60%); }
 html[data-theme="light"] .loader-status { color: #55607a; }
 html[data-theme="light"] .loader-tip { color: #6b7488; }
 html[data-theme="light"] .loader-skip { border-color: #c3ccdd; color: #55607a; }
 html[data-theme="light"] .loader-skip:hover { background: #eef2fb; color: #16202f; }
 html[data-theme="light"] .loader-track { background: #e3e8f2; border-color: #c9d2e2; }
-
-/* ===================================================================
-   SHARED CHROME: theme button, table of contents, back-to-top
-   =================================================================== */
 
 .topnav-theme {
   flex: none;
@@ -353,8 +310,6 @@ html[data-theme="light"] .topnav-theme:hover { background: #eef2fb; }
   .topnav-theme { order: 2; }
   .topnav-links { order: 1; }
 }
-
-/* ---- table of contents ---- */
 
 .toc {
   display: block;
@@ -392,7 +347,7 @@ html[data-theme="light"] .topnav-theme:hover { background: #eef2fb; }
   border: 1px solid var(--line-strong);
 }
 .toc a:hover { border-color: var(--accent); background: var(--hover); }
-/* Sub-headings sit under their parent and are easier to scan. */
+
 .toc-sub {
   display: grid;
   gap: 4px;
@@ -408,12 +363,8 @@ html[data-theme="light"] .topnav-theme:hover { background: #eef2fb; }
 }
 .toc-sub a:hover { background: var(--hover); color: var(--text); border-color: var(--line-strong); }
 
-/* Give the headings an anchor target that the table of contents can
-   jump to without hiding them under the sticky nav. */
 .toc a { scroll-margin-top: 70px; }
 :target { scroll-margin-top: 70px; }
-
-/* ---- back to top ---- */
 
 .to-top {
   position: fixed;
@@ -437,8 +388,7 @@ html[data-theme="light"] .topnav-theme:hover { background: #eef2fb; }
 }
 .to-top.show { opacity: 1; visibility: visible; transform: none; }
 .to-top:hover { border-color: var(--accent); }
-/* On the game page the controls are pinned to the bottom of the screen on
-   narrow viewports, so the button sits just above them. */
+
 body.has-game-bar .to-top { bottom: 100px; }
 @media (max-width: 819px) {
   body.has-game-bar .to-top { bottom: 100px; right: 12px; }

@@ -1,13 +1,4 @@
-/* The "Know the board?" quiz on the game page.
 
-   Eight questions about the ladders and snakes that are actually on the
-   board. A perfect score earns the Quiz Ace badge.
-
-   The module exposes:
-
-     BoardQuiz.init()   build the quiz box
-     BoardQuiz.start()  start a fresh round
- */
 (function (root) {
   "use strict";
 
@@ -16,12 +7,9 @@
 
   const Rewards = root.Rewards || { unlock: function () {} };
 
-  /* Sound is optional - the game works without it. */
   const Fx = root.Fx || { play: function () {} };
 
   let quiz = null;
-
-  /* ---------- helpers ---------- */
 
   function shuffle(list) {
     const a = list.slice();
@@ -32,7 +20,6 @@
     return a;
   }
 
-  /** Four answers: the right one plus three plausible neighbours. */
   function squareOptions(correct, pool) {
     const opts = [correct];
     shuffle(pool.filter(function (v) { return v !== correct; })).forEach(function (v) {
@@ -47,7 +34,6 @@
     return shuffle(opts);
   }
 
-  /** Four counts around the right one. */
   function countOptions(correct) {
     const opts = [correct];
     const cands = [];
@@ -57,8 +43,6 @@
     });
     return shuffle(opts);
   }
-
-  /* ---------- question bank ---------- */
 
   function buildQuiz() {
     const ladders = Object.keys(Rules.LADDERS).map(Number);
@@ -135,8 +119,6 @@
 
     return shuffle(questions).slice(0, 8);
   }
-
-  /* ---------- rendering ---------- */
 
   function render() {
     const host = document.getElementById("quizBox");
@@ -266,8 +248,6 @@
       navigator.clipboard.writeText(text + " " + url).catch(function () {});
     }
   }
-
-  /* ---------- public API ---------- */
 
   function start() {
     quiz = { questions: buildQuiz(), index: 0, score: 0, answered: false };

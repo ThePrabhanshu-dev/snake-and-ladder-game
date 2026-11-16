@@ -1,12 +1,4 @@
-/* Snake & Ladder — the game itself.
 
-   This file owns the board, the players, the dice and the turn loop. The
-   rules live in rules.js (shared with the Node tests), the badges and
-   statistics live in rewards.js and the quiz lives in quiz.js.
-
-   Everything the player sees is driven from here, and the only thing
-   written to the device are the player names.
- */
 (function () {
   "use strict";
 
@@ -18,8 +10,6 @@
   const COLS = Rules.COLS;
   const JUMPS = Rules.JUMPS;
 
-  /* Sound, confetti and toasts are optional - the game still works
-     without them, it just goes quiet. */
   const Fx = window.Fx || {
     play: function () {},
     toast: function () {},
@@ -27,8 +17,6 @@
     isEnabled: function () { return false; },
     toggle: function () { return false; }
   };
-
-  /* ---------- elements ---------- */
 
   const boardEl = document.getElementById("board");
   const tokensEl = document.getElementById("tokens");
@@ -49,20 +37,16 @@
   const NAMES_KEY = "snl-names-v1";
   const RULES_SEEN_KEY = "snl-rules-seen";
 
-  /* ---------- state ---------- */
-
   let players = [];
   let turn = 0;
   let rolling = false;
   let winner = -1;
-  let mode = "local";       // "local" (pass & play) or "ai" (vs computer)
-  let challenge = null;     // { seed, rng, date, moves } during a daily run
+  let mode = "local";
+  let challenge = null;
   let moves = 0;
   let startedAt = 0;
   let maxPos = 0;
   let playerNames = loadNames();
-
-  /* ---------- player names ---------- */
 
   function loadNames() {
     try {
@@ -77,7 +61,7 @@
           });
         }
       }
-    } catch (e) { /* storage unavailable - fall back to the defaults */ }
+    } catch (e) {   }
     return DEFAULT_NAMES.slice();
   }
 
@@ -89,7 +73,6 @@
     return playerNames[i] || DEFAULT_NAMES[i] || "Player " + (i + 1);
   }
 
-  /** Save a name when the field loses focus or Enter is pressed. */
   function commitName(i, raw) {
     const clean = String(raw || "").trim().slice(0, 16);
     if (!clean) {
@@ -104,8 +87,6 @@
     renderTurn();
     if (diceLabel && !rolling && winner === -1) diceLabel.textContent = nameOf(turn) + "'s turn";
   }
-
-  /* ---------- the board ---------- */
 
   function coord(n) { return Rules.coord(n); }
 
@@ -131,9 +112,6 @@
       cell.style.gridColumn = String(pos.col + 1);
       cell.dataset.n = n;
 
-      // Describe the square for screen readers: what is on it and where it
-      // leads. role="img" makes the label announced when a screen reader
-      // browses the board.
       const dest = JUMPS[n];
       cell.setAttribute("role", "img");
       if (dest === undefined) cell.setAttribute("aria-label", "Square " + n);
@@ -146,8 +124,6 @@
     drawLinks(linksEl);
   }
 
-  /* Draw the ladders and snakes using measured cell centers, so the lines
-     line up exactly with the squares. */
   function drawLinks(linksEl) {
     const area = linksEl.getBoundingClientRect();
     if (!area.width || !area.height) return;
@@ -171,21 +147,19 @@
   }
 
   function linkSVG(a, b, up) {
-    // The colours come from CSS variables so they can be tuned per theme.
-    // A presentation attribute cannot use var(), so the stroke and fill are
-    // set through the style attribute instead.
+
     const color = up ? "var(--ladder-color)" : "var(--snake-color)";
     const stroke = 'style="stroke:' + color + '"';
     const fill = 'style="fill:' + color + '"';
 
     if (up) {
-      // Ladder: two parallel rails with rungs between them.
+
       const dx = b.x - a.x;
       const dy = b.y - a.y;
       const len = Math.hypot(dx, dy) || 1;
       const nx = -dy / len;
-      const ny = dx / len;         // unit normal
-      const half = 1.7;            // half the width of the ladder
+      const ny = dx / len;
+      const half = 1.7;
       const a1 = { x: a.x + nx * half, y: a.y + ny * half };
       const a2 = { x: a.x - nx * half, y: a.y - ny * half };
       const b1 = { x: b.x + nx * half, y: b.y + ny * half };
@@ -210,16 +184,15 @@
         '</svg>';
     }
 
-    // Snake: an S-shaped body with small fins along it.
     const mx = (a.x + b.x) / 2;
     const my = (a.y + b.y) / 2;
     const dx = b.x - a.x;
     const dy = b.y - a.y;
     const len = Math.hypot(dx, dy) || 1;
     const nx = -dy / len;
-    const ny = dx / len;             // unit normal
-    const bow = Math.min(9, len * 0.28);  // how far the body bends
-    const w = 5;                     // half-width of the wave
+    const ny = dx / len;
+    const bow = Math.min(9, len * 0.28);
+    const w = 5;
     const q1 = { x: mx + nx * bow, y: my + ny * bow };
     const q2 = { x: mx - nx * bow, y: my - ny * bow };
     const path = "M " + a.x + " " + a.y + " C " + q1.x + " " + q1.y + " " + q2.x + " " + q2.y +
@@ -242,8 +215,6 @@
       '<circle cx="' + a.x + '" cy="' + a.y + '" r="1.8" fill="' + color + '" opacity="0.7"/>' +
       '</svg>';
   }
-
-  /* ---------- tokens and player rows ---------- */
 
   function buildTokens() {
     tokensEl.innerHTML = "";
@@ -272,7 +243,7 @@
       const rect = cell ? cell.getBoundingClientRect() : area;
       const x = ((rect.left + rect.width / 2) - area.left) / area.width;
       const y = ((rect.top + rect.height / 2) - area.top) / area.height;
-      const offset = (i % 2) * 2.4;  // nudge so stacked tokens are both visible
+      const offset = (i % 2) * 2.4;
       token.style.left = "calc(" + (x * 100).toFixed(3) + "% + " + offset + "%)";
       token.style.top = "calc(" + (y * 100).toFixed(3) + "% + " + offset + "%)";
     });
@@ -296,10 +267,10 @@
       nameInput.addEventListener("keydown", function (e) {
         if (e.key === "Enter") {
           e.preventDefault();
-          nameInput.blur();             // blurring saves the name
+          nameInput.blur();
         } else if (e.key === "Escape") {
           e.preventDefault();
-          nameInput.value = nameOf(i);  // put the old name back
+          nameInput.value = nameOf(i);
           nameInput.blur();
         }
       });
@@ -316,7 +287,7 @@
       row.classList.toggle("active", i === turn && winner === -1);
       const nameEl = row.querySelector(".pname");
       if (nameEl) {
-        // Never overwrite a name while the player is typing in it.
+
         if (document.activeElement !== nameEl) nameEl.value = nameOf(i);
       }
       document.getElementById("pos" + (i + 1)).textContent = "at " + player.pos;
@@ -328,8 +299,6 @@
     addBtn.disabled = players.length >= 4;
     if (removeBtn) removeBtn.disabled = players.length <= 2;
   }
-
-  /* ---------- dice ---------- */
 
   const PIPS = {
     1: [4], 2: [0, 8], 3: [0, 4, 8], 4: [0, 2, 6, 8], 5: [0, 2, 4, 6, 8], 6: [0, 2, 3, 5, 6, 8]
@@ -345,7 +314,6 @@
 
   function msg(html) { msgEl.innerHTML = html; }
 
-  /** Keeps the "whose turn is it" banner above the board in sync. */
   function renderTurn() {
     if (!turnBanner) return;
     const player = players[turn];
@@ -362,14 +330,11 @@
 
   function sleep(ms) { return new Promise(function (r) { setTimeout(r, ms); }); }
 
-  /* ---------- the game loop ---------- */
-
   function newGame(count) {
     players = [];
-    // `sixes` is the player's own count of consecutive sixes, so it has to
-    // travel with the player instead of living in a shared variable.
+
     for (let i = 0; i < count; i++) players.push({ pos: 0, sixes: 0, ai: false });
-    // In "vs computer" mode player 2 is played by the computer.
+
     if (mode === "ai" && players.length >= 2) players[1].ai = true;
 
     turn = 0;
@@ -409,7 +374,6 @@
 
     const value = challengeRoll();
 
-    // Brief shuffle animation before the result appears.
     for (let i = 0; i < 6; i++) {
       setDice(1 + Math.floor(Math.random() * 6));
       await sleep(90);
@@ -421,7 +385,6 @@
     const player = players[turn];
     if (player.pos > maxPos) maxPos = player.pos;
 
-    // Rules come from the shared, unit-tested rules.js module.
     const result = Rules.step(player, value);
     player.sixes = result.sixes;
 
@@ -446,7 +409,6 @@
       return;
     }
 
-    // Walk the token one square at a time.
     for (let i = 0; i < value; i++) {
       player.pos++;
       if (player.pos > maxPos) {
@@ -458,7 +420,6 @@
       await sleep(180);
     }
 
-    // Resolve ladder / snake jumps.
     let jumped = false;
     for (const jump of result.jumps) {
       const isLadder = jump.to > jump.from;
@@ -516,7 +477,7 @@
     rolling = false;
     renderPanels();
     startTurn();
-    // The computer plays its own turn shortly after the human's.
+
     if (players[turn] && players[turn].ai) scheduleAiTurn();
   }
 
@@ -526,14 +487,12 @@
     setTimeout(async function () {
       if (winner !== -1 || rolling) return;
       await roll();
-      // A 6 grants a bonus turn, so the computer rolls again on its own.
+
       if (winner === -1 && players[turn] && players[turn].ai && !rolling) {
         setTimeout(scheduleAiTurn, 900);
       }
     }, 850);
   }
-
-  /* ---------- the daily challenge ---------- */
 
   function todayKey() { return Rewards.todayKey(); }
 
@@ -577,8 +536,6 @@
     return value;
   }
 
-  /* ---------- the board explorer ---------- */
-
   function squareText(n) {
     const square = Rules.describeSquare(n);
     if (square.type === "ladder") {
@@ -603,8 +560,6 @@
     if (cell) cell.classList.add("explored");
     Rewards.noteSquare(n);
   }
-
-  /* ---------- the win dialog ---------- */
 
   function recordGame() {
     Rewards.recordGame({
@@ -674,8 +629,6 @@
     setTimeout(function () { cell.classList.remove("hit"); }, 550);
   }
 
-  /* ---------- the toolbar ---------- */
-
   function renderModeChip() {
     const label = document.getElementById("modeLabel");
     const chip = document.getElementById("modeToggle");
@@ -702,13 +655,9 @@
     if (hint) hint.textContent = on ? "Dice and jingles" : "Tap to turn sound on";
   }
 
-  /* ---------- controls ---------- */
-
   rollBtn.addEventListener("click", function () { Fx.play("click"); roll(); });
   restartBtn.addEventListener("click", function () { hideWinOverlay(); newGame(players.length); });
 
-  // Adding or removing a player changes the table, not the game that is
-  // already in progress - the tokens stay exactly where they are.
   addBtn.addEventListener("click", function () {
     if (players.length >= 4) return;
     hideWinOverlay();
@@ -734,8 +683,6 @@
     });
   }
 
-  // "Play vs computer" toggles between two humans sharing a device and a
-  // single human against the computer.
   const modeToggle = document.getElementById("modeToggle");
   if (modeToggle) {
     modeToggle.addEventListener("click", function () {
@@ -749,8 +696,6 @@
     });
   }
 
-  // The daily challenge chip toggles: tapping it while a challenge is
-  // running leaves the challenge.
   const challengeStart = document.getElementById("challengeStart");
   if (challengeStart) {
     challengeStart.addEventListener("click", function () {
@@ -779,7 +724,6 @@
     });
   }
 
-  // Sound on/off, remembered on the device.
   const soundToggle = document.getElementById("soundToggle");
   if (soundToggle) {
     soundToggle.addEventListener("click", function () {
@@ -788,7 +732,6 @@
     });
   }
 
-  // Board explorer: hovering or tapping a square explains what it does.
   boardEl.addEventListener("mouseover", function (e) {
     const cell = e.target.closest ? e.target.closest(".cell") : null;
     if (cell) showSquare(Number(cell.dataset.n));
@@ -799,14 +742,12 @@
       showSquare(Number(cell.dataset.n));
       return;
     }
-    // Clicking the empty space around the board counts as a roll.
+
     if (!rolling && winner === -1) roll();
   });
 
-  // Space bar rolls the dice, as long as the player is not typing somewhere
-  // or already pressing a button (space activates buttons on its own).
   document.addEventListener("keydown", function (e) {
-    // The win dialog swallows Escape and Tab so focus stays inside it.
+
     const overlay = document.getElementById("winOverlay");
     if (overlay && window.SiteDialog && window.SiteDialog.handleKey(overlay, e)) return;
 
@@ -815,14 +756,13 @@
     const target = e.target;
     const tag = (target && target.tagName) || "";
     if (tag === "INPUT" || tag === "TEXTAREA" || tag === "SELECT" || target.isContentEditable) return;
-    // Let the browser handle space/enter when a button or link has focus.
+
     if (key === " " && (tag === "BUTTON" || tag === "A" || tag === "SUMMARY")) return;
     if (key === "Enter" && tag !== "BODY") return;
     e.preventDefault();
     if (!rolling && winner === -1) roll();
   });
 
-  // Win dialog buttons.
   const winAgain = document.getElementById("winAgain");
   if (winAgain) winAgain.addEventListener("click", function () { hideWinOverlay(); newGame(players.length); });
   const winClose = document.getElementById("winClose");
@@ -835,8 +775,6 @@
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(function () { buildBoard(); renderTokens(); }, 120);
   });
-
-  /* ---------- boot ---------- */
 
   function openRulesForNewPlayers() {
     if (!rulesBox) return;
@@ -858,7 +796,6 @@
     newGame(2);
     openRulesForNewPlayers();
 
-    // ?challenge=YYYY-MM-DD deep-links straight into a daily challenge run.
     let requested = null;
     try { requested = new URLSearchParams(location.search).get("challenge"); } catch (e) {}
     if (requested) {

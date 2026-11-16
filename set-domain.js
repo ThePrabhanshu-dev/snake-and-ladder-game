@@ -1,18 +1,5 @@
 #!/usr/bin/env node
-/**
- * Repoint every URL in the site at a custom domain.
- *
- *   node set-domain.js yourdomain.com                  # rewrite the URLs
- *   node set-domain.js yourdomain.com --with-redirect  # also 301 the *.pages.dev host
- *   node set-domain.js --reset                         # back to *.pages.dev
- *   node set-domain.js yourdomain.com --dry-run        # preview only
- *
- * Why this exists: Google AdSense does not approve *.pages.dev or *.github.io
- * subdomains, so a custom domain is required before the site can be reviewed.
- * The canonical link, Open Graph tags, JSON-LD, sitemap, robots.txt and the
- * embed/referral helpers must all agree on ONE origin — if they disagree Google
- * treats the site as having duplicate content and may refuse approval.
- */
+
 
 const fs = require("fs");
 const path = require("path");
@@ -25,8 +12,6 @@ const SCAN_EXTENSIONS = new Set([
   ".html", ".js", ".json", ".md", ".py", ".txt", ".webmanifest", ".xml"
 ]);
 const SKIP_DIRS = new Set([".git", "node_modules", "dist", ".wrangler", ".cache"]);
-
-/* ---------- helpers ---------- */
 
 function walk(dir, out = []) {
   for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
@@ -42,23 +27,17 @@ function walk(dir, out = []) {
   return out;
 }
 
-/** The origin the site currently considers canonical (read from sitemap.xml). */
 function currentOrigin() {
   try {
     const xml = fs.readFileSync(path.join(ROOT, "sitemap.xml"), "utf8");
     const m = xml.match(/<loc>(https:\/\/[^/]+)\//);
     if (m) return m[1].replace(/\/$/, "");
   } catch (e) {
-    /* fall through to the default */
+
   }
   return PAGES_DEV_ORIGIN;
 }
 
-/**
- * The README lists the GitHub Pages mirror separately from the canonical URL.
- * Keep the mirror listed but make the "canonical" wording follow the origin
- * that is actually in force.
- */
 function updateReadme(src, canonical) {
   const mirrorBlock = new RegExp(
     "Mirror:\\s*" + GITHUB_PAGES_ORIGIN.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") +
@@ -69,8 +48,6 @@ function updateReadme(src, canonical) {
     : "Mirror: " + GITHUB_PAGES_ORIGIN + "/ (GitHub Pages — the canonical\nURL on every page points at the custom domain above).";
   return src.replace(mirrorBlock, wording);
 }
-
-/* ---------- main ---------- */
 
 function main() {
   const argv = process.argv.slice(2);
@@ -122,7 +99,6 @@ function main() {
     }
   }
 
-  // Optional: 301 the old host to the new one so only one URL is indexed.
   const redirectFile = path.join(ROOT, "_redirects");
   if (withRedirect && target !== PAGES_DEV_ORIGIN) {
     const body =

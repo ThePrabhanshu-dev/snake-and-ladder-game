@@ -1,4 +1,4 @@
-/* Node test suite for the Ludo rules. Run: node ludo-test.js */
+
 const R = require("./ludo-rules.js");
 
 let passed = 0, failed = 0;
@@ -81,7 +81,7 @@ console.log("\nBlocking");
 {
   const bluePath = R.pathFor("blue");
   const redPath = R.pathFor("red");
-  // Two blue tokens sitting together on one square block red's road.
+
   const blockCell = bluePath[0];
   let blockIndex = -1;
   for (let i = 0; i < redPath.length; i++) {
@@ -94,13 +94,11 @@ console.log("\nBlocking");
     g2.players[1].tokens = [0, 0, R.YARD, R.YARD];
     eq("a token cannot land on a pair of opponents", R.legalMoves(g2, 0, 1).length, 0);
 
-    // A token that would have to jump over the pair is not allowed either.
     const g3 = R.newGame(["red", "blue"]);
     g3.players[0].tokens = [blockIndex - 1, R.YARD, R.YARD, R.YARD];
     g3.players[1].tokens = [0, 0, R.YARD, R.YARD];
     eq("a token cannot jump over a pair of opponents", R.legalMoves(g3, 0, 3).length, 0);
 
-    // One opponent alone on the square can be captured.
     const g4 = R.newGame(["red", "blue"]);
     g4.players[0].tokens = [blockIndex - 1, R.YARD, R.YARD, R.YARD];
     g4.players[1].tokens = [0, R.YARD, R.YARD, R.YARD];
@@ -113,7 +111,7 @@ console.log("\nCaptures");
   const g = R.newGame(["red", "blue"]);
   const redPath = R.pathFor("red");
   const bluePath = R.pathFor("blue");
-  // Put a blue token on the square red's token is about to reach.
+
   const target = redPath[6];
   let blueIndex = -1;
   for (let i = 0; i < bluePath.length; i++) {
@@ -139,7 +137,7 @@ console.log("\nSafe squares cannot be captured");
   const g = R.newGame(["red", "blue"]);
   const redPath = R.pathFor("red");
   const bluePath = R.pathFor("blue");
-  // Red's start square is safe; put a blue token right before it.
+
   const redStart = R.startCell("red");
   let blueIndex = -1;
   for (let i = 0; i < bluePath.length; i++) {
@@ -156,7 +154,7 @@ console.log("\nSafe squares cannot be captured");
 console.log("\nThe home column and the centre");
 {
   const g = R.newGame(["red", "blue"]);
-  // Put a red token on the last home column square (index 62).
+
   g.players[0].tokens = [62, R.YARD, R.YARD, R.YARD];
   const moves = R.legalMoves(g, 0, 1);
   eq("an exact roll reaches the centre", moves.length, 1);
@@ -173,7 +171,7 @@ console.log("\nThe home column and the centre");
 console.log("\nA token has to visit its start square again");
 {
   const g = R.newGame(["red", "blue"]);
-  // The last track square before the start square again is index 55.
+
   g.players[0].tokens = [55, R.YARD, R.YARD, R.YARD];
   const moves = R.legalMoves(g, 0, 1);
   eq("one step lands on the start square", moves[0].to, R.START_AGAIN);

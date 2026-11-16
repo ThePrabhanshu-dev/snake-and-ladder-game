@@ -1,7 +1,4 @@
-/* Snake & Ladder — sound effects, confetti and toasts.
- * Everything is synthesised with the Web Audio API, so the site ships no
- * extra media files. Sound is opt-out and remembered on the device.
- */
+
 (function (root) {
   "use strict";
 
@@ -12,7 +9,7 @@
   try {
     const raw = root.localStorage.getItem(KEY);
     if (raw !== null) enabled = raw === "1";
-  } catch (e) { /* storage blocked — keep the default */ }
+  } catch (e) {   }
 
   let ctx = null;
   function audio() {
@@ -30,7 +27,6 @@
     }
   }
 
-  /** One shaped oscillator note. */
   function note(freq, dur, opts) {
     const o = opts || {};
     const ac = audio();
@@ -52,7 +48,6 @@
     osc.stop(t0 + dur + 0.05);
   }
 
-  /** Short filtered noise burst — used for the dice rattle. */
   function noise(dur, opts) {
     const o = opts || {};
     const ac = audio();
@@ -115,10 +110,9 @@
     if (!enabled) return;
     const fn = SOUNDS[name];
     if (!fn) return;
-    try { fn(); } catch (e) { /* audio is a nicety, never break the game */ }
+    try { fn(); } catch (e) {   }
   }
 
-  /* ---------- toasts ---------- */
   function toast(text, opts) {
     const o = opts || {};
     if (!doc || !doc.body) return;
@@ -139,7 +133,6 @@
     }, o.duration || 3200);
   }
 
-  /* ---------- confetti ---------- */
   function reducedMotion() {
     try {
       return root.matchMedia && root.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -155,8 +148,6 @@
     const o = opts || {};
     if (!doc || !doc.body || reducedMotion()) return;
 
-    // One canvas at a time — a burst restarts the previous one instead of
-    // stacking overlays on top of each other.
     if (!confettiCanvas || !confettiCanvas.isConnected) {
       confettiCanvas = doc.createElement("canvas");
       confettiCanvas.className = "confetti-canvas";

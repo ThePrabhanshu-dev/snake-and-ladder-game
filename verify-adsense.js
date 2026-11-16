@@ -1,13 +1,5 @@
 #!/usr/bin/env node
-/**
- * Verify that the live site is actually serving the configured AdSense setup.
- *
- *   node verify-adsense.js
- *   node verify-adsense.js https://yourdomain.com
- *
- * Checks: publisher id in the deployed ads.js, matching ads.txt line, and the
- * AdSense loader being referenced on the live pages.
- */
+
 
 const fs = require("fs");
 const path = require("path");
@@ -48,7 +40,7 @@ async function main() {
 
   if (local) {
     ok("publisher id deployed in ads.js", adsJs.body.includes(local), local);
-    // ads.txt lists the publisher id without the "ca-" prefix, e.g. pub-123…
+
     const adsTxtId = local.replace(/^ca-/, "");
     ok(
       "ads.txt lists the publisher id",

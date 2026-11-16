@@ -25,7 +25,6 @@ Repository: https://github.com/ThePrabhanshu-dev/snake-and-ladder-game (deployed
 
 ```bash
 cd D:\Go_Go && python -m http.server 8000
-# then visit http://localhost:8000
 ```
 
 Serving over `http://` is needed so the browser loads the sibling `.js` files.
@@ -146,8 +145,8 @@ Buy a `.com` (≈ ₹900/yr) or a cheaper `.fun` / `.games` / `.app` (₹250–6
 registrar, then point the nameservers at Cloudflare and attach it to the Pages project:
 
 ```bash
-node add-domain.js yourdomain.com          # attach
-node add-domain.js --remove yourdomain.com # detach
+node add-domain.js yourdomain.com
+node add-domain.js --remove yourdomain.com
 ```
 
 **Step B — create the AdSense account**
@@ -173,7 +172,7 @@ node deploy.js
 6. Verify the live site is really serving the ads:
 
 ```bash
-node verify-adsense.js            # checks the pages.dev site
+node verify-adsense.js
 node verify-adsense.js https://yourdomain.com
 ```
 
@@ -185,7 +184,6 @@ The file itself is fine — check it first:
 
 ```bash
 curl -s https://yourdomain.com/ads.txt
-# google.com, pub-XXXXXXXXXXXXXXXX, DIRECT, f08c47fec0942fa0
 ```
 
 `ads.txt` must sit at the **root** of the exact host you added to AdSense and be served as
@@ -217,8 +215,8 @@ Three slots exist: `top` (above the board), `side` (in the sidebar), `foot` (bel
 Game portals host the game for you and split the ad revenue. The build is one command:
 
 ```bash
-python tools/make-thumbnails.py   # cover.png (630x315) + thumb.png (512x512)
-node package-portal.js            # dist/snake-and-ladder-portal.zip + dist/listing.txt
+python tools/make-thumbnails.py
+node package-portal.js
 ```
 
 `dist/snake-and-ladder-portal.zip` contains the game (`index.html`, `rules.js`, `loader.js`,
@@ -281,8 +279,8 @@ Use it to share today's board, or to replay yesterday's board. The seed comes fr
 ## Tests
 
 ```bash
-node test.js         # Snake & Ladder rules
-node ludo-test.js    # Ludo rules
+node test.js
+node ludo-test.js
 ```
 
 Covers board coordinate mapping, ladder/snake resolution, movement, overshoot handling,
@@ -316,8 +314,8 @@ canonical domain used by every page's `<link rel="canonical">`:
 Deploy an update with one command:
 
 ```bash
-npx wrangler login   # one-time browser auth (only needed once)
-node deploy.js       # stages the site files and uploads them
+npx wrangler login
+node deploy.js
 ```
 
 `deploy.js` copies only the site assets into a temp folder (never `.git`, tests or scripts)
@@ -330,11 +328,11 @@ Board layouts live in one place — the `LADDERS` and `SNAKES` maps in `rules.js
 
 ```js
 const LADDERS = {
-  1: 38,   // ladder: square 1  → 38
+  1: 38,
   28: 84
 };
 const SNAKES = {
-  16: 6,   // snake:  square 16 → 6
+  16: 6,
   62: 19
 };
 const JUMPS = Object.assign({}, LADDERS, SNAKES);
@@ -388,21 +386,17 @@ published after it has been tested:
 Workflow:
 
 ```bash
-# 1. work on the testing branch
 git checkout UAT
 git add -A && git commit -m "Add the Ludo game"
 git push origin UAT
 
-# 2. test it (locally, or on the UAT preview build)
 node test.js && node ludo-test.js
 python tools/check-site.py
 
-# 3. after the test pass and approval, merge into the live branch
 git checkout main
 git merge UAT
 git push origin main
 
-# 4. optional: publish the UAT build to Cloudflare Pages
 $env:DEPLOY_BRANCH="UAT"; node deploy.js
 ```
 
@@ -412,8 +406,8 @@ two environments separate and makes every promotion traceable.
 ### Before you deploy
 
 ```bash
-node test.js             # game rules + seeded RNG unit tests
-node ludo-test.js        # Ludo rules unit tests
-python tools/check-site.py   # encoding, canonical URLs, AdSense tag, JSON-LD, assets
-node verify-adsense.js   # checks the *live* site serves the AdSense setup
+node test.js
+node ludo-test.js
+python tools/check-site.py
+node verify-adsense.js
 ```

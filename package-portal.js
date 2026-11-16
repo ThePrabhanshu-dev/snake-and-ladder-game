@@ -1,20 +1,5 @@
 #!/usr/bin/env node
-/**
- * Build a self-contained HTML5 build of the game for third-party portals
- * (itch.io, Newgrounds, CrazyGames, GameDistribution, ...) plus the listing
- * metadata needed to fill in each portal's submission form.
- *
- *   node package-portal.js          # build the package
- *   node package-portal.js --list   # only print the listing metadata
- *
- * Output (git-ignored):
- *   dist/snake-and-ladder-portal.zip   the uploadable build
- *   dist/listing.txt                   copy/paste metadata for every portal
- *   dist/cover.png, dist/thumb.png     cover art + square thumbnail
- *
- * The build strips Google AdSense (portals forbid ad scripts in submissions)
- * and leaves the ad slots empty, so the game never ships a malformed tag.
- */
+
 
 const fs = require("fs");
 const path = require("path");
@@ -23,8 +8,6 @@ const zlib = require("zlib");
 const ROOT = __dirname;
 const DIST = path.join(ROOT, "dist");
 const ZIP_NAME = "snake-and-ladder-portal.zip";
-
-/* ---------- listing metadata ---------- */
 
 const LISTING = {
   title: "Snake & Ladder",
@@ -55,23 +38,21 @@ const LISTING = {
     '<script src="https://snake-and-ladder-2q0.pages.dev/embed.js?v=1.1.0" async></script>'
 };
 
-/* ---------- build the portal variants of the source files ---------- */
-
 function read(file) {
   return fs.readFileSync(path.join(ROOT, file), "utf8");
 }
 
 function portalIndex() {
   let html = read("index.html");
-  // No Google AdSense inside a portal build - portals reject ad scripts.
+
   html = html.replace(/<script[^>]*googlesyndication\.com[^>]*>\s*<\/script>\s*/g, "");
-  // Keep only the local game scripts (ads.js stays, it renders share buttons).
+
   return html;
 }
 
 function portalAds() {
   let src = read("ads.js");
-  // Portals serve their own ads, so no AdSense client.
+
   src = src.replace(/adsenseClient:\s*"[^"]*"/, 'adsenseClient: ""');
   src = src.replace(/adsenseApproved:\s*(true|false)/, "adsenseApproved: false");
   return src;
@@ -95,8 +76,6 @@ function portalInfo() {
     LISTING.embedSnippet
   ].join("\n");
 }
-
-/* ---------- minimal, dependency-free zip writer ---------- */
 
 const CRC_TABLE = (() => {
   const table = new Int32Array(256);
@@ -139,7 +118,7 @@ function zip(files) {
     const local = Buffer.alloc(30);
     local.writeUInt32LE(0x04034b50, 0);
     local.writeUInt16LE(20, 4);
-    local.writeUInt16LE(0x0800, 6); // UTF-8 names
+    local.writeUInt16LE(0x0800, 6);
     local.writeUInt16LE(method, 8);
     local.writeUInt16LE(time, 10);
     local.writeUInt16LE(day, 12);
@@ -187,8 +166,6 @@ function zip(files) {
 
   return Buffer.concat([...chunks, centralBuf, end]);
 }
-
-/* ---------- main ---------- */
 
 function buildListingText() {
   const lines = [

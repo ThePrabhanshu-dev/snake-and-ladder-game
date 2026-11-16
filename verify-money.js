@@ -1,13 +1,5 @@
 #!/usr/bin/env node
-/**
- * Check that the live site is actually serving an ad setup that can earn.
- *
- *   node verify-money.js
- *   node verify-money.js https://yourdomain.com
- *
- * Reports whether the deployed site has AdSense switched on, whether the
- * publisher id is present and whether the ad slots are in the page.
- */
+
 
 const fs = require("fs");
 const path = require("path");

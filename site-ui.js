@@ -1,17 +1,10 @@
-/* Shared site chrome behaviour: the light/dark theme switch, the back-to-top
-   button and the auto-generated "On this page" table of contents.
 
-   The file is loaded in <head> on every page. The theme is applied straight
-   away so the page never flashes the wrong colours, and the parts that need
-   the DOM wait for DOMContentLoaded. */
 (function () {
   "use strict";
 
   const doc = document;
   const root = doc.documentElement;
   const THEME_KEY = "snl-theme-v1";
-
-  /* ---------- theme ---------- */
 
   function systemTheme() {
     try {
@@ -26,7 +19,7 @@
     try {
       const value = localStorage.getItem(THEME_KEY);
       if (value === "light" || value === "dark") return value;
-    } catch (e) { /* storage blocked - fall back to the system setting */ }
+    } catch (e) {   }
     return null;
   }
 
@@ -43,7 +36,6 @@
     }
   }
 
-  // Runs before the page body is painted.
   applyTheme(storedTheme() || systemTheme());
 
   function toggleTheme() {
@@ -51,8 +43,6 @@
     applyTheme(next);
     try { localStorage.setItem(THEME_KEY, next); } catch (e) {}
   }
-
-  /* ---------- helpers ---------- */
 
   function slug(text) {
     return String(text || "")
@@ -62,8 +52,6 @@
       .replace(/\s+/g, "-")
       .replace(/-+/g, "-") || "section";
   }
-
-  /* ---------- DOM parts ---------- */
 
   function buildThemeToggle() {
     if (doc.getElementById("themeToggle")) return;
@@ -108,19 +96,16 @@
   function buildToc() {
     const main = doc.getElementById("main");
     if (!main) return;
-    // The game pages put the board first, so a table of contents there
-    // would only push the game further down the screen.
+
     if (doc.getElementById("board") || doc.getElementById("ludoBoard")) return;
     if (main.querySelector(".toc")) return;
 
-    // Only the headings that belong to the article, never ones inside a
-    // dialog or a footer.
     const headings = Array.prototype.filter.call(
       main.querySelectorAll("h2, h3"),
       (h) => !h.closest(".win-overlay") && !h.closest("footer")
     );
     const h2s = headings.filter((h) => h.tagName === "H2");
-    if (h2s.length < 3) return;      // too short to be worth a table of contents
+    if (h2s.length < 3) return;
 
     const nav = doc.createElement("nav");
     nav.className = "toc";
@@ -143,7 +128,7 @@
         list.appendChild(li);
         lastH2Item = li;
       } else if (lastH2Item) {
-        // An h3 belongs under the h2 above it.
+
         let sub = lastH2Item.querySelector("ul.toc-sub");
         if (!sub) {
           sub = doc.createElement("ul");
@@ -152,7 +137,7 @@
         }
         sub.appendChild(li);
       } else {
-        // An h3 before any h2 - treat it as a top level entry.
+
         list.appendChild(li);
       }
     });
@@ -166,19 +151,13 @@
     buildThemeToggle();
     buildBackToTop();
     buildToc();
-    // The game pages pin their controls to the bottom of the screen on
-    // narrow viewports, so the back-to-top button has to clear them.
+
     if (doc.getElementById("roll")) doc.body.classList.add("has-game-bar");
   }
 
   if (doc.readyState === "loading") doc.addEventListener("DOMContentLoaded", init);
   else init();
 
-  /* ---------- modal dialog helper ----------
-     Both games show a "you win" dialog. This opens it properly for
-     keyboard and screen reader users: focus moves into the dialog,
-     Tab stays inside it, Escape closes it and focus goes back to
-     wherever it came from. */
   const FOCUSABLE = 'a[href], button:not([disabled]), input:not([disabled]), ' +
     'select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])';
 
@@ -205,7 +184,6 @@
       if (back && typeof back.focus === "function" && doc.contains(back)) back.focus();
     },
 
-    /* Called from a document-level keydown handler. */
     handleKey: function (overlay, e) {
       if (!overlay || !overlay.classList.contains("show")) return false;
       if (e.key === "Escape") {

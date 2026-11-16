@@ -1,17 +1,4 @@
-/* Player rewards for Snake & Ladder: statistics, badges and the daily
-   streak. Everything is stored on the device the player is using, so no
-   account is needed and nothing leaves the browser.
 
-   The module exposes a small API so the rest of the game does not have to
-   know how the data is saved:
-
-     Rewards.init()                          load and render everything
-     Rewards.unlock(id)                      award a badge (if it is new)
-     Rewards.noteSquare(n)                   remember an inspected square
-     Rewards.recordGame(result)              store the result of a game
-     Rewards.markDay()                       count today towards the streak
-     Rewards.renderStats()                   refresh the counters in the toolbar
- */
 (function (root) {
   "use strict";
 
@@ -34,7 +21,6 @@
     { id: "veteran", emoji: "🐍", name: "Veteran", desc: "Play 25 games" }
   ];
 
-  /* Sound and confetti are optional - the game works without them. */
   const Fx = root.Fx || {
     play: function () {},
     toast: function () {},
@@ -45,8 +31,6 @@
   let trophies = [];
   let days = [];
   let seenSquares = [];
-
-  /* ---------- storage helpers ---------- */
 
   function readList(key) {
     try {
@@ -59,21 +43,19 @@
   }
 
   function writeList(key, list) {
-    try { localStorage.setItem(key, JSON.stringify(list)); } catch (e) { /* storage blocked */ }
+    try { localStorage.setItem(key, JSON.stringify(list)); } catch (e) {   }
   }
 
   function loadStats() {
     try {
       const raw = localStorage.getItem(STATS_KEY);
       if (raw) stats = Object.assign(stats, JSON.parse(raw));
-    } catch (e) { /* storage blocked - stats stay in memory */ }
+    } catch (e) {   }
   }
 
   function saveStats() {
     try { localStorage.setItem(STATS_KEY, JSON.stringify(stats)); } catch (e) {}
   }
-
-  /* ---------- dates ---------- */
 
   function todayKey() {
     const d = new Date();
@@ -81,8 +63,6 @@
       String(d.getMonth() + 1).padStart(2, "0") + "-" +
       String(d.getDate()).padStart(2, "0");
   }
-
-  /* ---------- badges ---------- */
 
   function unlock(id) {
     if (trophies.indexOf(id) !== -1) return;
@@ -113,8 +93,6 @@
       host.appendChild(el);
     });
   }
-
-  /* ---------- statistics ---------- */
 
   function renderStats() {
     const games = document.getElementById("statGames");
@@ -158,13 +136,6 @@
     }
   }
 
-  /* ---------- the game result ---------- */
-
-  /**
-   * Store the result of a finished game.
-   * @param {{humanWon:boolean, mode:string, challenge:boolean,
-   *          maxPos:number, moves:number, name:string}} result
-   */
   function recordGame(result) {
     stats.games++;
     if (result.humanWon) {
@@ -198,7 +169,6 @@
     renderStreak();
   }
 
-  /** "Best finish" follows the token while the game is running. */
   function setBest(pos) {
     if (pos > stats.best) {
       stats.best = pos;
@@ -207,8 +177,6 @@
     }
   }
 
-  /* ---------- board explorer ---------- */
-
   function noteSquare(n) {
     if (seenSquares.indexOf(n) === -1) {
       seenSquares.push(n);
@@ -216,8 +184,6 @@
       if (seenSquares.length >= 10) unlock("explorer");
     }
   }
-
-  /* ---------- boot ---------- */
 
   function init() {
     loadStats();

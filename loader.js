@@ -1,6 +1,4 @@
-/* Interactive loading screen for the Snake & Ladder game.
-   Shows a live board build-up, a rolling dice and a progress bar while the
-   game assets/rules finish loading. Hides itself once the game is ready. */
+
 (function () {
   "use strict";
 
@@ -39,7 +37,6 @@
     }, 260);
   }, 3600);
 
-  /* ---------- animated backdrop ---------- */
   let backdropRunning = true;
   if (canvas && canvas.getContext) {
     const ctx = canvas.getContext("2d");
@@ -81,7 +78,6 @@
     draw();
   }
 
-  /* ---------- dice pip helper ---------- */
   const PIP_MAP = {
     1: [4], 2: [0, 8], 3: [0, 4, 8], 4: [0, 2, 6, 8], 5: [0, 2, 4, 6, 8], 6: [0, 2, 3, 5, 6, 8]
   };
@@ -92,7 +88,6 @@
     });
   }
 
-  /* ---------- progress ---------- */
   let progress = 0;
   let target = 0;
   let raf = null;
@@ -108,17 +103,15 @@
     if (!raf) raf = requestAnimationFrame(tick);
   }
 
-  /* ---------- self-running demo animation ---------- */
   let demoValue = 1;
   let demoTimer = null;
-  // Returning visitors do not need the full intro again - the board is only a
-  // few hundred milliseconds away. Remember that they have seen it.
+
   const SEEN_KEY = "snl-intro-seen";
   let seenBefore = false;
   try { seenBefore = localStorage.getItem(SEEN_KEY) === "1"; } catch (e) {}
 
   if (seenBefore) {
-    // Skip straight to the game: no canvas animation, no dice demo.
+
     clearInterval(tipTimer);
     overlay.classList.add("show");
     overlay.classList.add("done");
@@ -132,12 +125,10 @@
     overlay.classList.add("show");
   }
 
-  // preload the decorative art
   [ladderEl, snakeEl].forEach(el => { if (el) el.classList.add("animate"); });
 
-  /* ---------- public API ---------- */
   window.Loader = {
-    /** Report progress. `label` is shown under the bar. */
+
     progress(pct, label) {
       animateTo(pct);
       if (label && statusEl) {
@@ -147,7 +138,7 @@
         statusEl.classList.add("bump");
       }
     },
-    /** Finish loading and reveal the game. */
+
     done() {
       clearInterval(demoTimer);
       clearInterval(tipTimer);
@@ -163,7 +154,6 @@
     }
   };
 
-  // Skip button jumps straight to the game.
   if (skipBtn) {
     skipBtn.addEventListener("click", () => window.Loader.done());
   }

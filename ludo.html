@@ -30,7 +30,6 @@
 <meta name="google-adsense-account" content="ca-pub-8439899281485854" />
 <script async id="adsense-script" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8439899281485854" crossorigin="anonymous"></script>
 
-<!-- ===== Structured data ===== -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -135,7 +134,6 @@
   }
   .board-shell { display:flex; flex-direction:column; gap:12px; align-items:center; }
 
-  /* ---------- the board ---------- */
   #ludoBoard {
     display:grid; grid-template-columns:repeat(15,1fr); grid-template-rows:repeat(15,1fr);
     width:min(94vw,560px); aspect-ratio:1/1; gap:1px;
@@ -191,7 +189,6 @@
   }
   .cell.target { box-shadow:inset 0 0 0 2px rgba(255,255,255,.75); }
 
-  /* ---------- sidebar ---------- */
   .engage-bar { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin:16px 0; }
   .engage-card { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:10px 13px; }
   .engage-label { display:block; font-size:9.5px; letter-spacing:1.4px; text-transform:uppercase; color:var(--tag-text); }
@@ -234,12 +231,9 @@
 
   .ad-slot { margin:18px 0; }
 
-  /* ---------- game controls ---------- */
   .controls { display:flex; flex-direction:column; gap:10px; }
   .controls .msg { margin-top:0; }
 
-  /* On narrow screens the panel sits below the board, so pin the dice and
-     the Roll button to the bottom of the viewport. */
   @media (max-width: 819px) {
     .controls {
       position:fixed; left:0; right:0; bottom:0; z-index:200;

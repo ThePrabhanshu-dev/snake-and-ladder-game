@@ -1,12 +1,5 @@
 #!/usr/bin/env node
-/**
- * One-command free deploy to Cloudflare Pages.
- *
- *   node deploy.js
- *
- * Requires a Cloudflare account and a one-time `npx wrangler login`.
- * Staging files in the system temp dir so that .git / tests are never uploaded.
- */
+
 
 const { execFileSync } = require("child_process");
 const fs = require("fs");
@@ -61,10 +54,6 @@ for (const file of SITE_FILES) {
   fs.copyFileSync(src, path.join(stage, file));
 }
 
-/* ---------- ads.txt ---------- *
- * The AdSense publisher id lives in ads.js (CONFIG.adsenseClient). Mirror it
- * into ads.txt so the file always matches the id the site actually serves.
- */
 function adsenseClientId() {
   const adsSrc = fs.readFileSync(path.join(root, "ads.js"), "utf8");
   const m = adsSrc.match(/adsenseClient:\s*"([^"]*)"/);
@@ -103,7 +92,7 @@ const args = [
 
 try {
   if (process.platform === "win32") {
-    // .cmd shims cannot be spawned directly on modern Node without a shell.
+
     execFileSync("cmd.exe", ["/d", "/s", "/c", "npx " + args.join(" ")], {
       stdio: "inherit",
       cwd: root

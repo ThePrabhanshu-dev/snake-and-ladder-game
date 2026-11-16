@@ -1,9 +1,5 @@
-#!/usr/bin/env python3
-"""Generate og-image.png (1200x630) from the same design as og-image.svg.
 
-Most social platforms (Facebook, X, WhatsApp, LinkedIn) refuse SVG previews,
-so the OG image has to be a real PNG. Run:  python tools/make-og-image.py
-"""
+
 import os
 from PIL import Image, ImageDraw, ImageFont
 
@@ -20,13 +16,11 @@ TEXT = (232, 236, 245)
 MUTED = (159, 176, 212)
 WHITE = (238, 242, 255)
 
-
 def lerp(a, b, t):
     return tuple(round(a[i] + (b[i] - a[i]) * t) for i in range(3))
 
-
 def diagonal_gradient():
-    """Background gradient along the top-left -> bottom-right diagonal."""
+
     img = Image.new("RGB", (W, H))
     px = img.load()
     for y in range(H):
@@ -34,7 +28,6 @@ def diagonal_gradient():
             t = (x / (W - 1) * 0.5) + (y / (H - 1) * 0.5)
             px[x, y] = lerp(BG_A, BG_B, min(1.0, t))
     return img
-
 
 def font(size, bold=True):
     names = []
@@ -49,14 +42,12 @@ def font(size, bold=True):
             continue
     return ImageFont.load_default()
 
-
 def centered(draw, text, y, fnt, fill):
     bbox = draw.textbbox((0, 0), text, font=fnt)
     draw.text(((W - (bbox[2] - bbox[0])) / 2 - bbox[0], y), text, font=fnt, fill=fill)
 
-
 def draw_ladder(draw, ox, oy, scale=1.0):
-    """Two rails plus rungs, matching the SVG decorative ladder."""
+
     rail_w = max(1, int(9 * scale))
     x1, x2 = ox + 30 * scale, ox + 60 * scale
     y_top, y_bot = oy + 40 * scale, oy + 300 * scale
@@ -70,9 +61,8 @@ def draw_ladder(draw, ox, oy, scale=1.0):
                    (ox + rx2 * scale, oy + ry * scale)],
                   fill=LADDER, width=rung_w)
 
-
 def draw_snake(draw, ox, oy, scale=1.0):
-    """S-curved snake body drawn as a chain of thick round segments."""
+
     pts = [(1080, 130), (990, 130), (1000, 220), (1075, 235),
            (1150, 250), (1145, 330), (1065, 345), (1000, 358), (1010, 430), (1080, 440)]
     pts = [(ox + (x - 990) * scale, oy + (y - 130) * scale) for x, y in pts]
@@ -89,9 +79,8 @@ def draw_snake(draw, ox, oy, scale=1.0):
     for ex in (hx - 6 * scale, hx + 6 * scale):
         draw.ellipse([ex - er, hy - 4 * scale - er, ex + er, hy - 4 * scale + er], fill=EYE)
 
-
 def draw_dice(draw, ox, oy, size=74, pips=5):
-    """Rounded square die showing `pips` dots (1-6)."""
+
     grid = {1: (4,), 2: (0, 8), 3: (0, 4, 8), 4: (0, 2, 6, 8),
             5: (0, 2, 4, 6, 8), 6: (0, 2, 3, 5, 6, 8)}
     cells = 3
@@ -107,7 +96,6 @@ def draw_dice(draw, ox, oy, size=74, pips=5):
         cy = oy + pad + (idx // cells) * step + step / 2
         draw.ellipse([cx - pr, cy - pr, cx + pr, cy + pr], fill=WHITE)
 
-
 def main():
     img = diagonal_gradient()
     draw = ImageDraw.Draw(img)
@@ -115,8 +103,6 @@ def main():
     draw_ladder(draw, 90, 150)
     draw_snake(draw, 990, 130)
 
-    # Gradient title, rendered character by character so each letter can take
-    # its own colour along the red -> amber -> cyan ramp.
     title = "Snake & Ladder"
     f_title = font(86, bold=True)
     x = 0
@@ -145,7 +131,6 @@ def main():
 
     img.save(OUT, "PNG", optimize=True)
     print("wrote", OUT, img.size)
-
 
 if __name__ == "__main__":
     main()

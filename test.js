@@ -1,4 +1,4 @@
-/* Node test suite for the Snake & Ladder rules. Run: node test.js */
+
 const R = require("./rules.js");
 
 let passed = 0, failed = 0;
@@ -111,7 +111,7 @@ console.log("\nThe sixes counter belongs to the player");
   eq("the counter is cleared after a triple six", s.sixes, 0);
 }
 {
-  // A 6 that overshoots still counts towards this player's three-sixes counter.
+
   const s = R.step({ pos: 97, sixes: 0 }, 6);
   eq("a six that overshoots does not move the player", s.pos, 97);
   eq("a six that overshoots is flagged as an overshoot", s.overshoot, true);
@@ -119,12 +119,12 @@ console.log("\nThe sixes counter belongs to the player");
   eq("a six that overshoots still counts towards the counter", s.sixes, 1);
 }
 {
-  // One player's sixes must not leak into another player's turn.
+
   const a = { pos: 10, sixes: 1 };
   const b = { pos: 10, sixes: 0 };
   const ra = R.step(a, 6);
   eq("step does not mutate the player", a.sixes, 1);
-  a.sixes = ra.sixes;              // the caller stores the counter back
+  a.sixes = ra.sixes;
   const sb = R.step(b, 6);
   eq("a second player starts their own counter", sb.sixes, 1);
   eq("the first player keeps their counter", a.sixes, 2);
@@ -213,7 +213,7 @@ console.log("\nSeeded RNG (daily challenge)");
     R.hashSeed("2026-11-14") >= 0 && R.hashSeed("2026-11-14") <= 0xffffffff);
 }
 {
-  // Two players on the same daily challenge must roll identical dice.
+
   const date = "2026-11-14";
   const rngA = R.mulberry32(R.hashSeed(date));
   const rngB = R.mulberry32(R.hashSeed(date));

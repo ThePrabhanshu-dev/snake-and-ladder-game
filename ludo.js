@@ -1,7 +1,4 @@
-/* Ludo — the browser game. Board rendering, turn handling and the optional
- * computer player. All game rules live in ludo-rules.js so that the Node
- * test suite can verify the same behaviour.
- */
+
 (function () {
   "use strict";
 
@@ -51,12 +48,8 @@
   let lastRoll = 0;
   let settings = { count: 4, ai: false };
 
-  /* ------------------------------------------------------------------ */
-  /* board construction                                                   */
-  /* ------------------------------------------------------------------ */
-
-  const cellEls = {};   // cellKey -> element
-  const cellInfo = {};  // cellKey -> { type, colorId }
+  const cellEls = {};
+  const cellInfo = {};
 
   function key(r, c) { return r * SIZE + c; }
 
@@ -65,8 +58,7 @@
   }
 
   function classifyCells() {
-    // The track first — a start square is also a track square, so it is
-    // painted over afterwards.
+
     Rules.TRACK.forEach(function (cell) {
       setCell(cell[0], cell[1], {
         type: Rules.isSafeCell(cell) ? "safe" : "track",
@@ -110,10 +102,6 @@
     boardEl.appendChild(frag);
   }
 
-  /* ------------------------------------------------------------------ */
-  /* state                                                                */
-  /* ------------------------------------------------------------------ */
-
   function newGame(playerCount, aiIndex) {
     const ids = Rules.colorsFor(playerCount);
     settings.count = ids.length;
@@ -148,10 +136,6 @@
   }
 
   function current() { return state.players[state.turn]; }
-
-  /* ------------------------------------------------------------------ */
-  /* rendering                                                            */
-  /* ------------------------------------------------------------------ */
 
   function renderAll() {
     renderTokens();
@@ -240,19 +224,15 @@
     diceEl.setAttribute("aria-label", "Dice showing " + value);
   }
 
-  /* ------------------------------------------------------------------ */
-  /* turn flow                                                            */
-  /* ------------------------------------------------------------------ */
-
   function roll(byComputer) {
     if (!state || state.over || rolling || busy) return;
-    // A human never rolls for the computer — it rolls by itself.
+
     if (!byComputer && current().isAI) return;
     rolling = true;
     updateControls();
     const roll = 1 + Math.floor(Math.random() * 6);
     diceEl.classList.remove("rolling");
-    void diceEl.offsetWidth;           // restart the animation
+    void diceEl.offsetWidth;
     diceEl.classList.add("rolling");
     setTimeout(function () { setDice(roll); }, 220);
     Fx.play("dice");
@@ -284,7 +264,7 @@
       state.sixes += 1;
       if (state.sixes >= Rules.THREE_SIXES) {
         state.sixes = 0;
-        // The token moved on the previous six goes back to its yard.
+
         let penalty = null;
         if (state.lastMoved && state.lastMoved.player === state.turn) {
           player.tokens[state.lastMoved.token] = YARD;
@@ -341,7 +321,7 @@
   function playMove(move, diceRoll) {
     const player = current();
     const result = Rules.applyMove(state, state.turn, move);
-    // Only the token moved on a six can be sent back by a third six.
+
     state.lastMoved = diceRoll === 6 ? { player: state.turn, token: move.token } : null;
     pendingMoves = [];
     boardEl.querySelectorAll(".token.movable").forEach(function (t) { t.classList.remove("movable"); });
@@ -423,11 +403,6 @@
     else winOverlay.classList.remove("show");
   }
 
-  /* ------------------------------------------------------------------ */
-  /* computer player                                                      */
-  /* ------------------------------------------------------------------ */
-
-  /** The track index of a position, or null for the home column. */
   function trackIndexOf(colorId, pos) {
     if (pos < 0 || pos > Rules.TRACK_LEN - 1) return null;
     const start = Rules.colorById(colorId).startIndex;
@@ -441,13 +416,12 @@
 
     if (move.capture) score += 130;
     if (move.to === CENTER_INDEX) score += 220;
-    if (move.from === YARD) score += 45;                     // get out of the yard
+    if (move.from === YARD) score += 45;
 
     const destCell = Rules.pathFor(pl.colorId)[move.to];
     if (Rules.isSafeCell(destCell)) score += 30;
     else score -= 12;
 
-    // A token that sits just behind an opponent can be captured next turn.
     const myTrack = trackIndexOf(pl.colorId, move.to);
     if (myTrack !== null && !Rules.isSafeCell(destCell)) {
       state.players.forEach(function (op, oi) {
@@ -463,7 +437,6 @@
 
     score += (move.to - move.from) * 3;
 
-    // Prefer keeping one token close to home when others are still out.
     const home = Rules.atHome(pl);
     if (home >= 2 && move.to < Rules.TRACK_LEN) score -= 6;
 
@@ -482,24 +455,16 @@
     setTimeout(function () { if (state && !state.over) playMove(best, roll); }, 450);
   }
 
-  /* ------------------------------------------------------------------ */
-  /* stats                                                                */
-  /* ------------------------------------------------------------------ */
-
   function loadStats() {
     try {
       const raw = localStorage.getItem(STATS_KEY);
       if (raw) stats = Object.assign(stats, JSON.parse(raw));
-    } catch (e) { /* storage blocked — stats stay in memory */ }
+    } catch (e) {   }
   }
 
   function saveStats() {
     try { localStorage.setItem(STATS_KEY, JSON.stringify(stats)); } catch (e) {}
   }
-
-  /* ------------------------------------------------------------------ */
-  /* input                                                                */
-  /* ------------------------------------------------------------------ */
 
   boardEl.addEventListener("click", function (ev) {
     if (!state || state.over || busy || rolling) return;
@@ -548,17 +513,13 @@
   el("ludoWinClose").addEventListener("click", hideWin);
 
   document.addEventListener("keydown", function (ev) {
-    // Escape closes the win dialog and Tab stays trapped inside it.
+
     if (winOverlay && window.SiteDialog && window.SiteDialog.handleKey(winOverlay, ev)) return;
     if (ev.code === "Space" && ev.target === document.body) {
       ev.preventDefault();
       roll();
     }
   });
-
-  /* ------------------------------------------------------------------ */
-  /* start                                                                */
-  /* ------------------------------------------------------------------ */
 
   loadStats();
   buildBoard();

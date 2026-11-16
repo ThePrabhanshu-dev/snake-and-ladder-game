@@ -1,17 +1,9 @@
-#!/usr/bin/env python3
-"""Repair files that were double-encoded by a PowerShell read/write round-trip.
 
-PowerShell read the UTF-8 files as CP1252 and wrote them back as UTF-8, so
-every non-ASCII character went through the classic "Ã¢â‚¬â€"" mojibake
-mangling — twice, in this case. This reverses the round-trip.
 
-Usage:  python tools/fix-encoding.py <file> [...]
-"""
 import sys
 
-# Characters CP1252 cannot represent back to the original bytes.
 _FALLBACK = {
-    "\u20ac": "\u0080",  # euro sign
+    "\u20ac": "\u0080",
     "\u201a": "\u0082",
     "\u0192": "\u0083",
     "\u201e": "\u0084",
@@ -40,13 +32,12 @@ _FALLBACK = {
     "\u0178": "\u009f",
 }
 
-
 def to_latin1_bytes(text):
-    """Map text back to the single-byte code page it came from."""
+
     out = bytearray()
     for ch in text:
         if 0x80 <= ord(ch) <= 0x9F:
-            # Already a raw C1 control byte from a partially-unwound pass.
+
             out.append(ord(ch))
             continue
         try:
@@ -55,17 +46,14 @@ def to_latin1_bytes(text):
             out.append(_FALLBACK[ch].encode("latin-1")[0])
     return bytes(out)
 
-
 def unmojibake(text):
-    """Undo one round-trip of 'read as CP1252, write as UTF-8'."""
-    return to_latin1_bytes(text).decode("utf-8")
 
+    return to_latin1_bytes(text).decode("utf-8")
 
 def repair(path):
     raw = open(path, "rb").read()
     text = raw.decode("utf-8")
 
-    # Keep unwinding while the result still looks mangled and keeps decoding.
     for _ in range(4):
         if not any(m in text for m in ("Ã", "â€", "Â")):
             break
@@ -80,13 +68,11 @@ def repair(path):
     open(path, "wb").write(text.encode("utf-8"))
     return text
 
-
 def main():
     for path in sys.argv[1:]:
         result = repair(path)
         bad = sum(result.count(m) for m in ("Ã", "â€", "Â"))
         print(f"{path}: remaining_mojibake={bad}")
-
 
 if __name__ == "__main__":
     main()

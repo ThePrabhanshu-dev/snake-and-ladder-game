@@ -1,15 +1,5 @@
 #!/usr/bin/env node
-/**
- * Wire a Google AdSense publisher id + ad-slot ids into ads.js.
- *
- *   node set-adsense.js --client ca-pub-1234567890123456
- *   node set-adsense.js --client ca-pub-1234567890123456 --slots top=111,side=222,foot=333
- *
- * Then run `node deploy.js` to publish the change (ads.txt is regenerated
- * automatically from the same publisher id).
- *
- * Use --dry-run to preview the changes without writing them.
- */
+
 
 const fs = require("fs");
 const path = require("path");
@@ -46,7 +36,6 @@ function main() {
 
   let src = fs.readFileSync(ADS_FILE, "utf8");
 
-  // Publisher id
   const clientRe = /(adsenseClient:\s*")[^"]*(")/;
   if (!clientRe.test(src)) {
     console.error("Could not find adsenseClient in ads.js — update the CONFIG block manually.");
@@ -54,7 +43,6 @@ function main() {
   }
   src = src.replace(clientRe, `$1${args.client}$2`);
 
-  // Ad-slot ids
   const slotNames = ["top", "side", "foot"];
   for (const name of slotNames) {
     const value = args.slots[name];

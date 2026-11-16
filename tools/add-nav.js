@@ -1,7 +1,4 @@
-/* One-off helper: injects the shared top navigation bar into every page.
-   Run with:  node tools/add-nav.js
-   It is idempotent - running it twice does not add the bar twice, and it
-   refreshes a bar that is already there so links stay in sync. */
+
 const fs = require("fs");
 const path = require("path");
 
@@ -52,8 +49,6 @@ for (const page of PAGES) {
   const file = path.join(ROOT, page.file);
   let html = fs.readFileSync(file, "utf8");
 
-  // 1. stylesheet link in <head> - refresh the version so browsers pick
-  //    up the latest shared chrome.
   if (/<link rel="stylesheet" href="site-ui\.css[^"]*" \/>/.test(html)) {
     html = html.replace(
       /<link rel="stylesheet" href="site-ui\.css[^"]*" \/>/,
@@ -63,8 +58,6 @@ for (const page of PAGES) {
     html = html.replace(/<\/head>/i, `  <link rel="stylesheet" href="site-ui.css?v=${SITE_UI_VERSION}" />\n</head>`);
   }
 
-  // 2. the shared behaviour script. It is loaded in <head> without defer so
-  //    the theme is applied before the page paints.
   if (!/<script src="site-ui\.js/.test(html)) {
     html = html.replace(
       /<\/head>/i,
@@ -72,8 +65,6 @@ for (const page of PAGES) {
     );
   }
 
-  // 3. the nav bar right after <body>. Replace an existing bar so the
-  //    links never drift apart between pages.
   const nav = navHtml(page.current);
   if (/<nav class="topnav"[\s\S]*?<\/nav>/.test(html)) {
     html = html.replace(/<nav class="topnav"[\s\S]*?<\/nav>/, nav);
@@ -81,11 +72,9 @@ for (const page of PAGES) {
     html = html.replace(/<body>\s*\n/i, `<body>\n  ${nav}\n`);
   }
 
-  // 4. exactly one skip link, always as the first thing in the body.
   html = html.replace(/[ \t]*<a class="skip-link"[^>]*>[\s\S]*?<\/a>\r?\n?/g, "");
   html = html.replace(/<body>\s*\n/i, `<body>\n  <a class="skip-link" href="#main">Skip to content</a>\n`);
 
-  // 5. give the page content a skip-link target
   if (!html.includes('id="main"')) {
     html = html.replace(/<div class="wrap">/i, `<div class="wrap" id="main">`);
   }
