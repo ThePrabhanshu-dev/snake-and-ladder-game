@@ -1,10 +1,9 @@
 /* Ad manager for the Snake & Ladder game.
  *
  * Two jobs:
- *  1. Render the ad slots. If a Google AdSense publisher id is configured
- *     (CONFIG.adsenseClient below) the real AdSense unit is loaded, otherwise
- *     a fallback ad network can be used. Until one of them is live the slot
- *     stays empty - the layout does not break.
+ *  1. Render the ad slots. Once AdSense approves the site (CONFIG.adsenseApproved)
+ *     the real AdSense units are loaded; until then the slot stays empty and the
+ *     layout does not break.
  *  2. Build the "share the game" buttons.
  */
 (function () {
@@ -20,24 +19,9 @@
       side: "7394066327",
       foot: "9828657971"
     },
-    // Set to true once AdSense approves the site. Until then the slots are
-    // filled by the fallback ad network (see fallbackNetwork below), because
-    // AdSense units do not fill on an unapproved site.
-    adsenseApproved: false,
-    // Fallback ad network - earn money on the *.pages.dev domain while AdSense
-    // review is pending. Paste the snippets from your network's dashboard
-    // (Adsterra, HilltopAds, Exoclick, PropellerAds all accept subdomain
-    // sites). Managed with: node set-ads-network.js
-    fallbackNetwork: {
-      enabled: false,
-      provider: "",
-      // Global snippet injected at the end of <head> (e.g. a popunder loader).
-      head: "",
-      // Global snippet injected at the end of <body> (e.g. a social bar).
-      body: "",
-      // Snippet per on-page ad slot.
-      slots: { top: "", side: "", foot: "" }
-    }
+    // Set to true once AdSense approves the site. AdSense units do not fill on
+    // an unapproved site, so the slots stay empty until then.
+    adsenseApproved: false
   };
 
   var SHARE_TEXT = "Snake & Ladder — classic board game, play it in your browser! 🐍🎲";
@@ -94,96 +78,12 @@
     return id;
   }
 
-  /* ---------- fallback ad network ---------- */
-  // Snippets pasted from an ad network dashboard (Adsterra, HilltopAds,
-  // Exoclick, PropellerAds...). They are injected as real <script> elements
-  // so the network's loader actually executes.
-  function parseSnippet(html) {
-    // A <template> keeps the snippet as a fragment. DOMParser is not used on
-    // purpose: it parses a full document and moves a leading <script> into
-    // <head>, which would silently drop the snippet.
-    var tpl = document.createElement("template");
-    tpl.innerHTML = html;
-    return Array.prototype.slice.call(tpl.content.childNodes);
-  }
-
-  function appendSnippet(target, html) {
-    if (!target || !html) return;
-    var nodes = parseSnippet(html);
-    for (var i = 0; i < nodes.length; i++) {
-      var node = nodes[i];
-      if (node.nodeType === 1 && node.tagName === "SCRIPT") {
-        // Imported scripts do not run - recreate them so the code executes.
-        var s = document.createElement("script");
-        for (var j = 0; j < node.attributes.length; j++) {
-          s.setAttribute(node.attributes[j].name, node.attributes[j].value);
-        }
-        s.text = node.textContent || "";
-        target.appendChild(s);
-      } else {
-        target.appendChild(document.importNode(node, true));
-      }
-    }
-  }
-
-  function injectGlobal(snippet, where) {
-    if (!snippet) return;
-    appendSnippet(where === "head" ? document.head : document.body, snippet);
-  }
-
-  function fallbackEnabled() {
-    var fn = CONFIG.fallbackNetwork || {};
-    if (!fn.enabled) return false;
-    // Once AdSense is approved, AdSense takes priority - do not run two
-    // ad networks on the same page (Google rejects that as invalid traffic).
-    if (CONFIG.adsenseApproved && CONFIG.adsenseClient) return false;
-    return true;
-  }
-
-  /* ---------- config loading ---------- */
-  // The fallback network snippets live in ads-network.json so they can be
-  // pasted (and edited) without touching any JavaScript. If the file cannot
-  // be read - or the page is opened from disk - the built-in defaults apply.
-  function loadNetworkConfig(done) {
-    if (location.protocol === "file:") return done();
-    fetch("ads-network.json", { cache: "no-store" })
-      .then(function (res) { return res.ok ? res.json() : null; })
-      .then(function (cfg) {
-        if (cfg) applyNetworkConfig(cfg);
-      })
-      .catch(function () {})
-      .then(function () { done(); });
-  }
-
-  function applyNetworkConfig(cfg) {
-    var fn = CONFIG.fallbackNetwork;
-    if (!fn) return;
-    if (typeof cfg.enabled === "boolean") fn.enabled = cfg.enabled;
-    if (typeof cfg.provider === "string") fn.provider = cfg.provider;
-    if (typeof cfg.head === "string") fn.head = cfg.head;
-    if (typeof cfg.body === "string") fn.body = cfg.body;
-    if (cfg.slots && typeof cfg.slots === "object") {
-      ["top", "side", "foot"].forEach(function (name) {
-        if (typeof cfg.slots[name] === "string") fn.slots[name] = cfg.slots[name];
-      });
-    }
-  }
-
   /* ---------- ad slots ---------- */
   function renderAd(container, slot) {
     if (!container) return;
     container.innerHTML = "";
 
-    // 1. Fallback network (money now, while AdSense review is pending).
-    if (fallbackEnabled()) {
-      var snippet = (CONFIG.fallbackNetwork.slots || {})[slot] || "";
-      if (snippet) {
-        appendSnippet(container, snippet);
-        return;
-      }
-    }
-
-    // 2. Google AdSense (once the site is approved).
+    // Google AdSense (once the site is approved).
     if (CONFIG.adsenseApproved && CONFIG.adsenseClient) {
       var slotId = validSlotId(slot);
       // No manual unit for this position: leave the slot empty and let AdSense
@@ -248,14 +148,7 @@
     // The share buttons do not depend on the ad config.
     buildShare(document.getElementById("shareRow"));
 
-    // Ad slots wait for ads-network.json so the fallback snippets are known.
-    loadNetworkConfig(function () {
-      if (fallbackEnabled()) {
-        injectGlobal(CONFIG.fallbackNetwork.head, "head");
-        injectGlobal(CONFIG.fallbackNetwork.body, "body");
-      }
-      renderSlots();
-    });
+    renderSlots();
   }
 
   if (document.readyState === "loading") {

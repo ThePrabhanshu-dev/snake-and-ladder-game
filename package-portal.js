@@ -71,10 +71,9 @@ function portalIndex() {
 
 function portalAds() {
   let src = read("ads.js");
-  // Portals serve their own ads, so no AdSense client and no fallback network.
+  // Portals serve their own ads, so no AdSense client.
   src = src.replace(/adsenseClient:\s*"[^"]*"/, 'adsenseClient: ""');
   src = src.replace(/adsenseApproved:\s*(true|false)/, "adsenseApproved: false");
-  src = src.replace(/enabled:\s*true,\s*\n(\s*)provider:/, "enabled: false,\n$1provider:");
   return src;
 }
 

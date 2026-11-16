@@ -727,7 +727,6 @@ button.ghost { background: var(--panel2); box-shadow: none; border: 1px solid va
 .trophy-emoji { font-size: 24px; line-height: 1.2; }
 .trophy-name { font-size: 12px; font-weight: 700; }
 .trophy-desc { font-size: 10.5px; color: var(--muted); line-height: 1.35; }
-.trophy-count { font-size: 10.5px; color: var(--accent); font-weight: 700; }
 .streak-row { display: flex; gap: 6px; margin-top: 11px; flex-wrap: wrap; align-items: center; }
 .streak-day {
     width: 34px;

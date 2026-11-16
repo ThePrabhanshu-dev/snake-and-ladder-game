@@ -59,7 +59,7 @@ Serving over `http://` is needed so the browser loads the sibling `.js` files.
 - **Responsive layout** — board and side panel stack on narrow screens
 - **Live position readout** for every player
 - **Interactive loading screen** — animated ladder, slithering snake, tumbling dice, progress bar and rotating tips, with a skip button
-- **Ad slots** wired up and AdSense-ready, with a fallback ad network for earning before approval
+- **Ad slots** wired up and AdSense-ready (they fill as soon as AdSense approves the domain)
 - **Daily Challenge** — a date-seeded dice sequence so every player worldwide gets the same board,
   plus a shareable `?challenge=YYYY-MM-DD` link and a "Challenge a friend" button
 - **Share buttons** — send the game to a friend on WhatsApp, Facebook, X, Reddit or Telegram
@@ -89,8 +89,6 @@ Serving over `http://` is needed so the browser loads the sibling `.js` files.
 | `loader.js` | Interactive loading screen |
 | `fx.js` | Sound effects, confetti and toast notifications (Web Audio, no media files) |
 | `ads.js` | Ad slots (AdSense-ready) + the share buttons |
-| `ads-network.json` | Fallback ad-network snippets (for earning before AdSense approval) |
-| `set-ads-network.js` | Turn the fallback network on/off, paste unit snippets, check the money setup |
 | `embed.js` | Drop-in widget for embedding the game on other websites |
 | `play.html` | Landing page for external traffic (ad slots, FAQ, CTA) |
 | `how-to-play.html` | Rules + board map guide page (SEO content, AdSense approval) |
@@ -102,7 +100,7 @@ Serving over `http://` is needed so the browser loads the sibling `.js` files.
 | `deploy.js` | One-command free deploy to Cloudflare Pages |
 | `set-adsense.js` | Wire an AdSense publisher id + slot ids into `ads.js` |
 | `verify-adsense.js` | Check that the live site really serves the AdSense setup |
-| `verify-money.js` | Check which ad network is live on the deployed site and whether it can earn |
+| `verify-money.js` | Check that the deployed site has AdSense switched on and the ad slots in place |
 | `package-portal.js` | Build the portal upload zip + listing metadata for third-party game sites |
 | `add-domain.js` | Attach/remove a custom domain on the Pages project |
 | `test.js` | Node test suite for `rules.js` |
@@ -140,31 +138,6 @@ never even starts for a `pages.dev` URL.
 
 > AdSense requires a **custom domain** — a `*.pages.dev` or `*.github.io` subdomain is not approved.
 > Buy a domain, point it at Cloudflare Pages (free SSL) and use that URL in AdSense.
-
-#### While you wait: earn on the subdomain with a fallback network
-
-AdSense is the best-paying option, but it is gated behind the domain + review. Networks such as
-**Adsterra, HilltopAds, Exoclick and PropellerAds** accept sites on a subdomain, so the site can
-earn from `pages.dev` right now. The wiring is already built:
-
-```bash
-node set-ads-network.js --status                 # what is running right now
-node set-ads-network.js --enable --provider adsterra
-node set-ads-network.js --slot top --script "<script ...></script>"   # paste the unit snippet
-node deploy.js
-```
-
-- The snippets live in [`ads-network.json`](ads-network.json) — paste them there, no JavaScript edits.
-- `head` runs at the end of `<head>` (popunder loader), `body` at the end of `<body>` (social bar),
-  and `top` / `side` / `foot` render inside the on-page ad slots.
-- **Never run two ad networks on one page.** As soon as AdSense approves the domain:
-
-  ```bash
-  node set-ads-network.js --disable --adsense-approved   # fallback off, AdSense on
-  node deploy.js
-  ```
-
-  (`adsenseApproved: true` in [`ads.js`](ads.js) is what hands the slots over to AdSense.)
 
 **Step A — get a domain and attach it**
 

@@ -5,8 +5,8 @@
  *   node verify-money.js
  *   node verify-money.js https://yourdomain.com
  *
- * Reports which ad network is live (AdSense or the fallback network), whether
- * the snippets are deployed and whether the ad slots render.
+ * Reports whether the deployed site has AdSense switched on, whether the
+ * publisher id is present and whether the ad slots are in the page.
  */
 
 const fs = require("fs");
@@ -18,14 +18,11 @@ const site = (process.argv[2] || DEFAULT_SITE).replace(/\/$/, "");
 function localConfig() {
   const adsSrc = fs.readFileSync(path.join(__dirname, "ads.js"), "utf8");
   const approved = /adsenseApproved:\s*(true|false)/.exec(adsSrc);
-  let network = { enabled: false, provider: "", slots: {} };
-  try {
-    const cfg = JSON.parse(fs.readFileSync(path.join(__dirname, "ads-network.json"), "utf8"));
-    network = cfg;
-  } catch (e) {
-    console.warn("ads-network.json could not be read: " + e.message);
-  }
-  return { adsenseApproved: approved ? approved[1] === "true" : false, network };
+  const client = /adsenseClient:\s*"([^"]*)"/.exec(adsSrc);
+  return {
+    adsenseApproved: approved ? approved[1] === "true" : false,
+    adsenseClient: client ? client[1].trim() : ""
+  };
 }
 
 async function get(url) {
@@ -41,10 +38,9 @@ async function main() {
   const local = localConfig();
   console.log(`Site: ${site}\n`);
 
-  const [index, adsJs, networkJson] = await Promise.all([
+  const [index, adsJs] = await Promise.all([
     get(`${site}/index.html`),
-    get(`${site}/ads.js`),
-    get(`${site}/ads-network.json`)
+    get(`${site}/ads.js`)
   ]);
 
   const checks = [];
@@ -53,20 +49,6 @@ async function main() {
   ok("index.html reachable", index.status === 200, `HTTP ${index.status}`);
   ok("ads.js reachable", adsJs.status === 200, `HTTP ${adsJs.status}`);
 
-  let liveNetwork = null;
-  if (networkJson.status === 200) {
-    try {
-      liveNetwork = JSON.parse(networkJson.body);
-    } catch (e) {
-      /* reported below */
-    }
-  }
-  ok(
-    "ads-network.json deployed",
-    liveNetwork !== null,
-    liveNetwork ? `provider=${liveNetwork.provider} enabled=${liveNetwork.enabled}` : `HTTP ${networkJson.status}`
-  );
-
   const liveApproved = /adsenseApproved:\s*true/.test(adsJs.body);
   ok(
     "live ads.js has the ad network switch",
@@ -74,24 +56,33 @@ async function main() {
     `adsenseApproved=${liveApproved}`
   );
 
-  const liveEnabled = liveNetwork && liveNetwork.enabled;
-  const liveSnippets = liveNetwork
-    ? [liveNetwork.head, liveNetwork.body, ...Object.values(liveNetwork.slots || {})].filter(Boolean).length
-    : 0;
+  const liveClient = /adsenseClient:\s*"([^"]*)"/.exec(adsJs.body);
+  const liveClientId = liveClient ? liveClient[1].trim() : "";
+  ok(
+    "live ads.js has a publisher id",
+    /^ca-pub-\d{16}$/.test(liveClientId),
+    liveClientId || "(none)"
+  );
+
+  const slotCount = (index.body.match(/class="ad-slot"/g) || []).length;
+  ok("ad slots are present in the page", slotCount > 0, `${slotCount} slot(s)`);
 
   if (liveApproved) {
     ok("AdSense is the active network", true, "adsenseApproved=true");
-    ok("fallback network is switched off", !liveEnabled, liveEnabled ? "both networks are enabled - fix this" : "ok");
-  } else if (liveEnabled && liveSnippets > 0) {
-    ok("fallback network is live with snippets", true, `${liveSnippets} snippet(s)`);
   } else {
-    ok("an ad network is serving", false, "no network is active - the site earns nothing");
+    ok("AdSense is the active network", false, "adsenseApproved=false - the site earns nothing");
+  }
+
+  if (local.adsenseApproved !== liveApproved) {
+    ok("deployed ads.js matches the local one", false, "run: node deploy.js");
+  } else {
+    ok("deployed ads.js matches the local one", true, "ok");
   }
 
   let failed = 0;
   for (const c of checks) {
     if (!c.pass) failed++;
-    console.log(`${c.pass ? "PASS" : "FAIL"}  ${c.name}${c.detail ? " — " + c.detail : ""}`);
+    console.log(`${c.pass ? "PASS" : "FAIL"}  ${c.name}${c.detail ? " - " + c.detail : ""}`);
   }
   console.log(`\n${checks.length - failed} passed, ${failed} failed`);
   process.exit(failed ? 1 : 0);

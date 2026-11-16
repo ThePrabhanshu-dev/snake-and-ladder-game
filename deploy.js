@@ -38,7 +38,6 @@ const SITE_FILES = [
   "site-ui.css",
   "site-ui.js",
   "snake-ladder.css",
-  "ads-network.json",
   "embed.js",
   "favicon.svg",
   "og-image.svg",
