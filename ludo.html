@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ludo Online — Free Ludo Board Game for 2–4 Players</title>
+<meta name="description" content="Play Ludo online for free. Roll the dice, race your four tokens around the 15×15 board, capture opponents and bring every token home. Two to four players or play against the computer." />
+<meta name="keywords" content="ludo online, free ludo game, play ludo, ludo board game, ludo for 2 players, ludo vs computer" />
+<meta name="author" content="ThePrabhanshu-dev" />
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1" />
+<meta name="theme-color" content="#10131a" />
+<link rel="canonical" href="https://snake-and-ladder-2q0.pages.dev/ludo.html" />
+
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Snake &amp; Ladder" />
+<meta property="og:title" content="Ludo Online — Free Ludo Board Game" />
+<meta property="og:description" content="Race your four tokens home on a classic Ludo board. 2–4 players or play the computer. No signup needed." />
+<meta property="og:url" content="https://snake-and-ladder-2q0.pages.dev/ludo.html" />
+<meta property="og:image" content="https://snake-and-ladder-2q0.pages.dev/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="Ludo Online — Free Ludo Board Game" />
+<meta name="twitter:description" content="Race your four tokens home on a classic Ludo board. 2–4 players or play the computer." />
+<meta name="twitter:image" content="https://snake-and-ladder-2q0.pages.dev/og-image.png" />
+
+<link rel="icon" href="favicon.svg" type="image/svg+xml" />
+<link rel="apple-touch-icon" href="favicon.svg" />
+<link rel="manifest" href="manifest.webmanifest" />
+<meta name="google-adsense-account" content="ca-pub-8439899281485854" />
+<script async id="adsense-script" src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-8439899281485854" crossorigin="anonymous"></script>
+
+<!-- ===== Structured data ===== -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://snake-and-ladder-2q0.pages.dev/ludo.html#webpage",
+      "url": "https://snake-and-ladder-2q0.pages.dev/ludo.html",
+      "name": "Ludo Online — Free Ludo Board Game",
+      "description": "A free browser Ludo game for two to four players, with a computer opponent option.",
+      "isPartOf": { "@id": "https://snake-and-ladder-2q0.pages.dev/#website" },
+      "inLanguage": "en"
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://snake-and-ladder-2q0.pages.dev/#website",
+      "url": "https://snake-and-ladder-2q0.pages.dev/",
+      "name": "Snake &amp; Ladder Online",
+      "inLanguage": "en"
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://snake-and-ladder-2q0.pages.dev/ludo.html#breadcrumb",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://snake-and-ladder-2q0.pages.dev/" },
+        { "@type": "ListItem", "position": 2, "name": "Ludo", "item": "https://snake-and-ladder-2q0.pages.dev/ludo.html" }
+      ]
+    },
+    {
+      "@type": "Game",
+      "@id": "https://snake-and-ladder-2q0.pages.dev/ludo.html#game",
+      "name": "Ludo Online",
+      "url": "https://snake-and-ladder-2q0.pages.dev/ludo.html",
+      "genre": ["Board game", "Family game"],
+      "gamePlatform": "Web browser",
+      "playMode": "MultiPlayer",
+      "numberOfPlayers": "2-4",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" }
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://snake-and-ladder-2q0.pages.dev/ludo.html#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "How do I play Ludo online?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Every player rolls a six-sided die. You need a six to bring a token out of the yard and onto the board. Move your tokens around the 56-square track, capture a single opponent token by landing on it, avoid squares blocked by two opponents, and bring all four of your tokens into the centre column to win." }
+        },
+        {
+          "@type": "Question",
+          "name": "How many players can play Ludo on this site?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Between two and four. Players take turns on the same device, or you can switch on the computer opponent and play against the machine." }
+        },
+        {
+          "@type": "Question",
+          "name": "What happens if I roll a six?",
+          "acceptedAnswer": { "@type": "Answer", "text": "A six grants you an extra turn, which is how you bring new tokens out of your yard. Rolling three sixes in a row is a foul: the token goes back to the yard and the turn passes to the next player." }
+        },
+        {
+          "@type": "Question",
+          "name": "Which squares are safe in Ludo?",
+          "acceptedAnswer": { "@type": "Answer", "text": "The four start squares and the four squares directly in front of each home column are safe. A token on a safe square can never be captured." }
+        },
+        {
+          "@type": "Question",
+          "name": "Do I need an account to play Ludo here?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. The whole game runs in your browser with no signup, no download and no server. Your game statistics are stored on your own device only." }
+        }
+      ]
+    }
+  ]
+}
+</script>
+
+<style>
+  :root {
+    --bg:#0e1219; --panel:#181d28; --panel2:#212838; --accent:#5b8cff;
+    --text:#e8ecf5; --muted:#8b93a7; --line:#2b3244;
+    --red:#ef4444; --blue:#3b82f6; --yellow:#f5b301; --green:#22c55e;
+  }
+  * { box-sizing:border-box; }
+  body {
+    margin:0; background:radial-gradient(circle at 25% 0%, #1a2336 0%, var(--bg) 55%);
+    color:var(--text); font-family:"Segoe UI",system-ui,-apple-system,sans-serif; line-height:1.65;
+  }
+  .wrap { max-width:1080px; margin:0 auto; padding:22px 16px 60px; }
+  header { text-align:center; margin-bottom:16px; }
+  h1 { font-size:clamp(26px,5vw,40px); margin:0 0 6px; }
+  h1 span { color:var(--accent); }
+  .sub { color:var(--muted); font-size:14.5px; }
+  h2 { font-size:19px; margin:26px 0 8px; }
+  p, li { color:var(--muted); font-size:14.5px; }
+  a { color:var(--accent); }
+  ul, ol { padding-left:20px; }
+  li { margin:6px 0; }
+
+  .layout { display:grid; grid-template-columns:minmax(0,1fr) 320px; gap:18px; align-items:start; }
+  @media (max-width:860px) { .layout { grid-template-columns:1fr; } }
+
+  .panel, .card {
+    background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:16px 18px;
+  }
+  .board-shell { display:flex; flex-direction:column; gap:12px; align-items:center; }
+
+  /* ---------- the board ---------- */
+  #ludoBoard {
+    display:grid; grid-template-columns:repeat(15,1fr); grid-template-rows:repeat(15,1fr);
+    width:min(94vw,560px); aspect-ratio:1/1; gap:1px;
+    background:#0a0d13; border:2px solid #333d58; border-radius:10px; padding:2px;
+    user-select:none; touch-action:manipulation;
+  }
+  .cell { position:relative; border-radius:3px; background:#151a24; }
+  .cell-track { background:#dfe5f2; }
+  .cell-safe { background:#bcd0ff; }
+  .cell-start { border-radius:3px; }
+  .cell-yard { background:#1b2130; }
+  .cell-home { background:#202737; }
+  .cell-center {
+    background:conic-gradient(from 45deg, var(--red) 0deg 90deg, var(--yellow) 90deg 180deg,
+      var(--green) 180deg 270deg, var(--blue) 270deg 360deg);
+  }
+  .c-red.cell-start { background:#8f2323; }
+  .c-blue.cell-start { background:#2446a3; }
+  .c-yellow.cell-start { background:#b07708; }
+  .c-green.cell-start { background:#1a6b37; }
+  .c-red.cell-yard { background:#2b1113; }
+  .c-blue.cell-yard { background:#101f3d; }
+  .c-yellow.cell-yard { background:#2f2610; }
+  .c-green.cell-yard { background:#0f2a1b; }
+  .c-red.cell-home { background:#6b2626; }
+  .c-blue.cell-home { background:#244a8f; }
+  .c-yellow.cell-home { background:#7a5a12; }
+  .c-green.cell-home { background:#186b3d; }
+  .cell-home { box-shadow:inset 0 0 0 1px rgba(255,255,255,.12); }
+  .safe-star { position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
+    color:#5b7fc4; font-size:9px; }
+
+  .token {
+    position:absolute; width:62%; height:62%; border-radius:50%;
+    border:2px solid rgba(255,255,255,.85); box-shadow:0 1px 3px rgba(0,0,0,.5);
+  }
+  .token.c-red { background:var(--red); }
+  .token.c-blue { background:var(--blue); }
+  .token.c-yellow { background:var(--yellow); }
+  .token.c-green { background:var(--green); }
+  .token.slot-0 { top:6%; left:6%; }
+  .token.slot-1 { top:6%; right:6%; }
+  .token.slot-2 { bottom:6%; left:6%; }
+  .token.slot-3 { bottom:6%; right:6%; }
+  .token.movable { animation:pulse 1s ease-in-out infinite; cursor:pointer; z-index:3; }
+  .token.ai::after {
+    content:"CPU"; position:absolute; inset:auto 0 -10px 0; text-align:center;
+    font-size:7px; color:#cdd7ef; letter-spacing:.5px;
+  }
+  @keyframes pulse {
+    0%,100% { box-shadow:0 0 0 0 rgba(255,255,255,.85), 0 1px 3px rgba(0,0,0,.5); }
+    50% { box-shadow:0 0 0 5px rgba(255,255,255,.18), 0 1px 3px rgba(0,0,0,.5); }
+  }
+  .cell.target { box-shadow:inset 0 0 0 2px rgba(255,255,255,.75); }
+
+  /* ---------- sidebar ---------- */
+  .engage-bar { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin:16px 0; }
+  .engage-card { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:10px 13px; }
+  .engage-label { display:block; font-size:9.5px; letter-spacing:1.4px; text-transform:uppercase; color:#7d8aa8; }
+  .engage-value { display:block; font-size:20px; font-weight:700; }
+  .engage-hint { display:block; font-size:11.5px; color:#6d7794; }
+
+  .player-row { display:flex; align-items:center; gap:9px; padding:7px 9px; border-radius:9px;
+    border:1px solid transparent; }
+  .player-row.active { background:#232c3f; border-color:var(--accent); }
+  .player-row .dot { width:15px; height:15px; border-radius:50%; border:2px solid rgba(255,255,255,.7); }
+  .dot.c-red { background:var(--red); } .dot.c-blue { background:var(--blue); }
+  .dot.c-yellow { background:var(--yellow); } .dot.c-green { background:var(--green); }
+  .player-row .pname { font-size:14px; font-weight:600; flex:1; }
+  .player-row .pcount { font-size:12px; color:var(--muted); }
+
+  .dice-box { display:flex; align-items:center; gap:13px; margin:14px 0 12px; }
+  .dice { width:62px; height:62px; display:grid; grid-template-columns:repeat(3,1fr); grid-template-rows:repeat(3,1fr);
+    gap:4px; padding:8px; background:#f4f7ff; border-radius:11px; box-shadow:0 3px 10px rgba(0,0,0,.35); }
+  .dice .pip { width:100%; height:100%; border-radius:50%; background:transparent; }
+  .dice .pip.on { background:#1b2130; }
+  .dice.rolling { animation:shake .4s ease-in-out; }
+  @keyframes shake {
+    0%,100% { transform:rotate(0) scale(1); } 25% { transform:rotate(-14deg) scale(1.08); }
+    75% { transform:rotate(14deg) scale(1.08); }
+  }
+  .dice-label { font-size:14px; color:var(--muted); }
+
+  button {
+    font:inherit; cursor:pointer; border:none; border-radius:10px; padding:11px 18px;
+    background:linear-gradient(180deg,#6b96ff,#4472e6); color:#fff; font-weight:700; font-size:14.5px;
+  }
+  button.ghost { background:var(--panel2); border:1px solid #333d58; color:#b7c3dd; font-weight:600; }
+  button:disabled { opacity:.45; cursor:not-allowed; }
+  .btn-row { display:flex; flex-wrap:wrap; gap:8px; margin:8px 0; }
+  .msg { margin-top:12px; padding:11px 13px; background:#10151f; border:1px solid var(--line);
+    border-radius:10px; font-size:13.5px; color:#cfd8ee; min-height:44px; }
+  .rules { margin-top:14px; font-size:13.5px; }
+  .rules b { color:var(--text); }
+  .rules ul { margin:6px 0 0; }
+
+  .ad-slot { margin:18px 0; }
+  .faq details { border-bottom:1px solid #262d3d; padding:12px 0; }
+  .faq summary { cursor:pointer; font-weight:600; font-size:14.5px; color:var(--text); }
+  .faq p { margin:8px 0 0; }
+  .link-list { list-style:none; margin:0; padding:0; display:grid; gap:7px; }
+  .link-list a { display:block; background:var(--panel2); border:1px solid #333d58; border-radius:10px;
+    padding:10px 13px; color:var(--text); text-decoration:none; font-size:13.5px; font-weight:600; }
+  .link-list a:hover { border-color:var(--accent); background:#263049; }
+
+  .win-overlay { position:fixed; inset:0; background:rgba(6,9,14,.82); display:none;
+    align-items:center; justify-content:center; z-index:50; padding:18px; }
+  .win-overlay.show { display:flex; }
+  .win-card { background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:24px 26px;
+    max-width:380px; text-align:center; }
+  .win-emoji { font-size:44px; }
+  .win-card h2 { margin:6px 0 4px; }
+  .win-actions { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:14px; }
+
+  footer.site-footer { margin-top:28px; text-align:center; color:#6d7794; font-size:12.5px; }
+  .site-nav { display:flex; flex-wrap:wrap; gap:12px; justify-content:center; margin-bottom:10px; }
+  .site-nav a { color:#9fb0d8; text-decoration:none; font-weight:600; }
+  .site-nav a:hover { color:#fff; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Ludo <span>Online</span></h1>
+    <div class="sub">Classic Ludo on a 15×15 board — roll the dice, capture opponents, bring all four tokens home.</div>
+  </header>
+
+  <section class="engage-bar" aria-label="Game stats and options">
+    <div class="engage-card">
+      <span class="engage-label">Games played</span>
+      <span class="engage-value" id="ludoStatGames">0</span>
+      <span class="engage-hint">Saved on this device</span>
+    </div>
+    <div class="engage-card">
+      <span class="engage-label">Games won</span>
+      <span class="engage-value" id="ludoStatWins">0</span>
+      <span class="engage-hint">By any colour</span>
+    </div>
+    <div class="engage-card">
+      <span class="engage-label">Win streak</span>
+      <span class="engage-value" id="ludoStatStreak">0</span>
+      <span class="engage-hint">Wins in a row</span>
+    </div>
+    <div class="engage-card">
+      <span class="engage-label">Other games</span>
+      <span class="engage-value">🐍</span>
+      <span class="engage-hint"><a href="index.html">Play Snake &amp; Ladder</a></span>
+    </div>
+  </section>
+
+  <div id="adTop" class="ad-slot"></div>
+
+  <div class="layout">
+    <div class="board-shell">
+      <div id="ludoBoard" role="grid" aria-label="Ludo board"></div>
+      <p style="text-align:center;font-size:13px;margin:0">
+        Roll with the <b>Roll dice</b> button or the <b>space bar</b>, then click a glowing token to move it.
+      </p>
+    </div>
+
+    <aside class="panel">
+      <div id="ludoPlayers" aria-live="polite"></div>
+
+      <div class="dice-box">
+        <div class="dice" id="ludoDice" aria-label="Dice">
+          <span class="pip"></span><span class="pip"></span><span class="pip"></span>
+          <span class="pip"></span><span class="pip"></span><span class="pip"></span>
+          <span class="pip"></span><span class="pip"></span><span class="pip"></span>
+        </div>
+        <div class="dice-label" id="ludoDiceLabel">Roll to play</div>
+      </div>
+
+      <div class="btn-row">
+        <button id="ludoRoll" type="button">Roll Dice</button>
+        <button class="ghost" id="ludoRestart" type="button">Restart</button>
+      </div>
+      <div class="btn-row">
+        <button class="ghost" id="ludoAddPlayer" type="button">Add player</button>
+        <button class="ghost" id="ludoRemovePlayer" type="button">Remove player</button>
+      </div>
+      <div class="btn-row">
+        <button class="ghost" id="ludoAiToggle" type="button">Play vs computer</button>
+        <button class="ghost" id="ludoSoundToggle" type="button">Mute sounds</button>
+      </div>
+
+      <div class="msg" id="ludoMsg">Loading the board…</div>
+
+      <div class="rules">
+        <b>How to play Ludo</b>
+        <ul>
+          <li>Roll a <b>6</b> to bring a token out of your yard onto your start square.</li>
+          <li>Land on a single opponent token to send it back to its yard — safe squares (★) cannot be captured.</li>
+          <li>Two opponents on one square block the road: you cannot pass or land there.</li>
+          <li>A six gives you another turn. Three sixes in a row sends your token back to the yard.</li>
+          <li>Bring all <b>four</b> tokens into the centre column to win the game.</li>
+        </ul>
+      </div>
+
+      <div id="adSide" class="ad-slot"></div>
+    </aside>
+  </div>
+
+  <div id="adFoot" class="ad-slot"></div>
+
+  <section class="card">
+    <h2>Frequently asked questions</h2>
+    <div class="faq">
+      <details open><summary>How do I play Ludo online?</summary><p>Every player rolls a six-sided die. You need a six to bring a token out of the yard and onto the board. Move your tokens around the 56-square track, capture a single opponent token by landing on it, avoid squares blocked by two opponents, and bring all four of your tokens into the centre column to win.</p></details>
+      <details><summary>How many players can play Ludo on this site?</summary><p>Between two and four. Players take turns on the same device, or you can switch on the computer opponent and play against the machine.</p></details>
+      <details><summary>What happens if I roll a six?</summary><p>A six grants you an extra turn, which is how you bring new tokens out of your yard. Rolling three sixes in a row is a foul: the token goes back to the yard and the turn passes to the next player.</p></details>
+      <details><summary>Which squares are safe in Ludo?</summary><p>The four start squares and the four squares directly in front of each home column are safe. A token on a safe square can never be captured.</p></details>
+      <details><summary>Do I need an account to play Ludo here?</summary><p>No. The whole game runs in your browser with no signup, no download and no server. Your game statistics are stored on your own device only.</p></details>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>Keep playing</h2>
+    <ul class="link-list">
+      <li><a href="index.html">Snake &amp; Ladder — the classic climb-and-slide game</a></li>
+      <li><a href="daily-challenge.html">Daily Challenge — the same board for everyone</a></li>
+      <li><a href="how-to-play.html">How to play Snake &amp; Ladder</a></li>
+      <li><a href="strategy.html">Winning strategy</a></li>
+      <li><a href="about.html">About this site</a></li>
+    </ul>
+  </section>
+
+  <div class="win-overlay" id="ludoWinOverlay" role="dialog" aria-modal="true" aria-labelledby="ludoWinTitle">
+    <div class="win-card">
+      <div class="win-emoji">🎉</div>
+      <h2 id="ludoWinTitle">Red wins!</h2>
+      <p id="ludoWinSub">All four tokens reached the centre.</p>
+      <div class="win-actions">
+        <button id="ludoWinAgain" type="button">Play again</button>
+        <button class="ghost" id="ludoWinClose" type="button">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <footer class="site-footer">
+    <nav class="site-nav">
+      <a href="index.html">Snake &amp; Ladder</a>
+      <a href="ludo.html">Ludo</a>
+      <a href="daily-challenge.html">Daily challenge</a>
+      <a href="how-to-play.html">How to play</a>
+      <a href="strategy.html">Strategy</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="privacy.html">Privacy Policy</a>
+    </nav>
+    <div>Ludo Online — a free browser board game. Playable offline, no signup needed.</div>
+  </footer>
+</div>
+
+<script src="ludo-rules.js?v=1.0.0"></script>
+<script src="ads.js?v=1.3.0"></script>
+<script src="fx.js?v=1.3.0"></script>
+<script src="ludo.js?v=1.0.0"></script>
+</body>
+</html>

@@ -16,6 +16,7 @@ URL on every page points at the Cloudflare Pages domain).
 | How to play | [`/how-to-play.html`](https://snake-and-ladder-2q0.pages.dev/how-to-play.html) | Full rules + board map |
 | Strategy | [`/strategy.html`](https://snake-and-ladder-2q0.pages.dev/strategy.html) | Openings, safe squares, decision guide |
 | Daily challenge | [`/daily-challenge.html`](https://snake-and-ladder-2q0.pages.dev/daily-challenge.html) | Same seeded board + dice sequence for everyone |
+| Ludo | [`/ludo.html`](https://snake-and-ladder-2q0.pages.dev/ludo.html) | Full Ludo game — 2–4 players or play the computer |
 | Embed widget | [`/embed.js`](https://snake-and-ladder-2q0.pages.dev/embed.js) | Drop-in "Play Snake & Ladder" card for any other website |
 
 Repository: https://github.com/ThePrabhanshu-dev/snake-and-ladder-game (deployed via GitHub Pages from `main`).
@@ -62,6 +63,15 @@ Serving over `http://` is needed so the browser loads the sibling `.js` files.
 - **Daily Challenge** — a date-seeded dice sequence so every player worldwide gets the same board,
   plus a shareable `?challenge=YYYY-MM-DD` link and a "Challenge a friend" button
 - **Cross-promotion** — share buttons, referral links and a game-portal strip
+- **Ludo Online** (`ludo.html`) — a second, fully playable game on the same site:
+  - 15×15 board with four 6×6 home yards, a 56-square track and a home column per colour
+  - **2–4 players** on one device, or **play vs computer** (a greedy AI that captures,
+    keeps tokens safe and pushes for the centre)
+  - Correct Ludo rules — a **6** to leave the yard, **safe squares** that cannot be captured,
+    **two opponents block** a square, capture sends a token back to its yard, an **exact roll**
+    is needed to reach the centre and **three 6s in a row** is a foul
+  - Click the glowing token to move it, roll with the button or <kbd>Space</kbd>
+  - Win overlay, confetti, sound and per-device stats — same helpers as the Snake & Ladder game
 
 ## Files
 
@@ -69,6 +79,8 @@ Serving over `http://` is needed so the browser loads the sibling `.js` files.
 |---|---|
 | `index.html` | Markup, styling and the browser game (UI/animation layer) |
 | `rules.js` | Shared game rules — board coordinates, ladders/snakes, turn resolution |
+| `ludo.html`, `ludo.js` | The Ludo game page and its browser layer (board rendering, turns, computer player) |
+| `ludo-rules.js` | Shared Ludo rules — board layout, paths, legal moves, captures, win condition |
 | `loader.js` | Interactive loading screen |
 | `fx.js` | Sound effects, confetti and toast notifications (Web Audio, no media files) |
 | `ads.js` | Ad slots (AdSense-ready) + share/referral/portal promo system |
@@ -89,6 +101,7 @@ Serving over `http://` is needed so the browser loads the sibling `.js` files.
 | `package-portal.js` | Build the portal upload zip + listing metadata for third-party game sites |
 | `add-domain.js` | Attach/remove a custom domain on the Pages project |
 | `test.js` | Node test suite for `rules.js` |
+| `ludo-test.js` | Node test suite for `ludo-rules.js` |
 | `og-image.svg`, `og-image.png`, `favicon.svg`, `manifest.webmanifest` | Social preview, icon, PWA manifest |
 | `robots.txt`, `sitemap.xml` | Search-engine discovery |
 | `tools/check-site.py` | Source sanity checks (encoding, canonical, AdSense tag, JSON-LD) |
@@ -290,7 +303,8 @@ Use it to share today's board, or to replay yesterday's board. The seed comes fr
 ## Tests
 
 ```bash
-node test.js
+node test.js         # Snake & Ladder rules
+node ludo-test.js    # Ludo rules
 ```
 
 Covers board coordinate mapping, ladder/snake resolution, movement, overshoot handling,
@@ -301,6 +315,17 @@ push a pawn outside the 0–100 range.
 
 ```
 76 passed, 0 failed
+```
+
+The Ludo suite checks the board layout (56 track squares, four 6-square home columns, one
+centre), the yards, the eight safe squares, leaving the yard only on a six, blocking by a
+pair of opponents, captures (and that safe squares cannot be captured), the exact-roll rule
+for the centre, the "visit your start square again" rule, the win condition and input
+validation — plus 300 randomized full games to prove every game finishes and every winner
+really owns all four tokens.
+
+```
+84 passed, 0 failed
 ```
 
 ## 🌐 Free hosting (Cloudflare Pages)
@@ -372,10 +397,45 @@ Pages rebuilds automatically (~1 minute). Check the deployment at
 The same files are mirrored to Cloudflare Pages with `node deploy.js` (see
 [Free hosting](#-free-hosting-cloudflare-pages)).
 
+### Two environments: `UAT` and `main`
+
+The repository keeps a testing branch and a live branch apart, so a change is only
+published after it has been tested:
+
+| Branch | Purpose | Deployment |
+|---|---|---|
+| `UAT` | Testing — every change lands here first | Cloudflare Pages preview branch (`DEPLOY_BRANCH=UAT node deploy.js`) |
+| `main` | Live — the branch GitHub Pages and the canonical domain serve | `node deploy.js` (deploys `main`) |
+
+Workflow:
+
+```bash
+# 1. work on the testing branch
+git checkout UAT
+git add -A && git commit -m "Add the Ludo game"
+git push origin UAT
+
+# 2. test it (locally, or on the UAT preview build)
+node test.js && node ludo-test.js
+python tools/check-site.py
+
+# 3. after the test pass and approval, merge into the live branch
+git checkout main
+git merge UAT
+git push origin main
+
+# 4. optional: publish the UAT build to Cloudflare Pages
+$env:DEPLOY_BRANCH="UAT"; node deploy.js
+```
+
+`main` is never edited directly — every live change is a merge from `UAT`, which keeps the
+two environments separate and makes every promotion traceable.
+
 ### Before you deploy
 
 ```bash
 node test.js             # game rules + seeded RNG unit tests
+node ludo-test.js        # Ludo rules unit tests
 python tools/check-site.py   # encoding, canonical URLs, AdSense tag, JSON-LD, assets
 node verify-adsense.js   # checks the *live* site serves the AdSense setup
 ```

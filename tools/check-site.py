@@ -16,6 +16,7 @@ PUB = "ca-pub-8439899281485854"
 PAGES = [
     "index.html", "play.html", "how-to-play.html", "about.html",
     "contact.html", "privacy.html", "strategy.html", "daily-challenge.html",
+    "ludo.html",
 ]
 
 failures = []
@@ -68,7 +69,8 @@ def main():
 
     print("\nShared assets")
     for asset in ("ads.js", "rules.js", "loader.js", "ads.txt", "og-image.png",
-                  "sitemap.xml", "robots.txt", "404.html"):
+                  "sitemap.xml", "robots.txt", "404.html", "ludo.html",
+                  "ludo.js", "ludo-rules.js"):
         check(os.path.exists(os.path.join(ROOT, asset)), f"{asset} exists")
 
     ads_txt = open(os.path.join(ROOT, "ads.txt"), encoding="utf-8").read()
