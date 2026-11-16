@@ -113,7 +113,7 @@
   }
   * { box-sizing:border-box; }
   body {
-    margin:0; background:radial-gradient(circle at 25% 0%, #1a2336 0%, var(--bg) 55%);
+    margin:0; background:radial-gradient(circle at 25% 0%, var(--bg-glow) 0%, var(--bg) 55%);
     color:var(--text); font-family:"Segoe UI",system-ui,-apple-system,sans-serif; line-height:1.65;
   }
   .wrap { max-width:1080px; margin:0 auto; padding:22px 16px 60px; }
@@ -139,7 +139,7 @@
   #ludoBoard {
     display:grid; grid-template-columns:repeat(15,1fr); grid-template-rows:repeat(15,1fr);
     width:min(94vw,560px); aspect-ratio:1/1; gap:1px;
-    background:#0a0d13; border:2px solid #333d58; border-radius:10px; padding:2px;
+    background:#0a0d13; border:2px solid var(--line-strong); border-radius:10px; padding:2px;
     user-select:none; touch-action:manipulation;
   }
   .cell { position:relative; border-radius:3px; background:#151a24; }
@@ -194,9 +194,9 @@
   /* ---------- sidebar ---------- */
   .engage-bar { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:10px; margin:16px 0; }
   .engage-card { background:var(--panel); border:1px solid var(--line); border-radius:12px; padding:10px 13px; }
-  .engage-label { display:block; font-size:9.5px; letter-spacing:1.4px; text-transform:uppercase; color:#7d8aa8; }
+  .engage-label { display:block; font-size:9.5px; letter-spacing:1.4px; text-transform:uppercase; color:var(--tag-text); }
   .engage-value { display:block; font-size:20px; font-weight:700; }
-  .engage-hint { display:block; font-size:11.5px; color:#6d7794; }
+  .engage-hint { display:block; font-size:11.5px; color:var(--faint); }
 
   .player-row { display:flex; align-items:center; gap:9px; padding:7px 9px; border-radius:9px;
     border:1px solid transparent; }
@@ -223,7 +223,7 @@
     font:inherit; cursor:pointer; border:none; border-radius:10px; padding:11px 18px;
     background:linear-gradient(180deg,#6b96ff,#4472e6); color:#fff; font-weight:700; font-size:14.5px;
   }
-  button.ghost { background:var(--panel2); border:1px solid #333d58; color:#b7c3dd; font-weight:600; }
+  button.ghost { background:var(--panel2); border:1px solid var(--line-strong); color:var(--field-text); font-weight:600; }
   button:disabled { opacity:.45; cursor:not-allowed; }
   .btn-row { display:flex; flex-wrap:wrap; gap:8px; margin:8px 0; }
   .msg { margin-top:12px; padding:11px 13px; background:#10151f; border:1px solid var(--line);
@@ -233,13 +233,39 @@
   .rules ul { margin:6px 0 0; }
 
   .ad-slot { margin:18px 0; }
-  .faq details { border-bottom:1px solid #262d3d; padding:12px 0; }
+
+  /* ---------- game controls ---------- */
+  .controls { display:flex; flex-direction:column; gap:10px; }
+  .controls .msg { margin-top:0; }
+
+  /* On narrow screens the panel sits below the board, so pin the dice and
+     the Roll button to the bottom of the viewport. */
+  @media (max-width: 819px) {
+    .controls {
+      position:fixed; left:0; right:0; bottom:0; z-index:200;
+      flex-direction:row; align-items:center; gap:11px;
+      padding:9px 13px calc(9px + env(safe-area-inset-bottom));
+      background:rgba(24,29,40,.96); backdrop-filter:blur(10px);
+      border-top:1px solid var(--line); box-shadow:0 -8px 24px rgba(0,0,0,.45);
+    }
+    .controls .dice-box { margin:0; flex:none; gap:0; }
+    .controls .dice { width:46px; height:46px; padding:7px; border-radius:10px; }
+    .controls .dice-label { display:none; }
+    .controls #ludoRoll { flex:1 1 auto; padding:15px 14px; font-size:16px; }
+    .controls .msg {
+      flex:1 1 auto; min-height:0; max-height:62px; overflow:hidden;
+      margin:0; padding:0; background:transparent; border:none;
+      font-size:12px; line-height:1.35;
+    }
+    .wrap { padding-bottom:96px; }
+  }
+  .faq details { border-bottom:1px solid var(--line-soft); padding:12px 0; }
   .faq summary { cursor:pointer; font-weight:600; font-size:14.5px; color:var(--text); }
   .faq p { margin:8px 0 0; }
   .link-list { list-style:none; margin:0; padding:0; display:grid; gap:7px; }
-  .link-list a { display:block; background:var(--panel2); border:1px solid #333d58; border-radius:10px;
+  .link-list a { display:block; background:var(--panel2); border:1px solid var(--line-strong); border-radius:10px;
     padding:10px 13px; color:var(--text); text-decoration:none; font-size:13.5px; font-weight:600; }
-  .link-list a:hover { border-color:var(--accent); background:#263049; }
+  .link-list a:hover { border-color:var(--accent); background:var(--hover); }
 
   .win-overlay { position:fixed; inset:0; background:rgba(6,9,14,.82); display:none;
     align-items:center; justify-content:center; z-index:50; padding:18px; }
@@ -250,14 +276,31 @@
   .win-card h2 { margin:6px 0 4px; }
   .win-actions { display:flex; gap:8px; justify-content:center; flex-wrap:wrap; margin-top:14px; }
 
-  footer.site-footer { margin-top:28px; text-align:center; color:#6d7794; font-size:12.5px; }
+  footer.site-footer { margin-top:28px; text-align:center; color:var(--faint); font-size:12.5px; }
   .site-nav { display:flex; flex-wrap:wrap; gap:12px; justify-content:center; margin-bottom:10px; }
   .site-nav a { color:#9fb0d8; text-decoration:none; font-weight:600; }
   .site-nav a:hover { color:#fff; }
 </style>
+  <link rel="stylesheet" href="site-ui.css?v=1.5.0" />
+  <script src="site-ui.js?v=1.0.0"></script>
 </head>
 <body>
-<div class="wrap">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <nav class="topnav" aria-label="Main">
+    <a class="topnav-brand" href="index.html"><span class="topnav-emoji" aria-hidden="true">🐍</span> Snake &amp; Ladder</a>
+    <div class="topnav-links">
+      <a href="index.html">Play</a>
+      <a href="how-to-play.html">How to play</a>
+      <a href="strategy.html">Strategy</a>
+      <a href="daily-challenge.html">Daily challenge</a>
+      <a href="ludo.html" aria-current="page">Ludo</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="privacy.html">Privacy</a>
+    </div>
+  </nav>
+
+<div class="wrap" id="main">
   <header>
     <h1>Ludo <span>Online</span></h1>
     <div class="sub">Classic Ludo on a 15×15 board — roll the dice, capture opponents, bring all four tokens home.</div>
@@ -299,17 +342,22 @@
     <aside class="panel">
       <div id="ludoPlayers" aria-live="polite"></div>
 
-      <div class="dice-box">
-        <div class="dice" id="ludoDice" aria-label="Dice">
-          <span class="pip"></span><span class="pip"></span><span class="pip"></span>
-          <span class="pip"></span><span class="pip"></span><span class="pip"></span>
-          <span class="pip"></span><span class="pip"></span><span class="pip"></span>
+      <div class="controls">
+        <div class="dice-box">
+          <div class="dice" id="ludoDice" role="img" aria-label="Dice showing 1">
+            <span class="pip"></span><span class="pip"></span><span class="pip"></span>
+            <span class="pip"></span><span class="pip"></span><span class="pip"></span>
+            <span class="pip"></span><span class="pip"></span><span class="pip"></span>
+          </div>
+          <div class="dice-label" id="ludoDiceLabel">Roll to play</div>
         </div>
-        <div class="dice-label" id="ludoDiceLabel">Roll to play</div>
+
+        <div class="msg" id="ludoMsg" role="status" aria-live="polite">Loading the board…</div>
+
+        <button id="ludoRoll" type="button">Roll Dice</button>
       </div>
 
       <div class="btn-row">
-        <button id="ludoRoll" type="button">Roll Dice</button>
         <button class="ghost" id="ludoRestart" type="button">Restart</button>
       </div>
       <div class="btn-row">

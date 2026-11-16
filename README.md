@@ -59,10 +59,10 @@ Serving over `http://` is needed so the browser loads the sibling `.js` files.
 - **Responsive layout** — board and side panel stack on narrow screens
 - **Live position readout** for every player
 - **Interactive loading screen** — animated ladder, slithering snake, tumbling dice, progress bar and rotating tips, with a skip button
-- **Ad slots** wired up and AdSense-ready, with a house-ad fallback so the layout never breaks
+- **Ad slots** wired up and AdSense-ready, with a fallback ad network for earning before approval
 - **Daily Challenge** — a date-seeded dice sequence so every player worldwide gets the same board,
   plus a shareable `?challenge=YYYY-MM-DD` link and a "Challenge a friend" button
-- **Cross-promotion** — share buttons, referral links and a game-portal strip
+- **Share buttons** — send the game to a friend on WhatsApp, Facebook, X, Reddit or Telegram
 - **Ludo Online** (`ludo.html`) — a second, fully playable game on the same site:
   - 15×15 board with four 6×6 home yards, a 56-square track and a home column per colour
   - **2–4 players** on one device, or **play vs computer** (a greedy AI that captures,
@@ -77,13 +77,18 @@ Serving over `http://` is needed so the browser loads the sibling `.js` files.
 
 | File | Purpose |
 |---|---|
-| `index.html` | Markup, styling and the browser game (UI/animation layer) |
+| `index.html` | Markup for the game page |
+| `snake-ladder.css` | Styles for the game page (board, dice, panel, badges, quiz) |
+| `game.js` | The browser game — board, tokens, players, dice and the turn loop |
+| `rewards.js` | Statistics, badges and the 7-day play calendar (saved on the device) |
+| `quiz.js` | The "Know the board?" quiz, built from the live rules data |
+| `site-ui.css`, `site-ui.js` | Shared site chrome: navigation bar, theme switch, table of contents, back-to-top |
 | `rules.js` | Shared game rules — board coordinates, ladders/snakes, turn resolution |
 | `ludo.html`, `ludo.js` | The Ludo game page and its browser layer (board rendering, turns, computer player) |
 | `ludo-rules.js` | Shared Ludo rules — board layout, paths, legal moves, captures, win condition |
 | `loader.js` | Interactive loading screen |
 | `fx.js` | Sound effects, confetti and toast notifications (Web Audio, no media files) |
-| `ads.js` | Ad slots (AdSense-ready) + share/referral/portal promo system |
+| `ads.js` | Ad slots (AdSense-ready) + the share buttons |
 | `ads-network.json` | Fallback ad-network snippets (for earning before AdSense approval) |
 | `set-ads-network.js` | Turn the fallback network on/off, paste unit snippets, check the money setup |
 | `embed.js` | Drop-in widget for embedding the game on other websites |
@@ -104,6 +109,7 @@ Serving over `http://` is needed so the browser loads the sibling `.js` files.
 | `ludo-test.js` | Node test suite for `ludo-rules.js` |
 | `og-image.svg`, `og-image.png`, `favicon.svg`, `manifest.webmanifest` | Social preview, icon, PWA manifest |
 | `robots.txt`, `sitemap.xml` | Search-engine discovery |
+| `tools/add-nav.js` | Keeps the navigation bar identical on every page |
 | `tools/check-site.py` | Source sanity checks (encoding, canonical, AdSense tag, JSON-LD) |
 | `tools/make-og-image.py` | Regenerates `og-image.png` from the SVG design |
 | `tools/make-thumbnails.py` | Generates the portal cover art + square thumbnail |
@@ -184,7 +190,7 @@ node set-adsense.js --client ca-pub-XXXXXXXXXXXXXXXX
 node set-adsense.js --client ca-pub-XXXXXXXXXXXXXXXX --slots top=111,side=222,foot=333
 ```
 
-5. Deploy — the house-ad placeholders are replaced automatically by live AdSense units and
+5. Deploy — the ad slots are filled with live AdSense units and
    [`ads.txt`](ads.txt) is regenerated with your publisher id automatically:
 
 ```bash
@@ -257,8 +263,7 @@ description, tags, category and embed snippet to paste into each submission form
 | [Coolmath Games](https://www.coolmathgames.com/) | application | Yes | Pitch by email |
 | [Addicting Games](https://www.addictinggames.com/) | application | Yes | Pitch by email |
 
-Point the portal listing at the live URL and the "find us elsewhere" strip on the site
-([ads.js](ads.js) `CONFIG.portals`) sends players both ways.
+Point the portal listing at the live URL.
 
 ### 3. Embed the game on another website
 
@@ -273,15 +278,15 @@ Add this to any page on a partner site:
 Use `data-variant="button"` for a small button instead of the full card. Every click is tagged with
 `?ref=partnerName&utm_source=partnerName` so you can see which partners send players.
 
-### 4. Programmatic referral links
+### 4. Partner links
 
-```js
-window.GamePromo.partnerLink("mysite.com");
-// -> https://snake-and-ladder-2q0.pages.dev/?ref=mysite.com&utm_source=mysite.com&utm_medium=partner
+Link to the game with a partner tag and you can tell the traffic apart in your own analytics:
+
+```
+https://snake-and-ladder-2q0.pages.dev/?ref=mysite.com&utm_source=mysite.com&utm_medium=partner
 ```
 
-Visitors arriving with `?ref=` see a "You were invited by …" banner and the code is stored in `localStorage`
-under `snl_ref`.
+The `embed.js` widget does this for you automatically.
 
 ### 5. SEO & sharing
 

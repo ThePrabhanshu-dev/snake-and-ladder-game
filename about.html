@@ -66,7 +66,7 @@
 <style>
   :root { --bg:#0e1219; --panel:#181d28; --accent:#5b8cff; --text:#e8ecf5; --muted:#8b93a7; }
   * { box-sizing:border-box; }
-  body { margin:0; background:radial-gradient(circle at 25% 0%, #1a2336 0%, var(--bg) 55%);
+  body { margin:0; background:radial-gradient(circle at 25% 0%, var(--bg-glow) 0%, var(--bg) 55%);
     color:var(--text); font-family:"Segoe UI",system-ui,-apple-system,sans-serif; line-height:1.65; }
   .wrap { max-width:820px; margin:0 auto; padding:26px 16px 60px; }
   h1 { font-size:clamp(24px,4.5vw,34px); margin:0 0 6px; }
@@ -75,19 +75,36 @@
   p, li { color:var(--muted); font-size:14.5px; }
   ul { padding-left:20px; }
   a { color:var(--accent); }
-  .card { background:var(--panel); border:1px solid #2b3244; border-radius:14px; padding:20px 22px; }
+  .card { background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:20px 22px; }
   .cta { display:inline-block; margin-top:14px; padding:11px 20px; border-radius:10px; text-decoration:none;
     background:linear-gradient(180deg,#6b96ff,#4472e6); color:#fff; font-weight:700; font-size:14px; }
   .grid { display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); margin:14px 0 0; padding:0; list-style:none; }
-  .grid li { background:#212838; border:1px solid #2f3852; border-radius:12px; padding:14px; }
+  .grid li { background:var(--tile); border:1px solid var(--tile-line); border-radius:12px; padding:14px; }
   .grid strong { display:block; color:var(--text); font-size:14.5px; margin-bottom:4px; }
-  footer { text-align:center; color:#6d7794; font-size:12px; margin-top:30px; }
+  footer { text-align:center; color:var(--faint); font-size:12px; margin-top:30px; }
 </style>
+  <link rel="stylesheet" href="site-ui.css?v=1.5.0" />
+  <script src="site-ui.js?v=1.0.0"></script>
 </head>
 <body>
-<div class="wrap">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <nav class="topnav" aria-label="Main">
+    <a class="topnav-brand" href="index.html"><span class="topnav-emoji" aria-hidden="true">🐍</span> Snake &amp; Ladder</a>
+    <div class="topnav-links">
+      <a href="index.html">Play</a>
+      <a href="how-to-play.html">How to play</a>
+      <a href="strategy.html">Strategy</a>
+      <a href="daily-challenge.html">Daily challenge</a>
+      <a href="ludo.html">Ludo</a>
+      <a href="about.html" aria-current="page">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="privacy.html">Privacy</a>
+    </div>
+  </nav>
+
+<div class="wrap" id="main">
   <h1>About <span>Snake &amp; Ladder</span></h1>
-  <p class="updated" style="color:#6d7794;font-size:13px">Last updated: 14 November 2026</p>
+  <p class="updated" style="color:var(--faint);font-size:13px">Last updated: 14 November 2026</p>
 
   <div class="card">
     <p><strong>Snake &amp; Ladder Online</strong> is a free, classic board game that runs entirely in
@@ -116,8 +133,8 @@
     the <a href="privacy.html">Privacy Policy</a> for details.</p>
 
     <h2>Play on other sites</h2>
-    <p>Snake &amp; Ladder can be embedded on other websites as a card or a button. Site owners can use
-    the widget script and every player who arrives through their link is credited to them automatically.</p>
+    <p>Snake &amp; Ladder can be embedded on other websites as a card or a button. Site owners add the
+    widget script and the card links straight back to their own page.</p>
 
     <a class="cta" href="index.html">▶ Play Snake &amp; Ladder</a>
   </div>

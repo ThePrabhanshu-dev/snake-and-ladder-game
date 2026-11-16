@@ -71,7 +71,7 @@
 <style>
   :root { --bg:#0e1219; --panel:#181d28; --accent:#5b8cff; --text:#e8ecf5; --muted:#8b93a7; }
   * { box-sizing:border-box; }
-  body { margin:0; background:radial-gradient(circle at 25% 0%, #1a2336 0%, var(--bg) 55%);
+  body { margin:0; background:radial-gradient(circle at 25% 0%, var(--bg-glow) 0%, var(--bg) 55%);
     color:var(--text); font-family:"Segoe UI",system-ui,-apple-system,sans-serif; line-height:1.65; }
   .wrap { max-width:760px; margin:0 auto; padding:26px 16px 60px; }
   h1 { font-size:clamp(24px,4.5vw,34px); margin:0 0 6px; }
@@ -79,23 +79,40 @@
   h2 { font-size:18px; margin:24px 0 8px; }
   p { color:var(--muted); font-size:14.5px; }
   a { color:var(--accent); }
-  .card { background:var(--panel); border:1px solid #2b3244; border-radius:14px; padding:20px 22px; }
+  .card { background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:20px 22px; }
   .mail { display:inline-block; padding:12px 20px; border-radius:10px; text-decoration:none; font-weight:700; font-size:14.5px;
     background:linear-gradient(180deg,#6b96ff,#4472e6); color:#fff; }
   label { display:block; font-size:13px; color:var(--muted); margin:14px 0 5px; }
-  input, textarea { width:100%; padding:11px 13px; border-radius:10px; border:1px solid #333d58; background:#121824;
+  input, textarea { width:100%; padding:11px 13px; border-radius:10px; border:1px solid var(--line-strong); background:var(--field);
     color:var(--text); font:inherit; font-size:14px; }
   textarea { min-height:110px; resize:vertical; }
   button { margin-top:14px; padding:12px 20px; border-radius:10px; border:0; cursor:pointer; font:inherit; font-weight:700;
     font-size:14.5px; background:linear-gradient(180deg,#6b96ff,#4472e6); color:#fff; }
   .cta { display:inline-block; margin-top:14px; padding:11px 20px; border-radius:10px; text-decoration:none;
     background:linear-gradient(180deg,#6b96ff,#4472e6); color:#fff; font-weight:700; font-size:14px; }
-  code { background:#121824; border:1px solid #333d58; border-radius:6px; padding:2px 6px; font-size:13px; color:#b7c3dd; }
-  footer { text-align:center; color:#6d7794; font-size:12px; margin-top:30px; }
+  code { background:var(--field); border:1px solid var(--line-strong); border-radius:6px; padding:2px 6px; font-size:13px; color:var(--field-text); }
+  footer { text-align:center; color:var(--faint); font-size:12px; margin-top:30px; }
 </style>
+  <link rel="stylesheet" href="site-ui.css?v=1.5.0" />
+  <script src="site-ui.js?v=1.0.0"></script>
 </head>
 <body>
-<div class="wrap">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <nav class="topnav" aria-label="Main">
+    <a class="topnav-brand" href="index.html"><span class="topnav-emoji" aria-hidden="true">🐍</span> Snake &amp; Ladder</a>
+    <div class="topnav-links">
+      <a href="index.html">Play</a>
+      <a href="how-to-play.html">How to play</a>
+      <a href="strategy.html">Strategy</a>
+      <a href="daily-challenge.html">Daily challenge</a>
+      <a href="ludo.html">Ludo</a>
+      <a href="about.html">About</a>
+      <a href="contact.html" aria-current="page">Contact</a>
+      <a href="privacy.html">Privacy</a>
+    </div>
+  </nav>
+
+<div class="wrap" id="main">
   <h1>Contact <span>Us</span></h1>
 
   <div class="card">

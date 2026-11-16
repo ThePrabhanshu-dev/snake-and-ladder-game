@@ -40,6 +40,7 @@
   }, 3600);
 
   /* ---------- animated backdrop ---------- */
+  let backdropRunning = true;
   if (canvas && canvas.getContext) {
     const ctx = canvas.getContext("2d");
     const resize = () => {
@@ -62,6 +63,7 @@
       });
     }
     function draw() {
+      if (!backdropRunning) return;
       const w = canvas.clientWidth, h = canvas.clientHeight;
       ctx.clearRect(0, 0, w, h);
       for (const m of motes) {
@@ -108,11 +110,27 @@
 
   /* ---------- self-running demo animation ---------- */
   let demoValue = 1;
-  const demoTimer = setInterval(() => {
-    demoValue = (demoValue % 6) + 1;
-    setLoaderDice(demoValue);
-  }, 260);
-  overlay.classList.add("show");
+  let demoTimer = null;
+  // Returning visitors do not need the full intro again - the board is only a
+  // few hundred milliseconds away. Remember that they have seen it.
+  const SEEN_KEY = "snl-intro-seen";
+  let seenBefore = false;
+  try { seenBefore = localStorage.getItem(SEEN_KEY) === "1"; } catch (e) {}
+
+  if (seenBefore) {
+    // Skip straight to the game: no canvas animation, no dice demo.
+    clearInterval(tipTimer);
+    overlay.classList.add("show");
+    overlay.classList.add("done");
+    document.body.classList.add("loaded");
+    if (overlay.parentNode) overlay.parentNode.removeChild(overlay);
+  } else {
+    demoTimer = setInterval(() => {
+      demoValue = (demoValue % 6) + 1;
+      setLoaderDice(demoValue);
+    }, 260);
+    overlay.classList.add("show");
+  }
 
   // preload the decorative art
   [ladderEl, snakeEl].forEach(el => { if (el) el.classList.add("animate"); });
@@ -133,11 +151,13 @@
     done() {
       clearInterval(demoTimer);
       clearInterval(tipTimer);
+      backdropRunning = false;
       animateTo(100);
       if (statusEl) statusEl.textContent = "Ready to roll!";
       setTimeout(() => {
         overlay.classList.add("done");
         document.body.classList.add("loaded");
+        try { localStorage.setItem(SEEN_KEY, "1"); } catch (e) {}
         setTimeout(() => { if (overlay.parentNode) overlay.parentNode.removeChild(overlay); }, 700);
       }, 320);
     }

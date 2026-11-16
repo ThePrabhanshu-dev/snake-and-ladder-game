@@ -1,12 +1,11 @@
-/* Ad + cross-promotion manager for the Snake & Ladder game.
+/* Ad manager for the Snake & Ladder game.
  *
  * Two jobs:
- *  1. Render ad slots. If a Google AdSense publisher id is configured
- *     (CONFIG.adsenseClient below) the real AdSense unit is loaded, otherwise a
- *     tasteful house-ad placeholder is shown so the layout never breaks.
- *  2. Drive traffic from other websites: share buttons, a "More games" promo
- *     strip and a referral-link builder that other sites can use to send
- *     players here (utm-tagged so referrals are measurable).
+ *  1. Render the ad slots. If a Google AdSense publisher id is configured
+ *     (CONFIG.adsenseClient below) the real AdSense unit is loaded, otherwise
+ *     a fallback ad network can be used. Until one of them is live the slot
+ *     stays empty - the layout does not break.
+ *  2. Build the "share the game" buttons.
  */
 (function () {
   "use strict";
@@ -21,12 +20,9 @@
       side: "7394066327",
       foot: "9828657971"
     },
-    // Show the house-ad placeholder when no AdSense client is configured.
-    // Portal builds switch this off so the ad slots stay empty.
-    showHouseAds: true,
     // Set to true once AdSense approves the site. Until then the slots are
-    // filled by the fallback ad network (see fallbackNetwork below) or by the
-    // house ad, because AdSense units do not fill on an unapproved site.
+    // filled by the fallback ad network (see fallbackNetwork below), because
+    // AdSense units do not fill on an unapproved site.
     adsenseApproved: false,
     // Fallback ad network - earn money on the *.pages.dev domain while AdSense
     // review is pending. Paste the snippets from your network's dashboard
@@ -41,25 +37,14 @@
       body: "",
       // Snippet per on-page ad slot.
       slots: { top: "", side: "", foot: "" }
-    },
-    // Sites that list browser games — used by the "Play us there" strip.
-    portals: [
-      { name: "CrazyGames", url: "https://www.crazygames.com/", emoji: "🎮" },
-      { name: "Poki", url: "https://poki.com/", emoji: "🕹️" },
-      { name: "itch.io", url: "https://itch.io/games", emoji: "🧩" },
-      { name: "Newgrounds", url: "https://www.newgrounds.com/games", emoji: "🎨" },
-      { name: "GameDistribution", url: "https://gamedistribution.com/", emoji: "📦" },
-      { name: "Coolmath Games", url: "https://www.coolmathgames.com/", emoji: "➗" },
-      { name: "Addicting Games", url: "https://www.addictinggames.com/", emoji: "🔥" }
-    ]
+    }
   };
 
   var SHARE_TEXT = "Snake & Ladder — classic board game, play it in your browser! 🐍🎲";
   // Always share/point at the game itself, whatever page the visitor is on.
-  var GAME_PATH = "index.html";
   var SHARE_URL = (location.protocol === "file:")
     ? "https://snake-and-ladder-2q0.pages.dev/"
-    : new URL(GAME_PATH, location.href.split("#")[0]).toString();
+    : new URL("index.html", location.href.split("#")[0]).toString();
 
   /* ---------- helpers ---------- */
   function el(tag, cls, html) {
@@ -141,13 +126,9 @@
     }
   }
 
-  function injectSnippet(container, html) {
-    appendSnippet(container, html);
-  }
-
   function injectGlobal(snippet, where) {
-    var target = where === "head" ? document.head : document.body;
-    appendSnippet(target, snippet);
+    if (!snippet) return;
+    appendSnippet(where === "head" ? document.head : document.body, snippet);
   }
 
   function fallbackEnabled() {
@@ -188,16 +169,16 @@
     }
   }
 
-  function renderAd(container, slot, label) {
+  /* ---------- ad slots ---------- */
+  function renderAd(container, slot) {
     if (!container) return;
     container.innerHTML = "";
 
     // 1. Fallback network (money now, while AdSense review is pending).
     if (fallbackEnabled()) {
-      var fn = CONFIG.fallbackNetwork;
-      var slotSnippet = (fn.slots && fn.slots[slot]) || "";
-      if (slotSnippet) {
-        injectSnippet(container, slotSnippet);
+      var snippet = (CONFIG.fallbackNetwork.slots || {})[slot] || "";
+      if (snippet) {
+        appendSnippet(container, snippet);
         return;
       }
     }
@@ -218,69 +199,20 @@
       ins.setAttribute("aria-label", "Advertisement");
       container.appendChild(ins);
       try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {}
-      return;
-    }
-
-    // House ad / promo placeholder — drives players to the referral link
-    // and to the other game portals. Portal builds disable it.
-    if (!CONFIG.showHouseAds) return;
-    var box = el("div", "house-ad");
-    box.appendChild(el("div", "house-ad-tag", label || "Sponsored"));
-    box.appendChild(el("div", "house-ad-title", "Enjoying Snake &amp; Ladder?"));
-    box.appendChild(el("div", "house-ad-text",
-      "Invite a friend with your personal link — every friend who plays is tracked, " +
-      "and more games are coming soon."));
-    var row = el("div", "house-ad-actions");
-    var copy = el("button", "ad-btn primary", "Copy my invite link");
-    copy.addEventListener("click", function () {
-      copyReferral(copy);
-    });
-    var more = el("a", "ad-btn ghost", "See more games");
-    more.href = "#more-games";
-    row.appendChild(copy);
-    row.appendChild(more);
-    box.appendChild(row);
-    container.appendChild(box);
-  }
-
-  function copyReferral(btn) {
-    var link = referralLink();
-    var done = function () {
-      var old = btn.textContent;
-      btn.textContent = "Link copied! ✅";
-      btn.classList.add("copied");
-      setTimeout(function () { btn.textContent = old; btn.classList.remove("copied"); }, 1800);
-    };
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      navigator.clipboard.writeText(link).then(done, function () { fallbackCopy(link, done); });
-    } else {
-      fallbackCopy(link, done);
     }
   }
 
-  function fallbackCopy(text, done) {
-    var ta = document.createElement("textarea");
-    ta.value = text;
-    ta.style.position = "fixed";
-    ta.style.opacity = "0";
-    document.body.appendChild(ta);
-    ta.select();
-    try { document.execCommand("copy"); done(); } catch (e) {}
-    document.body.removeChild(ta);
-  }
+  function renderSlots() {
+    // Any element with data-ad="<slotName>" is treated as an ad slot, so extra
+    // pages (like play.html) can declare their own slots without changes here.
+    var declared = document.querySelectorAll("[data-ad]");
+    for (var i = 0; i < declared.length; i++) {
+      renderAd(declared[i], declared[i].getAttribute("data-ad"));
+    }
 
-  /* ---------- referral / UTM links ---------- */
-  function referralLink() {
-    var ref = "web";
-    try {
-      var r = new URLSearchParams(location.search).get("ref");
-      if (r) ref = r.slice(0, 24);
-    } catch (e) {}
-    var url = new URL(SHARE_URL);
-    url.searchParams.set("ref", ref);
-    url.searchParams.set("utm_source", "referral");
-    url.searchParams.set("utm_medium", "game_link");
-    return url.toString();
+    renderAd(document.getElementById("adTop"), "top");
+    renderAd(document.getElementById("adSide"), "side");
+    renderAd(document.getElementById("adFoot"), "foot");
   }
 
   /* ---------- share buttons ---------- */
@@ -304,58 +236,7 @@
     });
   }
 
-  /* ---------- "more games" strip ---------- */
-  function buildPortals(container) {
-    if (!container) return;
-    container.innerHTML = "";
-    CONFIG.portals.forEach(function (p) {
-      var a = el("a", "portal-card");
-      a.href = p.url;
-      a.target = "_blank";
-      a.rel = "noopener sponsored";
-      a.innerHTML = '<span class="portal-emoji">' + p.emoji + "</span>" +
-        '<span class="portal-name">' + p.name + "</span>" +
-        '<span class="portal-cta">Find us there →</span>';
-      container.appendChild(a);
-    });
-  }
-
-  /* ---------- outbound referral links for other websites ----------
-   * Any partner site can link players here and get credit via ?ref=<code>.
-   * Expose the builder so a partner can generate a link for their page.
-   */
-  window.GamePromo = {
-    referralLink: referralLink,
-    shareUrl: SHARE_URL,
-    /** Build a tracked link for a partner site. */
-    partnerLink: function (partner) {
-      var url = new URL(SHARE_URL);
-      url.searchParams.set("ref", partner);
-      url.searchParams.set("utm_source", partner);
-      url.searchParams.set("utm_medium", "partner");
-      return url.toString();
-    }
-  };
-
   /* ---------- boot ---------- */
-  function renderSlots() {
-    // Any element with data-ad="<slotName>" is treated as an ad slot, so extra
-    // pages (like play.html) can declare their own slots without changes here.
-    var declared = document.querySelectorAll("[data-ad]");
-    for (var i = 0; i < declared.length; i++) {
-      var node = declared[i];
-      var name = node.getAttribute("data-ad");
-      var label = node.getAttribute("data-ad-label") || "Sponsored";
-      if (node.id !== "adTop" && node.id !== "adSide" && node.id !== "adFoot") {
-        renderAd(node, name, label);
-      }
-    }
-
-    renderAd(document.getElementById("adTop"), "top", "Sponsored");
-    renderAd(document.getElementById("adSide"), "side", "Sponsored");
-    renderAd(document.getElementById("adFoot"), "foot", "Sponsored");
-  }
-
   function init() {
     // AdSense units are only requested once the site is approved - on an
     // unapproved site they serve nothing. The static adsbygoogle.js tag stays
@@ -364,30 +245,17 @@
       loadAdSense();
     }
 
-    // Share buttons and the portal strip do not depend on the ad config.
+    // The share buttons do not depend on the ad config.
     buildShare(document.getElementById("shareRow"));
-    buildPortals(document.getElementById("portalRow"));
 
     // Ad slots wait for ads-network.json so the fallback snippets are known.
     loadNetworkConfig(function () {
       if (fallbackEnabled()) {
-        var fn = CONFIG.fallbackNetwork;
-        injectGlobal(fn.head, "head");
-        injectGlobal(fn.body, "body");
+        injectGlobal(CONFIG.fallbackNetwork.head, "head");
+        injectGlobal(CONFIG.fallbackNetwork.body, "body");
       }
       renderSlots();
     });
-
-    // Track the referral that brought the player in.
-    var ref = new URLSearchParams(location.search).get("ref");
-    if (ref) {
-      try { localStorage.setItem("snl_ref", ref); } catch (e) {}
-      var note = document.getElementById("refNote");
-      if (note) {
-        note.textContent = "Welcome! You were invited by “" + ref + "” — enjoy the game! 🎉";
-        note.style.display = "block";
-      }
-    }
   }
 
   if (document.readyState === "loading") {

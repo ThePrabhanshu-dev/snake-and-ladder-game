@@ -1,0 +1,458 @@
+/* Shared site chrome: the top navigation bar and a few accessibility helpers.
+   Kept in its own file so every page gets the same bar without duplicating
+   the rules in each page's inline <style>. Colours are scoped to .topnav so
+   the bar looks identical no matter what theme variables a page defines. */
+
+.topnav {
+  --nav-bg: #12161f;
+  --nav-line: #262d3d;
+  --nav-text: #dbe2f0;
+  --nav-muted: #9aa5bd;
+  --nav-accent: #5b8cff;
+
+  position: sticky;
+  top: 0;
+  z-index: 300;
+  width: 100%;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 10px 16px;
+  background: var(--nav-bg);
+  border-bottom: 1px solid var(--nav-line);
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+.topnav-brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  flex: none;
+  font-weight: 800;
+  font-size: 15px;
+  color: var(--nav-text);
+  text-decoration: none;
+  white-space: nowrap;
+}
+.topnav-brand:hover { color: #fff; }
+.topnav-emoji { font-size: 17px; line-height: 1; }
+
+.topnav-links {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  margin-left: auto;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+.topnav-links::-webkit-scrollbar { display: none; }
+
+.topnav-links a {
+  flex: none;
+  padding: 7px 11px;
+  border-radius: 8px;
+  color: var(--nav-muted);
+  font-size: 13.5px;
+  font-weight: 600;
+  text-decoration: none;
+  white-space: nowrap;
+}
+.topnav-links a:hover { color: #fff; background: #1c2230; }
+.topnav-links a[aria-current="page"] { color: #fff; background: #223052; }
+
+@media (max-width: 680px) {
+  .topnav { flex-wrap: wrap; gap: 8px; padding: 9px 12px; }
+  .topnav-links { margin-left: 0; width: 100%; }
+}
+
+/* ---- accessibility helpers shared by every page ---- */
+
+/* First tab stop on every page: lets keyboard users jump past the nav. */
+.skip-link {
+  position: absolute;
+  left: -9999px;
+  top: 0;
+  z-index: 999;
+  padding: 10px 16px;
+  background: #5b8cff;
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  text-decoration: none;
+  border-radius: 0 0 10px 0;
+}
+.skip-link:focus { left: 0; }
+
+/* A visible focus ring on everything that can be tabbed to. */
+:focus-visible {
+  outline: 3px solid #7aa2ff;
+  outline-offset: 2px;
+}
+
+/* Content that only screen readers need. */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* An ad slot that has nothing in it should not leave a hole in the page. */
+.ad-slot:empty { display: none; }
+
+/* Shown when JavaScript is switched off. */
+.noscript-note {
+  width: 100%;
+  max-width: 960px;
+  margin: 16px auto 0;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.6;
+}
+.noscript-note b { color: var(--text); }
+
+/* Respect a reduced-motion preference everywhere on the site. */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ===================================================================
+   THEME TOKENS
+   Every page already defines --bg / --panel / --accent / --text /
+   --muted in its own inline <style>. This block adds the extra tokens
+   the shared chrome needs. They are only declared for the colours
+   that did not exist as variables before, so the dark theme keeps the
+   exact look each page already had.
+
+   The light theme lives further down and overrides everything.
+   =================================================================== */
+
+:root {
+  --line: #2b3244;          /* card + panel borders */
+  --line-soft: #262d3d;     /* table row separators */
+  --line-strong: #333d58;   /* input, tag and chip borders */
+  --field: #121824;         /* input / code background */
+  --field-text: #b7c3dd;    /* text sitting on a soft surface */
+  --tag-text: #7d8aa8;      /* small uppercase labels */
+  --faint: #6d7794;         /* footer and meta text */
+  --link-soft: #8fa6d8;     /* links inside footers */
+  --hover: #263049;         /* hover / active surface */
+  --tile: #212838;          /* small tile background */
+  --tile-line: #2f3852;     /* small tile border */
+  --bg-glow: #1a2336;       /* colour behind the page gradient */
+  --bar-bg: rgba(25, 29, 39, .96);   /* mobile control bar */
+  --overlay-bg: rgba(8, 10, 16, .82);/* modal scrim */
+  --toast-bg: linear-gradient(180deg, #232c42, #1b2130);
+  --toast-line: #3a465f;
+  --toast-win: #9df0c8;
+  --toast-bad: #ffc0c5;
+  --toast-trophy: #ffe6a8;
+  --shadow-panel: 0 18px 40px rgba(0, 0, 0, .45);
+}
+
+/* ===================================================================
+   LIGHT THEME
+   Applied by site-ui.js through <html data-theme="light">. The
+   attribute selector is more specific than the plain :root rule in
+   each page's inline <style>, so these values win.
+   =================================================================== */
+
+html[data-theme="light"] {
+  --bg: #f4f6fb;
+  --panel: #ffffff;
+  --panel2: #eef1f8;
+  --accent: #2f5fd0;
+  --text: #16202f;
+  --muted: #55607a;
+
+  --line: #d9e0ec;
+  --line-soft: #e6ebf3;
+  --line-strong: #c3ccdd;
+  --field: #ffffff;
+  --field-text: #3d4761;
+  --tag-text: #5d6880;
+  --faint: #6b7488;
+  --link-soft: #2f5fd0;
+  --hover: #e4eaf8;
+  --tile: #ffffff;
+  --tile-line: #dbe2ee;
+  --bg-glow: #dde7fb;
+
+  --bar-bg: rgba(255, 255, 255, .96);
+  --overlay-bg: rgba(22, 28, 40, .55);
+  --toast-bg: linear-gradient(180deg, #ffffff, #f2f5fb);
+  --toast-line: #c9d2e2;
+  --toast-win: #0f7a52;
+  --toast-bad: #b42318;
+  --toast-trophy: #8a5a00;
+
+  --ladder-color: #1d7fa8;
+  --snake-color: #cf4453;
+
+  --shadow-panel: 0 18px 40px rgba(24, 33, 56, .12);
+}
+
+/* Each page builds its background gradient from --bg-glow, so the light
+   theme gets the same soft spotlight without any extra rule. */
+html[data-theme="light"] .topnav {
+  --nav-bg: #ffffff;
+  --nav-line: #e3e8f2;
+  --nav-text: #16202f;
+  --nav-muted: #55607a;
+  --nav-accent: #2f5fd0;
+}
+html[data-theme="light"] .topnav-links a:hover { background: #eef2fb; }
+html[data-theme="light"] .topnav-links a[aria-current="page"] { background: #e3ebfd; }
+
+/* Surfaces that hard-code a dark border or background need the light
+   equivalents. The selectors match the classes each page uses. */
+html[data-theme="light"] .card,
+html[data-theme="light"] .panel,
+html[data-theme="light"] .board-shell,
+html[data-theme="light"] .promo-section,
+html[data-theme="light"] .explorer,
+html[data-theme="light"] .chip,
+html[data-theme="light"] .win-card,
+html[data-theme="light"] .engage-card {
+  border-color: var(--line);
+}
+html[data-theme="light"] .board-shell,
+html[data-theme="light"] .win-card { box-shadow: var(--shadow-panel); }
+
+html[data-theme="light"] input,
+html[data-theme="light"] textarea,
+html[data-theme="light"] code {
+  background: var(--field);
+  border-color: var(--line-strong);
+  color: var(--text);
+}
+html[data-theme="light"] code { color: var(--field-text); }
+
+html[data-theme="light"] .tag,
+html[data-theme="light"] .engage-label {
+  color: var(--tag-text);
+  border-color: var(--line-strong);
+}
+html[data-theme="light"] .engage-hint,
+html[data-theme="light"] .updated,
+html[data-theme="light"] footer,
+html[data-theme="light"] .footer,
+html[data-theme="light"] footer.site-footer { color: var(--faint); }
+
+html[data-theme="light"] .cta.ghost,
+html[data-theme="light"] button.ghost {
+  background: var(--panel2);
+  border-color: var(--line-strong);
+  color: var(--field-text);
+}
+html[data-theme="light"] .link-list a,
+html[data-theme="light"] .share-btn,
+html[data-theme="light"] .quiz-option,
+html[data-theme="light"] .badge {
+  background: var(--panel2);
+  border-color: var(--line-strong);
+  color: var(--text);
+}
+html[data-theme="light"] .link-list a:hover,
+html[data-theme="light"] .share-btn:hover,
+html[data-theme="light"] .quiz-option:hover:not(:disabled),
+html[data-theme="light"] .chip:hover,
+html[data-theme="light"] .chip[aria-pressed="true"],
+html[data-theme="light"] .player.active,
+html[data-theme="light"] .player-row.active,
+html[data-theme="light"] .pname:hover:not(:disabled) {
+  background: var(--hover);
+  border-color: var(--accent);
+}
+html[data-theme="light"] .features li,
+html[data-theme="light"] .grid li,
+html[data-theme="light"] .streak-day,
+html[data-theme="light"] .explorer-num {
+  background: var(--tile);
+  border-color: var(--tile-line);
+}
+html[data-theme="light"] .trophy { background: var(--panel2); border-color: var(--line-strong); }
+html[data-theme="light"] .trophy.unlocked { background: #fff7e2; border-color: #e8c471; }
+html[data-theme="light"] .msg { background: var(--panel2); }
+html[data-theme="light"] .faq details,
+html[data-theme="light"] th,
+html[data-theme="light"] td { border-color: var(--line-soft); }
+html[data-theme="light"] .toast { background: var(--toast-bg); border-color: var(--toast-line); }
+html[data-theme="light"] .toast.win { color: var(--toast-win); }
+html[data-theme="light"] .toast.bad { color: var(--toast-bad); }
+html[data-theme="light"] .toast.trophy { color: var(--toast-trophy); }
+html[data-theme="light"] .quiz-option.right { color: var(--toast-win); }
+html[data-theme="light"] .quiz-option.wrong { color: var(--toast-bad); }
+html[data-theme="light"] .streak-day.on { color: var(--toast-win); }
+html[data-theme="light"] .footer a,
+html[data-theme="light"] footer a,
+html[data-theme="light"] .site-nav a { color: var(--link-soft); }
+html[data-theme="light"] .site-nav a:hover { color: var(--accent); }
+
+/* The dice keeps its own contrast: on a light table the pips turn dark. */
+html[data-theme="light"] #dice .pip { background: #1b2130; }
+html[data-theme="light"] .win-overlay { background: var(--overlay-bg); }
+html[data-theme="light"] .controls { background: var(--bar-bg); border-top-color: var(--line); }
+html[data-theme="light"] .pname:hover:not(:disabled) { background: var(--line); border-color: var(--line-strong); }
+
+/* The Snake & Ladder board turns into the familiar pale checkerboard so
+   the square numbers stay easy to read in daylight. */
+html[data-theme="light"] .board { background: #dde3ee; }
+html[data-theme="light"] .cell { background: #ffffff; color: #56617a; }
+html[data-theme="light"] .cell.light { background: #e7ecf6; color: #414c63; }
+html[data-theme="light"] .cell.start { color: #2f5fd0; }
+html[data-theme="light"] .cell.finish { color: #8a5a00; }
+html[data-theme="light"] .cell.hit { background: #cddcff; }
+
+/* Tiles and cards that keep a dark fill in the dark theme. */
+html[data-theme="light"] .date-chip { color: #2f5fd0; border-color: var(--line-strong); }
+html[data-theme="light"] .up { color: #0f7a52; }
+html[data-theme="light"] .down { color: #b42318; }
+
+/* The Ludo board keeps its own coloured layout, but the message bubble
+   around it has to follow the page. */
+html[data-theme="light"] .msg { background: var(--panel2); color: var(--text); }
+html[data-theme="light"] .cell-home { box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .12); }
+
+/* The splash screen is shown before the game is ready. */
+html[data-theme="light"] .loader { background: radial-gradient(circle at 30% 20%, #ffffff 0%, #e7ecf6 60%); }
+html[data-theme="light"] .loader-status { color: #55607a; }
+html[data-theme="light"] .loader-tip { color: #6b7488; }
+html[data-theme="light"] .loader-skip { border-color: #c3ccdd; color: #55607a; }
+html[data-theme="light"] .loader-skip:hover { background: #eef2fb; color: #16202f; }
+html[data-theme="light"] .loader-track { background: #e3e8f2; border-color: #c9d2e2; }
+
+/* ===================================================================
+   SHARED CHROME: theme button, table of contents, back-to-top
+   =================================================================== */
+
+.topnav-theme {
+  flex: none;
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border-radius: 9px;
+  border: 1px solid var(--nav-line);
+  background: transparent;
+  color: var(--nav-text);
+  font-size: 15px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background .15s, border-color .15s;
+}
+.topnav-theme:hover { background: #1c2230; border-color: var(--nav-accent); }
+html[data-theme="light"] .topnav-theme:hover { background: #eef2fb; }
+
+@media (max-width: 680px) {
+  .topnav-theme { order: 2; }
+  .topnav-links { order: 1; }
+}
+
+/* ---- table of contents ---- */
+
+.toc {
+  display: block;
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin: 16px 0 18px;
+}
+.toc-title {
+  display: block;
+  font-size: 11px;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+  color: var(--tag-text);
+  margin-bottom: 8px;
+}
+.toc ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 5px;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+}
+.toc a {
+  display: block;
+  color: var(--text);
+  text-decoration: none;
+  font-size: 13.5px;
+  font-weight: 600;
+  padding: 7px 10px;
+  border-radius: 9px;
+  background: var(--panel2);
+  border: 1px solid var(--line-strong);
+}
+.toc a:hover { border-color: var(--accent); background: var(--hover); }
+/* Sub-headings sit under their parent and are easier to scan. */
+.toc-sub {
+  display: grid;
+  gap: 4px;
+  margin-top: 5px;
+}
+.toc-sub a {
+  font-size: 12.5px;
+  font-weight: 500;
+  padding: 5px 10px;
+  background: transparent;
+  border-color: transparent;
+  color: var(--muted);
+}
+.toc-sub a:hover { background: var(--hover); color: var(--text); border-color: var(--line-strong); }
+
+/* Give the headings an anchor target that the table of contents can
+   jump to without hiding them under the sticky nav. */
+.toc a { scroll-margin-top: 70px; }
+:target { scroll-margin-top: 70px; }
+
+/* ---- back to top ---- */
+
+.to-top {
+  position: fixed;
+  right: 16px;
+  bottom: 18px;
+  z-index: 210;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border-radius: 50%;
+  font-size: 19px;
+  line-height: 1;
+  background: var(--panel);
+  color: var(--text);
+  border: 1px solid var(--line-strong);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, .35);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(10px);
+  transition: opacity .2s, transform .2s, visibility .2s;
+}
+.to-top.show { opacity: 1; visibility: visible; transform: none; }
+.to-top:hover { border-color: var(--accent); }
+/* On the game page the controls are pinned to the bottom of the screen on
+   narrow viewports, so the button sits just above them. */
+body.has-game-bar .to-top { bottom: 100px; }
+@media (max-width: 819px) {
+  body.has-game-bar .to-top { bottom: 100px; right: 12px; }
+}

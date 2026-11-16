@@ -237,6 +237,7 @@
     const on = layout[value] || [];
     pips.forEach(function (p, i) { p.classList.toggle("on", on.indexOf(i) !== -1); });
     diceEl.dataset.value = String(value);
+    diceEl.setAttribute("aria-label", "Dice showing " + value);
   }
 
   /* ------------------------------------------------------------------ */
@@ -407,14 +408,19 @@
     if (winTitle) winTitle.textContent = (winnerIndex + 1) + ". " + colorName(winner.colorId) + " wins!";
     if (winSub) winSub.textContent = "All four tokens reached the centre" +
       (winner.isAI ? " — the computer played well." : " — well played.");
-    if (winOverlay) winOverlay.classList.add("show");
+    if (winOverlay) {
+      if (window.SiteDialog) window.SiteDialog.open(winOverlay);
+      else winOverlay.classList.add("show");
+    }
     Fx.play("win");
     Fx.confetti({ colors: [colorHex(winner.colorId), "#ffd166", "#ffffff"] });
     message(colorName(winner.colorId) + " wins the game!");
   }
 
   function hideWin() {
-    if (winOverlay) winOverlay.classList.remove("show");
+    if (!winOverlay) return;
+    if (window.SiteDialog) window.SiteDialog.close(winOverlay);
+    else winOverlay.classList.remove("show");
   }
 
   /* ------------------------------------------------------------------ */
@@ -542,6 +548,8 @@
   el("ludoWinClose").addEventListener("click", hideWin);
 
   document.addEventListener("keydown", function (ev) {
+    // Escape closes the win dialog and Tab stays trapped inside it.
+    if (winOverlay && window.SiteDialog && window.SiteDialog.handleKey(winOverlay, ev)) return;
     if (ev.code === "Space" && ev.target === document.body) {
       ev.preventDefault();
       roll();

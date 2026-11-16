@@ -107,7 +107,7 @@
   :root { --bg:#0e1219; --panel:#181d28; --accent:#5b8cff; --text:#e8ecf5; --muted:#8b93a7; }
   * { box-sizing:border-box; }
   body {
-    margin:0; background:radial-gradient(circle at 25% 0%, #1a2336 0%, var(--bg) 55%);
+    margin:0; background:radial-gradient(circle at 25% 0%, var(--bg-glow) 0%, var(--bg) 55%);
     color:var(--text); font-family:"Segoe UI",system-ui,-apple-system,sans-serif; line-height:1.6;
   }
   .wrap { max-width:940px; margin:0 auto; padding:24px 16px 50px; }
@@ -120,39 +120,45 @@
     font-weight:700; text-decoration:none; font-size:16px; box-shadow:0 10px 26px rgba(68,114,230,.4); }
   .cta:hover { filter:brightness(1.08); }
   .badges { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; margin-top:14px; }
-  .badge { font-size:12px; color:var(--muted); border:1px solid #2b3244; background:var(--panel);
+  .badge { font-size:12px; color:var(--muted); border:1px solid var(--line); background:var(--panel);
     padding:5px 12px; border-radius:99px; }
   .ad-slot { margin:22px 0; }
-  .house-ad { border:1px solid #2f3852; border-radius:12px; background:linear-gradient(135deg,#1e2639,#1a2131);
-    padding:14px; text-align:center; }
-  .house-ad-tag { display:inline-block; font-size:9.5px; letter-spacing:1.4px; text-transform:uppercase;
-    color:#7d8aa8; border:1px solid #333d58; border-radius:99px; padding:2px 9px; margin-bottom:8px; }
-  .house-ad-title { font-weight:700; font-size:15px; margin-bottom:5px; }
-  .house-ad-text { font-size:13px; color:var(--muted); margin-bottom:11px; }
-  .ad-btn { font:inherit; font-size:13px; font-weight:700; padding:10px 16px; border-radius:9px;
-    border:1px solid transparent; cursor:pointer; text-decoration:none; display:inline-block; }
-  .ad-btn.primary { background:linear-gradient(180deg,#6b96ff,#4472e6); color:#fff; }
-  .ad-btn.ghost { background:#232b3f; color:#b7c3dd; border-color:#333d58; }
-  .ad-actions { display:flex; gap:9px; justify-content:center; flex-wrap:wrap; }
-  .card { background:var(--panel); border:1px solid #2b3244; border-radius:16px; padding:22px; margin:22px 0; }
+  .card { background:var(--panel); border:1px solid var(--line); border-radius:16px; padding:22px; margin:22px 0; }
   .card h2 { margin:0 0 12px; font-size:20px; }
   .card p { color:var(--muted); margin:0 0 12px; font-size:14.5px; }
   .features { display:grid; gap:12px; grid-template-columns:repeat(auto-fit,minmax(210px,1fr)); margin:0; padding:0; list-style:none; }
-  .features li { background:#212838; border:1px solid #2f3852; border-radius:12px; padding:14px; font-size:13.5px; color:var(--muted); }
+  .features li { background:var(--tile); border:1px solid var(--tile-line); border-radius:12px; padding:14px; font-size:13.5px; color:var(--muted); }
   .features strong { display:block; color:var(--text); font-size:14.5px; margin-bottom:4px; }
-  .faq details { border-bottom:1px solid #262d3d; padding:12px 0; }
+  .faq details { border-bottom:1px solid var(--line-soft); padding:12px 0; }
   .faq summary { cursor:pointer; font-weight:600; font-size:14.5px; }
   .faq p { margin:8px 0 0; color:var(--muted); font-size:13.5px; }
   .share-row { display:flex; gap:8px; flex-wrap:wrap; }
   .share-btn { display:inline-flex; align-items:center; gap:6px; padding:9px 13px; border-radius:10px;
-    background:#212838; border:1px solid #333c52; color:var(--text); text-decoration:none; font-size:12.5px; font-weight:600; }
+    background:var(--tile); border:1px solid var(--line-strong); color:var(--text); text-decoration:none; font-size:12.5px; font-weight:600; }
   .share-btn:hover { border-color:var(--accent); }
-  footer { text-align:center; color:#6d7794; font-size:12px; margin-top:28px; }
-  footer a { color:#8fa6d8; }
+  footer { text-align:center; color:var(--faint); font-size:12px; margin-top:28px; }
+  footer a { color:var(--link-soft); }
 </style>
+  <link rel="stylesheet" href="site-ui.css?v=1.5.0" />
+  <script src="site-ui.js?v=1.0.0"></script>
 </head>
 <body>
-<div class="wrap">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <nav class="topnav" aria-label="Main">
+    <a class="topnav-brand" href="index.html"><span class="topnav-emoji" aria-hidden="true">🐍</span> Snake &amp; Ladder</a>
+    <div class="topnav-links">
+      <a href="index.html" aria-current="page">Play</a>
+      <a href="how-to-play.html">How to play</a>
+      <a href="strategy.html">Strategy</a>
+      <a href="daily-challenge.html">Daily challenge</a>
+      <a href="ludo.html">Ludo</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="privacy.html">Privacy</a>
+    </div>
+  </nav>
+
+<div class="wrap" id="main">
   <div class="hero">
     <h1>Play <span>Snake &amp; Ladder</span> Online — Free</h1>
     <p>The classic ladders-and-snakes board game. Start playing in one click: no download, no signup, no ads blocking your move.</p>
@@ -195,7 +201,7 @@
 
   <div class="card">
     <h2>Share the game</h2>
-    <p>Know someone who loves board games? Send them the link — you will both get credited when they play.</p>
+    <p>Know someone who loves board games? Send them the link. It works on any phone, tablet or computer and needs no download.</p>
     <div id="shareRow" class="share-row"></div>
   </div>
 

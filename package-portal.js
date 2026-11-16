@@ -71,8 +71,10 @@ function portalIndex() {
 
 function portalAds() {
   let src = read("ads.js");
+  // Portals serve their own ads, so no AdSense client and no fallback network.
   src = src.replace(/adsenseClient:\s*"[^"]*"/, 'adsenseClient: ""');
-  src = src.replace(/showHouseAds:\s*true/, "showHouseAds: false");
+  src = src.replace(/adsenseApproved:\s*(true|false)/, "adsenseApproved: false");
+  src = src.replace(/enabled:\s*true,\s*\n(\s*)provider:/, "enabled: false,\n$1provider:");
   return src;
 }
 
@@ -240,6 +242,12 @@ function main() {
     { name: "rules.js", data: read("rules.js") },
     { name: "loader.js", data: read("loader.js") },
     { name: "fx.js", data: read("fx.js") },
+    { name: "game.js", data: read("game.js") },
+    { name: "rewards.js", data: read("rewards.js") },
+    { name: "quiz.js", data: read("quiz.js") },
+    { name: "site-ui.css", data: read("site-ui.css") },
+    { name: "site-ui.js", data: read("site-ui.js") },
+    { name: "snake-ladder.css", data: read("snake-ladder.css") },
     { name: "ads.js", data: portalAds() },
     { name: "favicon.svg", data: read("favicon.svg") },
     { name: "cover.png", data: fs.readFileSync(path.join(DIST, "cover.png")) },

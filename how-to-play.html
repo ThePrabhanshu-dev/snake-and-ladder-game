@@ -87,7 +87,7 @@
 <style>
   :root { --bg:#0e1219; --panel:#181d28; --accent:#5b8cff; --text:#e8ecf5; --muted:#8b93a7; }
   * { box-sizing:border-box; }
-  body { margin:0; background:radial-gradient(circle at 25% 0%, #1a2336 0%, var(--bg) 55%);
+  body { margin:0; background:radial-gradient(circle at 25% 0%, var(--bg-glow) 0%, var(--bg) 55%);
     color:var(--text); font-family:"Segoe UI",system-ui,-apple-system,sans-serif; line-height:1.7; }
   .wrap { max-width:860px; margin:0 auto; padding:26px 16px 60px; }
   h1 { font-size:clamp(24px,4.5vw,34px); margin:0 0 6px; }
@@ -98,11 +98,11 @@
   ul, ol { padding-left:20px; }
   li { margin:5px 0; }
   a { color:var(--accent); }
-  .card { background:var(--panel); border:1px solid #2b3244; border-radius:14px; padding:20px 22px; }
-  .tag { display:inline-block; font-size:9.5px; letter-spacing:1.4px; text-transform:uppercase; color:#7d8aa8;
-    border:1px solid #333d58; border-radius:99px; padding:2px 9px; margin-bottom:8px; }
+  .card { background:var(--panel); border:1px solid var(--line); border-radius:14px; padding:20px 22px; }
+  .tag { display:inline-block; font-size:9.5px; letter-spacing:1.4px; text-transform:uppercase; color:var(--tag-text);
+    border:1px solid var(--line-strong); border-radius:99px; padding:2px 9px; margin-bottom:8px; }
   table { width:100%; border-collapse:collapse; margin:12px 0; font-size:14px; }
-  th, td { text-align:left; padding:9px 10px; border-bottom:1px solid #262d3d; }
+  th, td { text-align:left; padding:9px 10px; border-bottom:1px solid var(--line-soft); }
   th { color:var(--text); font-size:13px; text-transform:uppercase; letter-spacing:.6px; }
   td { color:var(--muted); }
   td b { color:var(--text); }
@@ -110,16 +110,33 @@
   .down { color:#ff7a8a; font-weight:700; }
   .cta { display:inline-block; margin-top:16px; padding:12px 22px; border-radius:10px; text-decoration:none;
     background:linear-gradient(180deg,#6b96ff,#4472e6); color:#fff; font-weight:700; font-size:15px; }
-  .faq details { border-bottom:1px solid #262d3d; padding:12px 0; }
+  .faq details { border-bottom:1px solid var(--line-soft); padding:12px 0; }
   .faq summary { cursor:pointer; font-weight:600; font-size:14.5px; color:var(--text); }
   .faq p { margin:8px 0 0; }
-  footer { text-align:center; color:#6d7794; font-size:12px; margin-top:30px; }
+  footer { text-align:center; color:var(--faint); font-size:12px; margin-top:30px; }
 </style>
+  <link rel="stylesheet" href="site-ui.css?v=1.5.0" />
+  <script src="site-ui.js?v=1.0.0"></script>
 </head>
 <body>
-<div class="wrap">
+  <a class="skip-link" href="#main">Skip to content</a>
+  <nav class="topnav" aria-label="Main">
+    <a class="topnav-brand" href="index.html"><span class="topnav-emoji" aria-hidden="true">🐍</span> Snake &amp; Ladder</a>
+    <div class="topnav-links">
+      <a href="index.html">Play</a>
+      <a href="how-to-play.html" aria-current="page">How to play</a>
+      <a href="strategy.html">Strategy</a>
+      <a href="daily-challenge.html">Daily challenge</a>
+      <a href="ludo.html">Ludo</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="privacy.html">Privacy</a>
+    </div>
+  </nav>
+
+<div class="wrap" id="main">
   <h1>How to Play <span>Snake &amp; Ladder</span></h1>
-  <p style="color:#6d7794;font-size:13px">Rules, board map and the openings that win games · Last updated: 14 November 2026</p>
+  <p style="color:var(--faint);font-size:13px">Rules, board map and the openings that win games · Last updated: 14 November 2026</p>
 
   <div class="card">
     <p><strong>Snake &amp; Ladder</strong> (also known as <em>Chutes and Ladders</em> or <em>Vikram Bates</em>)
@@ -138,7 +155,7 @@
           the next player goes.</li>
     </ol>
 
-    <h2>Every ladder and snake on the board</h2>
+    <h2 id="board-map">Every ladder and snake on the board</h2>
     <p>The board this game uses is the traditional layout — 9 ladders and 6 snakes. Ladders take you
     up, snakes pull you back down:</p>
     <table>
